@@ -1,0 +1,6 @@
+ffmpeg/
+node_modules/
+data_red_packet.json
+database.json
+db.json
+giveaway.json
