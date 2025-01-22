@@ -1,0 +1,1 @@
+start cmd /K "node register_commands.js & node index.js"
