@@ -1,1 +1,1 @@
-start cmd /K "node register_commands.js & node index.js"
+start cmd /K "git pull & node register_commands.js & node index.js"
