@@ -33,7 +33,7 @@ module.exports = {
                     await interaction.reply({ content: `[${time()}] 我運行這個指令的時候遇到了錯誤 :|\n${error.stack}`, ephemeral: interaction.ephemeral || true });
                 };
                 throw error;
-            }
+            };
         });
     },
 };

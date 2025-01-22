@@ -14,7 +14,7 @@ module.exports = {
                     const useravator = user.avatarURL();
                     const goodbye_embed = new EmbedBuilder()
                         .setTitle("再見!")
-                        .setDescription(`\`${user.toString()}\` 在 ${time()} 離開了此伺服器`)
+                        .setDescription(`${user.toString()} 在 ${time()} 離開了此伺服器`)
                         .setColor(0x00BBFF)
                         .setImage(useravator);
                     await channel.send({ embeds: [goodbye_embed] });
