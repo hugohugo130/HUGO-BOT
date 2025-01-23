@@ -1,14 +1,8 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 function check_can_sign(userid) {
-    const { loadData, saveUserData } = require("../../module_database.js");
-    const { emptyeg } = require("../../config.json");
+    const { loadData } = require("../../module_database.js");
     let data = loadData(userid);
-    if (!data[userid]) {
-        data[userid] = emptyeg;
-        saveUserData(data);
-        return true;
-    };
 
     let date = new Date();
     let year = date.getFullYear();

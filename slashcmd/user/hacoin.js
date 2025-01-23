@@ -17,10 +17,6 @@ module.exports = {
         let user = interaction.options.getUser("用戶") ?? member.user;
         let userid = user.id;
         let data = loadData(userid);
-        if (!data[userid]) {
-            data[userid] = emptyeg;
-            saveUserData(userid, data);
-        };
         let userhacoin = data.hacoin;
         await interaction.editReply(`${userid === member.user.id ? "你" : user.toString()}有 ${userhacoin} 個哈狗幣`);
     },

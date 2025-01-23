@@ -25,7 +25,6 @@ module.exports = {
         let guild = interaction.guild;
         let bot = user.bot;
         let embed = new EmbedBuilder()
-            .setTitle(`${username}的資訊`)
             .setColor(0x00BBFF)
             .setThumbnail(avatarurl)
             .addFields(

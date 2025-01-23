@@ -6,14 +6,11 @@ function loadData(userid = null, mode = 0) {
     if (mode !== 1 && mode !== 0) {
         throw new TypeError("Invalid mode");
     };
-    const { databasefilename, emptyeg } = require("./config.json");
+    const { databasefilename } = require("./config.json");
     if (fs.existsSync(databasefilename)) {
         const rawData = fs.readFileSync(databasefilename);
         let data = JSON.parse(rawData);
         if (mode == 0 && userid) {
-            if (!data[userid]) {
-                data[userid] = emptyeg;
-            };
             saveUserData(userid, data[userid]);
             return data[userid];
         } else {
@@ -25,8 +22,11 @@ function loadData(userid = null, mode = 0) {
 };
 
 function saveUserData(userid, userData) {
-    const { databasefilename } = require("./config.json");
+    const { databasefilename, emptyeg } = require("./config.json");
     let data = loadData(null, 1); // 取得所有資料
+    if (!data[userid]) {
+        data[userid] = emptyeg;
+    };
     data[userid] = userData; // 更新資料
     data = JSON.stringify(data, null, 2); // 轉換成 JSON 格式
     fs.writeFileSync(databasefilename, data); // 寫入檔案
@@ -69,7 +69,7 @@ function get_boosters(mode = 0) {
         throw new TypeError("Invalid mode");
     };
     const data = loadData(null, 1);
-    const userid_list = Object.keys(data).filter(key => data[key].boost_date === new Date().toISOString().slice(0,10).replace(/-/g, " "));
+    const userid_list = Object.keys(data).filter(key => data[key].boost_date === new Date().toISOString().slice(0, 10).replace(/-/g, " "));
     if (mode == 0) {
         return userid_list; // 取得今天加成的人 (userid)
     } else {

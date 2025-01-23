@@ -12,14 +12,12 @@ client.setMaxListeners(Infinity);
 
 if (slashcmd) {
     client.commands = loadslashcmd(true);
-    console.log(`[${time()}] 斜線指令已加載`);
 } else {
     console.log(`[${time()}] 斜線指令已禁用，建議啟用`);
 };
 
 if (botfunction) {
     loadbotfunction(client);
-    console.log(`[${time()}] 機器人功能已加載`);
 } else {
     console.log(`[${time()}] 機器人功能已禁用，建議啟用`);
 };

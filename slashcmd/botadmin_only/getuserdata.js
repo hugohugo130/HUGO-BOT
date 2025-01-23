@@ -20,9 +20,9 @@ module.exports = {
         const user = interaction.options.getUser("用戶") ?? interaction.user;
         const member = interaction.guild.members.cache.get(user.id);
         const username = member.user.globalName || member.user.username;
-        const userData = loadData(user.id);
 
         if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
+        const userData = loadData(user.id);
 
         if (!userData) {
             return await interaction.editReply({

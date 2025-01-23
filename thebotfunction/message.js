@@ -243,7 +243,6 @@ module.exports = {
 
                     const embed = new EmbedBuilder()
                         .setColor(0x00BBFF)
-                        // .setDescription(`語音延遲ws：${connection.ping.ws || "無"}ms`);
                         .addFields(
                             { name: 'WebSocket 語音延遲', value: `${connection.ping.ws || "無"}ms` },
                             { name: 'UDP 語音延遲', value: `${connection.ping.udp || "無"}ms` }
@@ -261,17 +260,24 @@ module.exports = {
             const { beta } = require("../config.json");
             const channel = message.channel;
             if (message.content === "哈狗") {
-                await channel.send("等等..?");
-                await sleep(500);
-                await channel.send("哈狗?");
-                await sleep(500);
-                await channel.send("他...哦!對對對!他是我的創造者!");
-                await sleep(500);
+                await channel.send("哈狗!我的創造者!");
                 const msg = await channel.send("他是大佬!");
                 msg.react(beta ? "👍" : "<:good:1238854252282122372>");
                 // 如果beta為true，則反應👍 (因為beta機器人伺服器沒有這個表情符號)，否則反應good表情符號
                 await message.reply("送你一個熱狗");
-                await channel.send("🌭");
+                return channel.send("🌭");
+            };
+
+            if (
+                message.content === "暗夜" ||
+                message.content === "風暴" ||
+                message.content === "風暴." ||
+                message.content.toLowerCase() === "darknight" ||
+                message.content === "袋子" ||
+                message.content === "daiz" ||
+                message.content === "daiz01"
+            ) {
+                return channel.send("大佬!!我非常肯定!他是!大佬!!!");
             };
         });
     },
