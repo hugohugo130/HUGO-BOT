@@ -37,7 +37,7 @@ async function shortenUrl(longUrl) {
         const { data } = await axios.get(apiUrl);
         return (data.trim()) || (null, false);
     } catch (error) {
-        console.error('縮短 URL 時發生錯誤：', error);
+        require("../module_senderr").senderr({ client: client, msg: `縮短 URL 時發生錯誤：${error.stack}`, clientready: true });
         return (null, error);
     };
 };

@@ -17,11 +17,7 @@ module.exports = {
                 await invite.delete();
             });
         } catch (error) {
-            const { time } = require("../module_time.js");
-            console.error(`[${time()}] 處理邀請事件時出錯：`, error);
-            const { chatting_channel_ID, HugoUserID } = require("../config.json");
-            client.channels.cache.get(chatting_channel_ID).send(`[${time()}] 處理邀請事件時出錯：${error}\n<@${HugoUserID}>`);
-            client.users.send(HugoUserID, `[${time()}] 處理邀請事件時出錯：${error}`);
+            require("../module_senderr").senderr({ client: client, msg: `處理邀請事件時出錯：${error.stack}`, clientready: true });
         };
     },
 };

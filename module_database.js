@@ -6,11 +6,14 @@ function loadData(userid = null, mode = 0) {
     if (mode !== 1 && mode !== 0) {
         throw new TypeError("Invalid mode");
     };
-    const { databasefilename } = require("./config.json");
+    const { databasefilename, emptyeg } = require("./config.json");
     if (fs.existsSync(databasefilename)) {
         const rawData = fs.readFileSync(databasefilename);
         let data = JSON.parse(rawData);
         if (mode == 0 && userid) {
+            if (!data[userid]) {
+                data[userid] = emptyeg;
+            };
             saveUserData(userid, data[userid]);
             return data[userid];
         } else {
@@ -99,6 +102,7 @@ module.exports = {
             userData.hacoin = amount;
         };
         saveUserData(userId, userData);
+        return userData.hacoin;
     },
     sethacoin_forsign(userId, amount, add) {
         let userData = loadData(userId);
@@ -114,5 +118,6 @@ module.exports = {
         };
         userData.latestdate = curdate;
         saveUserData(userId, userData);
+        return userData.hacoin;
     },
 };

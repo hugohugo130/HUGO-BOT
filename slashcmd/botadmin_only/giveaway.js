@@ -27,16 +27,11 @@ module.exports = {
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
         const { loadGiveawayData, saveGiveawayData } = require("../../module_giveaway.js");
-        // const { emptyeg, giveaway_eg, giveaway_channel_ID } = require("../../config.json");
         const { giveaway_eg, giveaway_channel_ID } = require("../../config.json");
         await interaction.deferReply();
         const user = interaction.user;
         const userid = user.id;
         let userdata = loadData(userid);
-        // if (!userdata) {
-        //     userdata = emptyeg;
-        //     saveUserData(userdata);
-        // };
         const time = interaction.options.getString("時間");
         const name = interaction.options.getString("名稱");
         const amount = interaction.options.getInteger("金額");

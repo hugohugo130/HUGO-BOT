@@ -38,7 +38,7 @@ module.exports = {
         const dataToEdit = interaction.options.getString('數據');
         let value = interaction.options.getString('數值');
 
-        if (emptyeg[dataToEdit] === undefined) { // 不能使用'!' 因為emptyeg[dataToEdit] 可能為0
+        if (emptyeg[dataToEdit] === undefined) {
             return await interaction.editReply({
                 content: `${dataToEdit}是無效的數據類型。\nemptyeg[${dataToEdit}] is ${emptyeg[dataToEdit]}`,
                 ephemeral: true,
@@ -63,6 +63,7 @@ module.exports = {
         await interaction.editReply({
             content: `已成功更新 ${user} 的 ${dataToEdit} 數值到 ${dataToEdit === 'installment' ? JSON.stringify(value) : value}。`,
             ephemeral: true,
+            allowedMentions: { repliedUser: false }
         });
     },
 };

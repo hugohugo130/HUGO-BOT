@@ -6,17 +6,11 @@ module.exports = {
             if (!interaction.isChatInputCommand()) return;
             if (interaction.commandName !== '備份資料庫') return;
             try {
-                // const { databasefilename, emptyeg } = require("../config.json");
                 const { databasefilename } = require("../config.json");
-                // const { loadData, saveUserData } = require("../module_database.js");
                 const { loadData } = require("../module_database.js");
                 await interaction.deferReply({ ephemeral: true });
                 let userid = interaction.user.id;
                 let data = loadData(userid);
-                // if (!data) {
-                //     data = emptyeg;
-                //     saveUserData(data);
-                // };
 
                 let isadmin = data.admin;
                 if (!isadmin) return interaction.editReply("你不是機器人管理員! (機器人每1分鐘刷新一次)");

@@ -29,7 +29,7 @@ module.exports = {
                 const { loadData, sethacoin } = require("../module_database.js");
                 if (!interaction.isChatInputCommand()) return;
                 if (interaction.commandName != "紅包" && interaction.commandName != "結束紅包") return;
-                const { emptyeg, red_packet_Channel_ID, GuildID } = require("../config.json");
+                const { red_packet_Channel_ID, GuildID } = require("../config.json");
                 await interaction.deferReply();
                 let redpacketdata = loadredpacketData();
                 let isredpacketIng = Boolean(redpacketdata.expiredts);
@@ -72,10 +72,6 @@ module.exports = {
                 if (amount <= 0) return await interaction.editReply(`紅包要有多少?...${amount}哈狗幣?蛤?`);
                 if (packets <= 0) return await interaction.editReply(`紅包要有多少封?...${packets}封?蛤?`);
                 let data = loadData(userid);
-                // if (!data) {
-                //     data = emptyeg;
-                //     saveUserData(userid, data);
-                // };
                 if (data.hacoin < amount) {
                     return await interaction.editReply(`你沒有足夠的哈狗幣, 你只有${data.hacoin}哈狗幣`);
                 };
@@ -96,8 +92,9 @@ module.exports = {
             `;
                 let redpacketmsg = await client.channels.cache
                     .get(red_packet_Channel_ID)
-                    .send(qmsg);
-                await redpacketmsg.react("🎉")
+                    .send(qmsg)
+                    .then(msg => msg.react("🎉"));
+
                 redpacketMessageID = redpacketmsg.id;
                 redpacketdata = {
                     userid: redpacketUserID,
@@ -108,15 +105,12 @@ module.exports = {
                     remainhacoin: redpacketremain,
                     messageID: redpacketMessageID
                 };
+
                 saveredpacketData(redpacketdata);
                 await interaction.editReply(`已成功發起紅包: https://discord.com/channels/${GuildID}/${red_packet_Channel_ID}/${redpacketMessageID}`);
             });
         } catch (error) {
-            const { time } = require("../module_time.js");
-            console.error(`[${time()}] 處理紅包事件時出錯：`, error);
-            const { chatting_channel_ID, HugoUserID } = require("../config.json");
-            client.channels.cache.get(chatting_channel_ID).send(`[${time()}] 處理紅包事件時出錯：${error}\n<@${HugoUserID}>`);
-            client.users.send(HugoUserID, `[${time()}] 處理紅包事件時出錯：${error}`);
+            require("../module_senderr").senderr({ client: client, msg: `處理紅包事件時出錯：${error.stack}`, clientready: true });
         };
 
         try {

@@ -1,5 +1,3 @@
-// const schedule = require("node-schedule");
-
 module.exports = {
     run: async function (client) {
         delete require.cache[require.resolve("../module_senderr.js")];
@@ -14,7 +12,7 @@ module.exports = {
                 await channel.send({ content: `資料庫備份失敗: ${error.message}` });
             };
         } catch (error) {
-            if (error.message.includes("getaddrinfo ENOTFOUND discord.com")) {} else {
+            if (!error.message.includes("getaddrinfo ENOTFOUND discord.com")) {
                 require("../module_senderr.js").senderr({ client: client, msg: `備份資料庫時出錯：${error.stack}`, clientready: true });
             };
         };

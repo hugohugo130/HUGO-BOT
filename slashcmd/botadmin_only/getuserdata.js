@@ -37,7 +37,7 @@ module.exports = {
             "autosign": "是否啟用自動簽到",
             "admin": "是否為機器人管理員",
             "vip": "是否為VIP",
-            "infsign": "是否可以無限簽到",
+            "infsign": "是否啟用無限簽到",
             "birthday": "生日日期",
             "birthday_year": "最後一次慶祝生日的年份",
             "count_for_e": "消息中含有e的次數",
@@ -54,7 +54,7 @@ module.exports = {
                 fields.push({
                     name: description[key] || key,
                     value: key === "installment" ? JSON.stringify(value) : value.toString(),
-                    inline: false,
+                    inline: true,
                 });
             };
         };

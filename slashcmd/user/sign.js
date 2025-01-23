@@ -53,4 +53,5 @@ module.exports = {
             await interaction.editReply("今天你已經簽到過啦!明天再來吧!");
         };
     },
+    check_can_sign,
 };

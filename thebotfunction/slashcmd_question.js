@@ -12,7 +12,7 @@ module.exports = {
             client.on(Events.InteractionCreate, async (interaction) => {
                 if (!interaction.isChatInputCommand()) return;
                 if (interaction.commandName != "建立問題") return;
-                const { emptyeg, question_channel_ID, question_ans_time, GuildID } = require("../config.json");
+                const { question_channel_ID, question_ans_time, GuildID } = require("../config.json");
                 await interaction.deferReply({ ephemeral: true });
                 let amount = interaction.options.getNumber("數量");
                 let question = interaction.options.getString("問題");
@@ -32,9 +32,6 @@ module.exports = {
                     );
                 };
                 let data = loadData(userid);
-                // if (!data) {
-                //     data = emptyeg;
-                // };
                 if (data.hacoin < amount) {
                     return await interaction.editReply(`你不夠哈狗幣, 你只有${data.hacoin}哈狗幣`);
                 };
@@ -84,11 +81,7 @@ module.exports = {
                 return await msg.reply(`你已成功獲得 ${questionAmount} 哈狗幣`);
             });
         } catch (error) {
-            const { time } = require("../module_time.js");
-            console.error(`[${time()}] 處理問題事件時出錯：`, error);
-            const { chatting_channel_ID, HugoUserID } = require("../config.json");
-            client.channels.cache.get(chatting_channel_ID).send(`[${time()}] 處理問題事件時出錯：${error}\n<@${HugoUserID}>`);
-            client.users.send(HugoUserID, `[${time()}] 處理問題事件時出錯：${error}`);
+            require("../module_senderr").senderr({ client: client, msg: `處理問題事件時出錯：${error.stack}`, clientready: true });
         };
     },
 };

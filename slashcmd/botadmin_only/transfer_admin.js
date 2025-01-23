@@ -21,17 +21,9 @@ module.exports = {
         ),
     async execute(interaction) {
         await interaction.deferReply();
-        // const { loadData, sethacoin, saveUserData } = require("../../module_database.js");
         const { loadData, sethacoin } = require("../../module_database.js");
-        // const { emptyeg } = require("../../config.json");
         let sourceuser = interaction.options.getUser("來源");
         let targetuser = interaction.options.getUser("目標");
-        // [interaction.user.id, sourceuser.id, targetuser.id].forEach(userId => {
-        //     if (!data) {
-        //         data = emptyeg;
-        //         saveUserData(userid, data);
-        //     };
-        // });
         let isadmin = data.admin;
         if (!isadmin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         if (targetuser.bot) return await interaction.editReply("不能轉賬給機器人, 不然哈狗幣會被吞掉!");

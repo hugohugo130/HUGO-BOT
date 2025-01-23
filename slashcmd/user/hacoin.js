@@ -11,7 +11,6 @@ module.exports = {
         ),
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
-        const { emptyeg } = require("../../config.json");
         await interaction.deferReply();
         let member = interaction.member;
         let user = interaction.options.getUser("用戶") ?? member.user;

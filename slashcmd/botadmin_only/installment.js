@@ -42,10 +42,6 @@ module.exports = {
         let day = date.getDate();
         let curdate = `${year} ${month} ${day}`;
         today_int = parseInt(curdate.split(" ")[2])
-        // if (!data) {
-        //     data = emptyeg;
-        //     saveUserData(data);
-        // };
         data['installment'] = {
             remainamount: amount,
             latestrundate: '',
