@@ -1,5 +1,9 @@
 const schedule = require("node-schedule");
 const { Events } = require("discord.js");
+const fs = require('fs');
+const path = require('path');
+
+let run_lock = {} // 使用 run lock 來避免上次事件未完成，下次的事件也開始
 
 module.exports = {
     setup(client) {
@@ -23,9 +27,6 @@ module.exports = {
                 "../schedule/check_internet-7.js",
             ];
 
-            const fs = require('fs');
-            const path = require('path');
-            
             const schedule_dir = path.join(__dirname, '../schedule');
             const schedule_js_list = fs.readdirSync(schedule_dir)
                 .filter(file => file.endsWith('.js'))
@@ -34,6 +35,10 @@ module.exports = {
             let schedules = schedule_js_list.filter(item => !skip_list.includes(item));
 
             client.schedules = schedules;
+
+            for (const schedule of schedule_js_list) {
+                run_lock[schedule] = false;
+            };
 
             /*
             schedule.scheduleJob('* * * * * *', function(){
@@ -49,9 +54,18 @@ module.exports = {
                 // 順序執行一般事件
                 for (const schedulename of schedules) {
                     try {
+
+                        if (run_lock[schedulename]) {
+                            continue;
+                        };
+
+                        run_lock[schedulename] = true;
+
                         const schedule = require(schedulename);
 
-                        await schedule.run(client);
+                        if (schedule.run) {
+                            await schedule.run(client);
+                        };
 
                         if (schedule.run2) {
                             await schedule.run2(client);
@@ -60,6 +74,8 @@ module.exports = {
                         if (schedule.run3) {
                             await schedule.run3(client);
                         };
+
+                        run_lock[schedulename] = false;
                     } catch (error) {
                         require("../module_senderr").senderr({ client: client, msg: `處理排程時出錯：${error.stack}`, clientready: true });
                     };
