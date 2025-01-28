@@ -46,6 +46,8 @@
         "message_count": 0,
         "level": 0,
         "exp": 0,
+        "boost_date": "",
+        "vip": false,
         "installment": {}
     },
     "red_packet_eg": {
@@ -92,10 +94,23 @@
         "1299997155586474015",
         "1299997171210387547"
     ],
-    "load_skiplist": [
-        "createclient.js",
-        "createrl.js",
-        "loadcog.js",
-        "readlinecmd.js"
-    ]
+    "load_skiplist": [],
+    "default_value": {
+        "db.json": {
+            "counting_num": 0,
+            "counting_highest": 0,
+            "guess_num": {},
+            "vote": {
+                "active": false,
+                "title": null,
+                "description": null,
+                "options": [],
+                "endtime": null,
+                "message_id": null,
+                "participants": {}
+            }
+        },
+        "data_red_packet.json": {},
+        "database.json": {}
+    }
 }
