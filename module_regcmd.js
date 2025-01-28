@@ -24,7 +24,7 @@ function loadslashcmd(bot) {
                         commands.push(command.data.toJSON());
                     };
                 } else {
-                    console.log(`[警告] ${itemPath} 中的指令缺少必要的 "data" 和 "execute" 屬性。`);
+                    console.warn(`[警告] ${itemPath} 中的指令缺少必要的 "data" 和 "execute" 屬性。`);
                 };
             };
         };

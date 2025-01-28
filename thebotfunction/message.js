@@ -12,9 +12,9 @@ module.exports = {
                 let userid = user.id;
                 let data = loadData(userid);
 
-                data.message_count += 1;
+                data.message_count++;
                 if (message.content.includes("e")) {
-                    data.count_for_e += 1;
+                    data.count_for_e++;
                 };
 
                 saveUserData(userid, data);
@@ -38,7 +38,7 @@ module.exports = {
                 const channel = client.channels.cache.get(level_channel_ID);
                 while (data.exp >= exp_need) {
                     data.exp -= exp_need;
-                    data.level += 1;
+                    data.level++;
                     if (channel) {
                         await channel.send(`${user} 已達到 ${data.level} 級!`);
                     };
@@ -248,6 +248,10 @@ module.exports = {
                             { name: 'UDP 語音延遲', value: `${connection.ping.udp || "無"}ms` }
                         );
                     return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                };
+
+                if (cmd === "!ip") {
+                    return message.reply({ content: `mc.yanpl.com:25709`, allowedMentions: { repliedUser: false } });
                 };
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `處理訊息指令時出錯：${error.stack}`, clientready: true });
