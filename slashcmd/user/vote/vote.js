@@ -47,7 +47,7 @@ module.exports = {
 
         const title = interaction.options.getString('標題');
         const optionnum = interaction.options.getInteger('回答選項數');
-        const description = interaction.options.getString('描述') ?? "無";
+        const description = interaction.options.getString('描述') ?? "無描述";
         const period = interaction.options.getInteger('期間') ?? 60 * 60;
         const force = interaction.options.getBoolean('強制') ?? false;
 
@@ -129,6 +129,7 @@ module.exports = {
             options: optionValues,
             endtime: endtime,
             message_id: message.id,
+            channel_id: message.channel.id,
             participants: {
                 ...optionValues.map(option => ({
                     option: option,

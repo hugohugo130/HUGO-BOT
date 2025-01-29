@@ -79,7 +79,7 @@ module.exports = {
                 };
             };
         } catch (error) {
-            require("../module_senderr").senderr({ client: client, msg: `處理分期付款時出錯：${error.stack}`, clientready: true });
+            require("../module_senderr.js").senderr({ client: client, msg: `處理分期付款時出錯：${error.stack}`, clientready: true });
         };
     },
 };

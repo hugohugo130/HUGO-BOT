@@ -3,11 +3,12 @@ const { Events, EmbedBuilder } = require("discord.js");
 module.exports = {
     setup(client) {
         client.on(Events.InteractionCreate, async (interaction) => {
-            const { load_db, save_db } = require("../module_database.js");
-            const db = load_db();
             if (!interaction.isButton()) return;
             if (!interaction.customId.startsWith("vote_")) return;
+            const { load_db, save_db } = require("../module_database.js");
+            let db = load_db();
             if (!db.vote.active) return;
+            if (db.vote.message_id !== interaction.message.id) return;
             const index = interaction.customId.split("_")[1];
 
             // 檢查用戶是否已經投過票

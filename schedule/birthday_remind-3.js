@@ -36,7 +36,7 @@ module.exports = {
                 saveUserData(userid, data);
             };
         } catch (error) {
-            require("../module_senderr").senderr({ client: client, msg: `處理生日提醒時出錯：${error.stack}`, clientready: true });
+            require("../module_senderr.js").senderr({ client: client, msg: `處理生日提醒時出錯：${error.stack}`, clientready: true });
         };
     },
 };

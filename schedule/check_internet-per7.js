@@ -14,7 +14,7 @@ module.exports = {
             if (error.message.includes("fetch failed") && !internet_broken[0]) {
                 internet_broken = [true, parseInt(Date.now() / 1000)];
             } else if (!internet_broken[0]){
-                require("../module_senderr").senderr({ client: client, msg: `檢查網路連接時出錯：${error.stack}`, clientready: true });
+                require("../module_senderr.js").senderr({ client: client, msg: `檢查網路連接時出錯：${error.stack}`, clientready: true });
             };
         };
     },

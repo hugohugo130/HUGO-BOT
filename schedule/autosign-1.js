@@ -30,7 +30,7 @@ module.exports = {
             const sentmsg = await channel.send({ content: autosigntext.join("\n"), allowedMentions: { repliedUser: false } });
             await sentmsg.react('✅');
         } catch (error) {
-            require("../module_senderr").senderr({ client: client, msg: `進行自動簽到時出錯：${error.stack}`, clientready: true });
+            require("../module_senderr.js").senderr({ client: client, msg: `進行自動簽到時出錯：${error.stack}`, clientready: true });
         };
     },
 };

@@ -77,7 +77,8 @@ module.exports = {
                     "c set2 <數字>": "設定數數的**最高**數字",
                     "pin <訊息ID>": "釘選訊息",
                     "unpin <訊息ID>": "取消釘選訊息",
-                    "vping": "顯示語音延遲"
+                    "vping": "顯示語音延遲",
+                    "ip": "顯示伺服器IP"
                 };
 
                 let mathConstants = {
@@ -250,8 +251,8 @@ module.exports = {
                     return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
                 };
 
-                if (cmd === "!ip") {
-                    return message.reply({ content: `mc.yanpl.com:25709`, allowedMentions: { repliedUser: false } });
+                if (cmd === "ip") {
+                    return message.reply({ content: `\`mc.yanpl.com:25709\``, allowedMentions: { repliedUser: false } });
                 };
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `處理訊息指令時出錯：${error.stack}`, clientready: true });
@@ -276,10 +277,10 @@ module.exports = {
                 message.content === "暗夜" ||
                 message.content === "風暴" ||
                 message.content === "風暴." ||
-                message.content.toLowerCase() === "darknight" ||
                 message.content === "袋子" ||
-                message.content === "daiz" ||
-                message.content === "daiz01"
+                message.content.toLowerCase() === "darknight" ||
+                message.content.toLowerCase() === "daiz" ||
+                message.content.toLowerCase() === "daiz01"
             ) {
                 return channel.send("大佬!!我非常肯定!他是!大佬!!!");
             };

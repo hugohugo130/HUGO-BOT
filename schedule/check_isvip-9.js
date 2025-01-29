@@ -17,7 +17,7 @@ module.exports = {
                 saveUserData(userid, data);
             };
         } catch (error) {
-            require("../module_senderr").senderr({ client: client, msg: `檢查是否為VIP(自動刷新)時出錯：${error.stack}`, clientready: true });
+            require("../module_senderr.js").senderr({ client: client, msg: `檢查是否為VIP(自動刷新)時出錯：${error.stack}`, clientready: true });
         }
     },
 };
