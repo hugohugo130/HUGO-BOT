@@ -69,7 +69,8 @@ module.exports = {
                 // ];
 
                 let help = {
-                    "help": "顯示所有指令",
+                    "h": "幫助 - 顯示此頁面",
+                    "help": "幫助 - 顯示此頁面",
                     "calc <運算式>": "計算",
                     "ping": "顯示延遲",
                     "c": "顯示關於數數的資訊",
@@ -92,7 +93,7 @@ module.exports = {
                 };
 
                 // if (!commands.includes(cmd)) return;
-                if (cmd === "help") {
+                if (cmd === "h" || cmd === "help") {
                     let showhelp = '指令列表```\n';
                     for (const [cmd, description] of Object.entries(help)) {
                         showhelp += `h!${cmd}: ${description}\n`;
@@ -252,7 +253,7 @@ module.exports = {
                 };
 
                 if (cmd === "ip") {
-                    return message.reply({ content: `\`mc.yanpl.com:25709\``, allowedMentions: { repliedUser: false } });
+                    return message.reply({ content: `\`ouo.yanpl.com:25303\``, allowedMentions: { repliedUser: false } });
                 };
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `處理訊息指令時出錯：${error.stack}`, clientready: true });
