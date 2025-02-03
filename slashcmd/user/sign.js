@@ -40,7 +40,7 @@ module.exports = {
 
         if (check_can_sign(userid)) {
             let gothacoin = randomhacoin(minhacoin, maxhacoin + 1);
-            for (let booster of get_boosters(1)) {
+            for (let booster of get_boosters(interaction.client, 1)) {
                 const user = booster.user;
                 const channel = booster.guild.channels.cache.get(BotChannelID);
                 sethacoin(user.id, gothacoin, true);

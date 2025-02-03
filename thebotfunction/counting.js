@@ -87,7 +87,6 @@ module.exports = {
 
             messages = Array.from(messages
                 .filter(msg => !msg.author.bot) // 過濾掉機器人
-                .filter(msg => /^\d+$/.test(handler1(msg.content.split(" ")[0]))) // 過濾掉非數字
                 .filter(msg => !msg.reactions.cache.find(reaction =>
                     reaction.users.cache.has(client.user.id)
                 )) // 過濾掉機器人已反應過的訊息
@@ -102,6 +101,10 @@ module.exports = {
 
             for (const msg of messages) {
                 const counting_num = handler1(msg.content.split(" ")[0]);
+                if (!counting_num) {
+                    await msg.react("🇪");
+                    continue;
+                };
 
                 if (counting_num !== db.counting_num + 1) {
                     await msg.react("❌");

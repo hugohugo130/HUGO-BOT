@@ -67,7 +67,7 @@ function end_guess_num_game(userid) {
     return 1;
 };
 
-function get_boosters(mode = 0) {
+function get_boosters(client, mode = 0) {
     if (mode !== 1 && mode !== 0) {
         throw new TypeError("Invalid mode");
     };
