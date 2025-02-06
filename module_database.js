@@ -72,7 +72,7 @@ function get_boosters(client, mode = 0) {
         throw new TypeError("Invalid mode");
     };
     const data = loadData(null, 1);
-    const userid_list = Object.keys(data).filter(key => data[key].boost_date === new Date().toISOString().slice(0, 10).replace(/-/g, " "));
+    const userid_list = Object.keys(data).filter(key => data[key].roles && data[key].roles.includes("1221819716323250320"));
     if (mode == 0) {
         return userid_list; // 取得今天加成的人 (userid)
     } else {

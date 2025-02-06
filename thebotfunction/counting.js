@@ -74,7 +74,7 @@ module.exports = {
             // 目前的數字是 ${db.counting_num}!
             // 下一個數字是 ${db.counting_num + 1}!
             // `});
-            await webhook.send({ content: counting_num }); // 重新發送數字
+            await webhook.send({ content: counting_num.toString() }); // 重新發送數字
             await webhook.delete();
         });
 
