@@ -20,13 +20,13 @@ module.exports = {
                 .setRequired(true),
         ),
     async execute(interaction) {
-        await interaction.deferReply();
         const { loadData } = require("../../module_database.js");
-        const data = loadData(interaction.user.id);
-        if (!data.vip) {
+        await interaction.deferReply();
+        if (!loadData(interaction.user.id).vip) {
             await interaction.editReply("你不是VIP，無法使用此功能");
             return;
         };
+
         const min_num = interaction.options.getInteger("min");
         const max_num = interaction.options.getInteger("max");
         const guess = interaction.options.getInteger("guess");
@@ -35,7 +35,7 @@ module.exports = {
         if (correct) {
             await interaction.editReply(`哇！你猜中了！猜中的機率為${(1 / (max_num - min_num + 1)).toFixed(2)}%`);
         } else {
-            await interaction.editEeply(`oh..你猜錯了，正確的數字是${rnum} 猜中的機率為${(1 / (max_num - min_num + 1)).toFixed(2)}%`);
+            await interaction.editReply(`oh..你猜錯了，正確的數字是${rnum} 猜中的機率為${(1 / (max_num - min_num + 1)).toFixed(2)}%`);
         };
     },
 };
