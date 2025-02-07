@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, MessageFlags } = require("discord.js");
 
 module.exports = {
     setup(client) {
@@ -8,12 +8,10 @@ module.exports = {
             try {
                 const { databasefilename } = require("../config.json");
                 const { loadData } = require("../module_database.js");
-                await interaction.deferReply({ ephemeral: true });
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 let userid = interaction.user.id;
-                let data = loadData(userid);
 
-                let isadmin = data.admin;
-                if (!isadmin) return interaction.editReply("你不是機器人管理員! (機器人每1分鐘刷新一次)");
+                if (!loadData(userid).admin) return interaction.editReply("你不是機器人管理員! (機器人每1分鐘刷新一次)");
 
                 /*
                 if (interaction.channel) {

@@ -20,7 +20,7 @@ module.exports = {
                 if (!data.autosign) continue;
                 if (check_can_sign(userid)) {
                     let gothacoin = randomhacoin(minhacoin, maxhacoin + 1);
-                    for (let booster of get_boosters(interaction.client, 1)) {
+                    for (let booster of get_boosters(client, 1)) {
                         const user = booster.user;
                         sethacoin(user.id, gothacoin, true);
                         boosterstext.push(`**${user.toString()}** 今天加成了 **${booster.guild.name}** 所以獲得了 1 哈狗幣!`);

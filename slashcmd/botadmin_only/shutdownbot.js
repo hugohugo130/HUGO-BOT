@@ -17,9 +17,7 @@ module.exports = {
         console.log(`[${time()}] 正在關機... (${user.globalName || user.username} 要求關機)`);
         let channel = interaction.guild.channels.cache.get(BotAnnouncementChannelID);
         if (channel) {
-            await channel.send(`哈狗機器人已關機! (${user.toString()} 要求我關機)`);
-        } else {
-            await interaction.client.users.cache.get(HugoUserID).send(":warning: 未找到機器人頻道!");
+            await channel.send({ content: `哈狗機器人已關機! (${user.toString()} 要求我關機)`, allowedMentions: { repliedUser: false } });
         };
         saveQueue(new Map());
         await interaction.client.destroy();

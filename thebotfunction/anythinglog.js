@@ -5,13 +5,14 @@ module.exports = {
         client.on(Events.MessageCreate, async (message) => {
             if (!message.guild) return;
             try {
-                const { backend_channel_ID, backup_database_channel_ID } = require("../config.json");
+                const { backend_channel_ID, backup_database_channel_ID, counting_channel_ID } = require("../config.json");
                 const backendchannel = client.channels.cache.get(backend_channel_ID);
                 if (!backendchannel) return;
                 let user = message.author;
                 let channel = message.channel;
                 if (user.id === client.user.id && channel.id === backend_channel_ID) return;
                 if (channel.id === backup_database_channel_ID) return;
+                if (channel.id === counting_channel_ID) return;
                 let content = message.content || "無內容";
                 let referenceurl = "無";
                 if (message.reference) {

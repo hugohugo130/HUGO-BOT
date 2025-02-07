@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -13,7 +13,7 @@ module.exports = {
         ),
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
-        await interaction.deferReply();
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const currentSeconds = new Date().getSeconds();
         const targetSeconds = 9;
         const diff = Math.abs(currentSeconds - targetSeconds);

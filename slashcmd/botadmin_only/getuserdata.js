@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,18 +8,14 @@ module.exports = {
             option.setName("用戶")
                 .setDescription("選擇用戶")
                 .setRequired(false)
-        )
-        .addBooleanOption(option =>
-            option.setName("ephemeral")
-                .setDescription("是否以私密模式顯示")
-                .setRequired(false)
         ),
     async execute(interaction) {
         const { loadData } = require("../../module_database.js");
-        await interaction.deferReply({ ephemeral: interaction.options.getBoolean("ephemeral") ?? true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const user = interaction.options.getUser("用戶") ?? interaction.user;
         const member = interaction.guild.members.cache.get(user.id);
         const username = member.user.globalName || member.user.username;
+
 
         if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         const userData = loadData(user.id);

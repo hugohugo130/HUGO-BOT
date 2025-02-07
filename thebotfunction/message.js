@@ -29,7 +29,8 @@ module.exports = {
                 const { loadData, saveUserData } = require("../module_database.js");
                 let user = message.author;
                 if (user.bot) return;
-                const { level_channel_ID, exp_need } = require("../config.json");
+                const { level_channel_ID, exp_need, spam_free_channel_ID } = require("../config.json");
+                if (message.channel.id === spam_free_channel_ID) return;
                 let userid = user.id;
                 let data = loadData(userid);
 
