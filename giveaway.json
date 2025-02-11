@@ -1,0 +1,12 @@
+{
+  "host_userid": "",
+  "name": null,
+  "note": null,
+  "amount": 0,
+  "participants": [],
+  "endts": 0,
+  "messageID": "",
+  "winner": null,
+  "active": false,
+  "emoji": "🎉"
+}

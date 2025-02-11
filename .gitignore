@@ -1,8 +1,4 @@
 ffmpeg/
 node_modules/
-data_red_packet.json
-database.json
-db.json
-giveaway.json
-package-lock.json
-package.json
+**/package-lock.json
+**/package.json

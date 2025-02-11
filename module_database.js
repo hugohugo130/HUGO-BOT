@@ -1,4 +1,5 @@
 const fs = require("fs");
+
 function loadData(userid = null, mode = 0) {
     /*
     mode: 0 取得用戶資料, 1 取得所有資料
@@ -26,13 +27,18 @@ function loadData(userid = null, mode = 0) {
 
 function saveUserData(userid, userData) {
     const { databasefilename, emptyeg } = require("./config.json");
-    let data = loadData(null, 1); // 取得所有資料
+    let data = {};
+    if (fs.existsSync(databasefilename)) {
+        const rawData = fs.readFileSync(databasefilename);
+        data = JSON.parse(rawData);
+    };
+    
     if (!data[userid]) {
         data[userid] = emptyeg;
     };
-    data[userid] = userData; // 更新資料
-    data = JSON.stringify(data, null, 2); // 轉換成 JSON 格式
-    fs.writeFileSync(databasefilename, data); // 寫入檔案
+    
+    data[userid] = { ...data[userid], ...userData };
+    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 2));
 };
 
 function deleteUserData(userid) {
@@ -86,6 +92,43 @@ function get_boosters(client, mode = 0) {
     };
 };
 
+// 更新資料庫檔案的預設值
+function updateDatabaseDefaults() {
+    let { default_value, giveaway_eg } = require('./config.json');
+    default_value = { ...default_value, "giveaway.json": giveaway_eg };
+    for (const file of ["db.json", "giveaway.json"]) {
+        try {
+            let data = JSON.parse(fs.readFileSync(file));
+            let defaultData = default_value[file];
+            let changed = false;
+
+            // 遞迴檢查和更新物件的所有層級
+            function updateObject(current, defaults) {
+                for (const [key, value] of Object.entries(defaults)) {
+                    if (!(key in current)) {
+                        current[key] = value;
+                        changed = true;
+                    } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                        if (typeof current[key] !== 'object') {
+                            current[key] = {};
+                            changed = true;
+                        }
+                        updateObject(current[key], value);
+                    };
+                };
+            };
+
+            updateObject(data, defaultData);
+
+            if (changed) {
+                fs.writeFileSync(file, JSON.stringify(data, null, 2));
+            };
+        } catch (error) {
+            console.error(`更新${file}時出錯：${error.stack}`);
+        };
+    };
+};
+
 module.exports = {
     loadData,
     saveUserData,
@@ -94,6 +137,7 @@ module.exports = {
     save_db,
     end_guess_num_game,
     get_boosters,
+    updateDatabaseDefaults,
     sethacoin(userId, amount, add) {
         let userData = loadData(userId);
         if (add) {
@@ -104,20 +148,21 @@ module.exports = {
         saveUserData(userId, userData);
         return userData.hacoin;
     },
-    sethacoin_forsign(userId, amount, add) {
-        let userData = loadData(userId);
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        let curdate = `${year} ${month} ${day}`;
-        if (add) {
-            userData.hacoin += amount;
-        } else {
-            userData.hacoin = amount;
-        };
-        userData.latestdate = curdate;
-        saveUserData(userId, userData);
-        return userData.hacoin;
+    sethacoin_forsign(userId, amount, add = false) {
+        return queueOperation(() => {
+            let userData = loadData(userId);
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let curdate = `${year} ${month} ${day}`;
+            if (add) {
+                userData.hacoin += amount;
+            } else {
+                userData.hacoin = amount;
+            };
+            userData.latestdate = curdate;
+            saveUserData(userId, userData);
+        });
     },
 };

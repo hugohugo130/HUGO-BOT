@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, MessageFlags } = require("discord.js");
 const fs = require("fs");
 
 function loadredpacketData() {
@@ -29,8 +29,8 @@ module.exports = {
                 const { loadData, sethacoin } = require("../module_database.js");
                 if (!interaction.isChatInputCommand()) return;
                 if (interaction.commandName != "紅包" && interaction.commandName != "結束紅包") return;
-                const { red_packet_Channel_ID, GuildID } = require("../config.json");
-                await interaction.deferReply();
+                const { red_packet_Channel_ID } = require("../config.json");
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 let redpacketdata = loadredpacketData();
                 let isredpacketIng = Boolean(redpacketdata.expiredts);
                 if (interaction.commandName == "結束紅包") {
@@ -90,12 +90,12 @@ module.exports = {
 0人 已領取 / ${packets}
 剩餘時間: <t:${expiredts}:R>
             `;
-                let redpacketmsg = await client.channels.cache
-                    .get(red_packet_Channel_ID)
-                    .send(qmsg)
-                    .then(msg => msg.react("🎉"));
+                const channel = await client.channels.cache.get(red_packet_Channel_ID);
+                const message = await channel.send(qmsg);
+                await message.react("🎉");
 
-                redpacketMessageID = redpacketmsg.id;
+
+                redpacketMessageID = message.id;
                 redpacketdata = {
                     userid: redpacketUserID,
                     expiredts: expiredts,
@@ -107,7 +107,7 @@ module.exports = {
                 };
 
                 saveredpacketData(redpacketdata);
-                await interaction.editReply(`已成功發起紅包: https://discord.com/channels/${GuildID}/${red_packet_Channel_ID}/${redpacketMessageID}`);
+                await interaction.editReply(`已成功發起紅包: ${message.url}`);
             });
         } catch (error) {
             require("../module_senderr").senderr({ client: client, msg: `處理紅包事件時出錯：${error.stack}`, clientready: true });
@@ -121,9 +121,9 @@ module.exports = {
                 let redpacketdata = loadredpacketData(); // 讀取紅包數據
                 let isredpacketIng = Boolean(redpacketdata.expiredts); // 是否正在進行紅包
                 if (!isredpacketIng) return; // 如果不在進行紅包，則返回
-                let message = reaction.message;
-                let channel = message.channel;
-                let redpacketgotmember = redpacketdata.gotmember;
+                const message = reaction.message;
+                const channel = message.channel;
+                const redpacketgotmember = redpacketdata.gotmember;
                 if (channel.id != red_packet_Channel_ID) return; // 如果消息不在紅包頻道，則返回
                 if (user.bot) return; // 如果用戶是機器人，則返回
                 if (reaction.emoji.name != "🎉") return; // 如果反應不是🎉，則返回

@@ -52,36 +52,59 @@ module.exports = {
         )
         .addChannelOption(option =>
             option.setName('channel')
-                .setDescription('選擇要刪除訊息的頻道(選填)')
+                .setDescription('選擇要刪除訊息的頻道')
                 .setRequired(false),
         )
         .addStringOption(option =>
             option.setName('contentincluded')
-                .setDescription('要刪除的訊息是否包含特定內容(選填)')
+                .setDescription('要刪除的訊息是否包含特定內容')
                 .setRequired(false),
         )
         .addUserOption(option =>
             option.setName('user')
-                .setDescription('要刪除的訊息是否包含特定使用者(選填)')
+                .setDescription('要刪除的訊息是否包含特定使用者')
+                .setRequired(false),
+        )
+        .addIntegerOption(option =>
+            option.setName('until')
+                .setDescription('刪除直到指定訊息的id(包含該訊息)')
                 .setRequired(false),
         ),
     async execute(interaction) {
-        await interaction.deferReply();
         const { loadData } = require("../../module_database.js");
+        await interaction.deferReply();
         let userid = interaction.user.id;
         let data = loadData(userid);
+
         if (!data.admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         const msgnum = interaction.options.getInteger('number');
         const channel = interaction.options.getChannel('channel') ?? interaction.channel;
         const contentincluded = interaction.options.getString('contentincluded');
+        const until = interaction.options.getInteger('until').toString();
         const user = interaction.options.getUser('user');
         const messages = await getMessages(channel, msgnum + 1);
-        if (messages === null) {
-            return await interaction.editReply({ content: '訊息數量不得超過500，請重新輸入' });
+        if (messages === null) return await interaction.editReply({ content: '訊息數量不得超過500，請重新輸入' });
+
+        let untilmsg;
+        if (until) {
+            try {
+                untilmsg = await channel.messages.fetch(until);
+                if (!untilmsg) return await interaction.editReply({ content: '找不到指定訊息，請重新輸入' });
+            } catch (error) {
+                return await interaction.editReply({ content: '指定的訊息ID無效，請重新輸入' });
+            };
         };
+
+        let progressMessage = null; // 追蹤進度訊息
+        const reply = await interaction.editReply('開始刪除訊息...'); // 使用 fetchReply 獲取回覆
+        progressMessage = reply;
 
         // 根據條件過濾訊息
         let filteredMessages = messages;
+
+        // 排除機器人的回應訊息
+        filteredMessages = filteredMessages.filter(msg => msg.id !== reply.id);
+
         if (contentincluded) {
             filteredMessages = filteredMessages.filter(msg => msg.content.includes(contentincluded));
         };
@@ -90,8 +113,12 @@ module.exports = {
             filteredMessages = filteredMessages.filter(msg => msg.author.id === user.id);
         };
 
-        // 移除第一條訊息（機器人的訊息）
-        filteredMessages = filteredMessages.slice(1);
+        if (until && untilmsg) {
+            const untilIndex = filteredMessages.findIndex(msg => msg.id === until);
+            if (untilIndex !== -1) {
+                filteredMessages = filteredMessages.slice(0, untilIndex + 1);
+            };
+        };
 
         if (filteredMessages.length === 0) {
             return await interaction.editReply({ content: '找不到符合條件的訊息' });
@@ -116,9 +143,6 @@ module.exports = {
         const empty = '○';
         const full = '●';
 
-        let progressMessage = null; // 追蹤進度訊息
-        const reply = await interaction.editReply('開始刪除訊息...'); // 使用 fetchReply 獲取回覆
-        progressMessage = reply;
 
         for (let i = 0; i < filteredMessages.length; i++) {
             try {

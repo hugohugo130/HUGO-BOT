@@ -1,5 +1,4 @@
 const { BotToken, slashcmd, botfunction, giveaway_eg } = require('./config.json');
-let { default_value } = require('./config.json');
 const { loadbotfunction } = require("./module_loadbotfunction.js")
 const { rlcmd } = require("./module_readlinecmd.js")
 const { getclient } = require("./module_createclient.js");
@@ -7,8 +6,8 @@ const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
 const { time } = require("./module_time.js");
 const { Events } = require("discord.js");
+const { updateDatabaseDefaults } = require("./module_database.js");
 const fs = require("fs");
-
 
 const database_files = [
     "data_red_packet.json",
@@ -17,52 +16,14 @@ const database_files = [
     "giveaway.json",
 ]
 
+let { default_value } = require('./config.json');
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
-
 for (const file of database_files) {
     if (!fs.existsSync(file)) {
         fs.writeFileSync(file, JSON.stringify(default_value[file]));
     };
 };
-
-
-// 更新資料庫檔案的預設值
-function updateDatabaseDefaults() {
-    for (const file of ["db.json", "giveaway.json"]) {
-        try {
-            let data = JSON.parse(fs.readFileSync(file));
-            let defaultData = default_value[file];
-            let changed = false;
-
-            // 遞迴檢查和更新物件的所有層級
-            function updateObject(current, defaults) {
-                for (const [key, value] of Object.entries(defaults)) {
-                    if (!(key in current)) {
-                        current[key] = value;
-                        changed = true;
-                    } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                        if (typeof current[key] !== 'object') {
-                            current[key] = {};
-                            changed = true;
-                        }
-                        updateObject(current[key], value);
-                    };
-                };
-            };
-
-            updateObject(data, defaultData);
-
-            if (changed) {
-                fs.writeFileSync(file, JSON.stringify(data, null, 2));
-            };
-        } catch (error) {
-            console.error(`更新${file}時出錯：${error.stack}`);
-        };
-    };
-};
-
 updateDatabaseDefaults();
-
 
 let client = getclient();
 client.setMaxListeners(Infinity); // 設定最大監聽器數量為無限

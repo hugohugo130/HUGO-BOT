@@ -16,9 +16,23 @@ module.exports = {
             schedule.scheduleJob("*/6 * * * * *", async function () {
                 await require("../schedule/giveaway_run-per6.js").run(client);
             });
+
             // 每7秒執行一次check_internet，特殊事件
             schedule.scheduleJob("*/7 * * * * *", async function () {
                 await require("../schedule/check_internet-per7.js").run(client);
+            });
+
+            // 每5秒執行一次database_operations，特殊事件
+            schedule.scheduleJob("*/5 * * * * *", async function () {
+                if (run_lock['database_operations']) return;
+                try {
+                    run_lock['database_operations'] = true;
+                    await require("../schedule/backup_database-2.js").run(client);
+                    await require("../schedule/delete_require_cache-6.js").run(client);
+                    await require("../schedule/delete_bot_database-5.js").run(client);
+                } finally {
+                    run_lock['database_operations'] = false;
+                };
             });
 
             const skip_list = [
@@ -61,6 +75,7 @@ module.exports = {
 
                         run_lock[schedulename] = true;
 
+                        delete require.cache[require.resolve(schedulename)];
                         const schedule = require(schedulename);
 
                         if (schedule.run) {
@@ -73,11 +88,11 @@ module.exports = {
 
                         if (schedule.run3) {
                             await schedule.run3(client);
-                        };
-
-                        run_lock[schedulename] = false;
+                        };  
                     } catch (error) {
                         require("../module_senderr").senderr({ client: client, msg: `處理排程時出錯：${error.stack}`, clientready: true });
+                    } finally {
+                        run_lock[schedulename] = false;
                     };
                 };
             });

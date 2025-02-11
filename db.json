@@ -1,0 +1,15 @@
+{
+  "counting_num": 1420,
+  "counting_highest": 1420,
+  "guess_num": {},
+  "vote": {
+    "active": false,
+    "title": null,
+    "description": null,
+    "options": [],
+    "endtime": null,
+    "message_id": null,
+    "channel_id": null,
+    "participants": {}
+  }
+}

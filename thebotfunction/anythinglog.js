@@ -5,7 +5,7 @@ module.exports = {
         client.on(Events.MessageCreate, async (message) => {
             if (!message.guild) return;
             try {
-                const { backend_channel_ID, backup_database_channel_ID, counting_channel_ID } = require("../config.json");
+                const { backend_channel_ID, backup_database_channel_ID, counting_channel_ID, spam_free_channel_ID } = require("../config.json");
                 const backendchannel = client.channels.cache.get(backend_channel_ID);
                 if (!backendchannel) return;
                 let user = message.author;
@@ -13,6 +13,7 @@ module.exports = {
                 if (user.id === client.user.id && channel.id === backend_channel_ID) return;
                 if (channel.id === backup_database_channel_ID) return;
                 if (channel.id === counting_channel_ID) return;
+                if (channel.id === spam_free_channel_ID) return;
                 let content = message.content || "無內容";
                 let referenceurl = "無";
                 if (message.reference) {
@@ -23,7 +24,7 @@ module.exports = {
                 let time = Math.floor(message.createdTimestamp / 1000);
                 let embed = new EmbedBuilder()
                     .setColor("#00BBFF")
-                    .setTitle("訊息記錄(新增)")
+                    .setTitle("訊息記錄(發送)")
                     .addFields(
                         { name: "發送者", value: user.toString(), inline: true },
                         { name: "訊息ID", value: message.id, inline: true },
