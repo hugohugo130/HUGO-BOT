@@ -32,11 +32,11 @@ function saveUserData(userid, userData) {
         const rawData = fs.readFileSync(databasefilename);
         data = JSON.parse(rawData);
     };
-    
+
     if (!data[userid]) {
         data[userid] = emptyeg;
     };
-    
+
     data[userid] = { ...data[userid], ...userData };
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 2));
 };
@@ -149,20 +149,18 @@ module.exports = {
         return userData.hacoin;
     },
     sethacoin_forsign(userId, amount, add = false) {
-        return queueOperation(() => {
-            let userData = loadData(userId);
-            let date = new Date();
-            let year = date.getFullYear();
-            let month = date.getMonth() + 1;
-            let day = date.getDate();
-            let curdate = `${year} ${month} ${day}`;
-            if (add) {
-                userData.hacoin += amount;
-            } else {
-                userData.hacoin = amount;
-            };
-            userData.latestdate = curdate;
-            saveUserData(userId, userData);
-        });
+        let userData = loadData(userId);
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let curdate = `${year} ${month} ${day}`;
+        if (add) {
+            userData.hacoin += amount;
+        } else {
+            userData.hacoin = amount;
+        };
+        userData.latestdate = curdate;
+        saveUserData(userId, userData);
     },
 };

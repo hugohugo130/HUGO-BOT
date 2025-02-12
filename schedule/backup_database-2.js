@@ -1,13 +1,14 @@
+const { MessageFlags } = require("discord.js");
+
 module.exports = {
     run: async function (client) {
-        delete require.cache[require.resolve("../module_senderr.js")];
         try {
             const { backup_database_channel_ID, databasefilename } = require("../config.json");
-            const channel = await client.channels.fetch(backup_database_channel_ID);
+            const channel = client.channels.cache.get(backup_database_channel_ID);
             if (!channel) return;
 
             try {
-                await channel.send({ content: `[<t:${Math.floor(Date.now() / 1000)}:f>] 資料庫備份`, files: [databasefilename], flags: [4096] });
+                await channel.send({ content: `[<t:${Math.floor(Date.now() / 1000)}:f>] 資料庫備份`, files: [databasefilename], flags: [MessageFlags.SuppressNotifications] });
             } catch (error) {
                 await channel.send({ content: `資料庫備份失敗: ${error.message}` });
             };

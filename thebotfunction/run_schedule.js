@@ -22,19 +22,6 @@ module.exports = {
                 await require("../schedule/check_internet-per7.js").run(client);
             });
 
-            // 每5秒執行一次database_operations，特殊事件
-            schedule.scheduleJob("*/5 * * * * *", async function () {
-                if (run_lock['database_operations']) return;
-                try {
-                    run_lock['database_operations'] = true;
-                    await require("../schedule/backup_database-2.js").run(client);
-                    await require("../schedule/delete_require_cache-6.js").run(client);
-                    await require("../schedule/delete_bot_database-5.js").run(client);
-                } finally {
-                    run_lock['database_operations'] = false;
-                };
-            });
-
             const skip_list = [
                 "../schedule/giveaway_run-per6.js",
                 "../schedule/red_packet_reaction_operation_per5.js",
@@ -68,7 +55,6 @@ module.exports = {
                 // 順序執行一般事件
                 for (const schedulename of schedules) {
                     try {
-
                         if (run_lock[schedulename]) {
                             continue;
                         };
