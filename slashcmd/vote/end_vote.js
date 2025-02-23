@@ -5,7 +5,7 @@ module.exports = {
         .setName("結束投票")
         .setDescription("結束投票 end vote"),
     async execute(interaction) {
-        const { load_db, save_db, loadData } = require("../../../module_database.js");
+        const { load_db, save_db, loadData } = require("../../module_database.js");
         await interaction.deferReply();
         const db = load_db();
         if (!db.vote.active) return interaction.editReply({ content: "目前沒有投票進行中" });

@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require("discord.js");
+const { Events, EmbedBuilder, MessageFlagsBitField } = require("discord.js");
 
 module.exports = {
     setup(client) {
@@ -22,7 +22,7 @@ module.exports = {
                     referenceurl = reference_message.url || "無";
                 };
                 let time = Math.floor(message.createdTimestamp / 1000);
-                let embed = new EmbedBuilder()
+                const embed = new EmbedBuilder()
                     .setColor("#00BBFF")
                     .setTitle("訊息記錄(發送)")
                     .addFields(
@@ -33,13 +33,38 @@ module.exports = {
                         { name: "附件數", value: message.attachments.size.toString(), inline: true },
                         { name: "引用訊息", value: referenceurl, inline: true },
                         { name: "嵌入數", value: message.embeds.length.toString(), inline: true },
-                        { name: "訊息內容", value: content.length > 1024 ? content.substring(0, 1021) + "..." : content, inline: false }
+                        { name: "訊息內容", value: content.length > 1024 ? content.substring(0, 1021) + "..." : content, inline: false },
+                        { name: "跳轉至訊息", value: message.url },
                     )
                     .setTimestamp();
-                backendchannel.send({ embeds: [embed], flags: [4096] });
+
+                let embeds = [embed];
+
+                if (message.attachments.size > 0) {
+                    const embed = new EmbedBuilder()
+                        .setColor("#BBBB00")
+                        .setTitle("訊息附件:")
+                        .setDescription(message.attachments.map(attachment => attachment.url).join("\n"));
+
+                    embeds.push(embed);
+                };
+
+                if (message.embeds.length > 0) {
+                    const embed = new EmbedBuilder()
+                        .setColor("#00FF00")
+                        .setTitle("訊息嵌入:");
+
+                    embeds.push(embed);
+                    embeds.push(...message.embeds.map(embed => {
+                        const newEmbed = EmbedBuilder.from(embed);
+                        return newEmbed.setColor("#00DD00");
+                    }));
+                };
+
+                backendchannel.send({ embeds: embeds, flags: [MessageFlagsBitField.Flags.SuppressNotifications] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送訊息記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.MessageDelete, async (message) => {
@@ -67,14 +92,15 @@ module.exports = {
                         { name: "訊息ID", value: message.id, inline: true },
                         { name: "訊息頻道", value: channel.toString(), inline: true },
                         { name: "訊息發送時間", value: `<t:${time}:f> (<t:${time}:R>)`, inline: true },
-                        { name: "訊息內容", value: content.substring(0, 1024), inline: false }
+                        { name: "訊息內容", value: content.substring(0, 1024), inline: false },
+                        { name: "跳轉至訊息", value: message.url },
                     )
                     .setTimestamp();
 
-                await backendchannel.send({ embeds: [embed], flags: [4096] });
+                await backendchannel.send({ embeds: [embed], flags: [MessageFlagsBitField.Flags.SuppressNotifications] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送訊息刪除記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
@@ -97,13 +123,14 @@ module.exports = {
                         { name: "訊息頻道", value: channel.toString(), inline: true },
                         { name: "訊息發送時間", value: `<t:${time}:f> (<t:${time}:R>)`, inline: true },
                         { name: "舊訊息內容", value: oldMessage.content || "無內容", inline: false },
-                        { name: "新訊息內容", value: content || "無內容", inline: false }
+                        { name: "新訊息內容", value: content || "無內容", inline: false },
+                        { name: "跳轉至訊息", value: newMessage.url || oldMessage.url || "無" },
                     )
                     .setTimestamp();
-                backendchannel.send({ embeds: [embed], flags: [4096] });
+                backendchannel.send({ embeds: [embed], flags: [MessageFlagsBitField.Flags.SuppressNotifications] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送訊息編輯記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.ChannelCreate, async (channel) => {
@@ -126,7 +153,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送頻道新增記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.ChannelDelete, async (channel) => {
@@ -150,7 +177,7 @@ module.exports = {
                 await backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送頻道刪除記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.ChannelUpdate, async (oldChannel, newChannel) => {
@@ -178,7 +205,7 @@ module.exports = {
                     .setTimestamp();
                 await backendchannel.send({ embeds: [embed] });
             } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送頻道更新記錄時出錯：${error.stack}`, clientready: true });
+                requ; ire("../module_senderr").senderr({ client: client, msg: `發送頻道更新記錄時出錯：${error.stack}`, clientready: true });
             }
         });
 
@@ -200,7 +227,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員加入記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildMemberRemove, async (member) => {
@@ -221,7 +248,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員離開記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
@@ -250,7 +277,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員更新記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildBanAdd, async (ban) => {
@@ -271,7 +298,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員停權記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildBanRemove, async (ban) => {
@@ -292,7 +319,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員解除停權記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildEmojiUpdate, async (oldEmoji, newEmoji) => {
@@ -321,7 +348,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送表情符號更新記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildEmojiDelete, async (emoji) => {
@@ -341,7 +368,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送表情符號刪除記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildRoleCreate, async (role) => {
@@ -362,7 +389,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送身份組新增記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildRoleDelete, async (role) => {
@@ -383,7 +410,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送身份組刪除記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildRoleUpdate, async (oldRole, newRole) => {
@@ -412,7 +439,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送身份組更新記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildUpdate, async (oldGuild, newGuild) => {
@@ -441,7 +468,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送伺服器更新記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildIntegrationsUpdate, async (guild) => {
@@ -461,7 +488,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送整合更新記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildMembersChunk, async (members, guild) => {
@@ -481,7 +508,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送成員分塊記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
 
         client.on(Events.GuildAuditLogEntryCreate, async (entry) => {
@@ -502,7 +529,7 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送審查日誌新增記錄時出錯：${error.stack}`, clientready: true });
-            }
+            };
         });
     },
 };

@@ -12,6 +12,8 @@ module.exports = {
         .addIntegerOption(option =>
             option.setName("封")
                 .setDescription("發起多少封紅包")
+                .setMinValue(1)
+                .setMaxValue(63)
                 .setRequired(true),
         )
         .addStringOption(option =>

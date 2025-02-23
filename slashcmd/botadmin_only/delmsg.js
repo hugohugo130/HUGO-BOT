@@ -65,7 +65,7 @@ module.exports = {
                 .setDescription('要刪除的訊息是否包含特定使用者')
                 .setRequired(false),
         )
-        .addIntegerOption(option =>
+        .addStringOption(option =>
             option.setName('until')
                 .setDescription('刪除直到指定訊息的id(包含該訊息)')
                 .setRequired(false),
@@ -80,10 +80,9 @@ module.exports = {
         const msgnum = interaction.options.getInteger('number');
         const channel = interaction.options.getChannel('channel') ?? interaction.channel;
         const contentincluded = interaction.options.getString('contentincluded');
-        const until = interaction.options.getInteger('until').toString();
+        const until = interaction.options.getString('until');
         const user = interaction.options.getUser('user');
         const messages = await getMessages(channel, msgnum + 1);
-        if (messages === null) return await interaction.editReply({ content: '訊息數量不得超過500，請重新輸入' });
 
         let untilmsg;
         if (until) {
@@ -96,7 +95,7 @@ module.exports = {
         };
 
         let progressMessage = null; // 追蹤進度訊息
-        const reply = await interaction.editReply('開始刪除訊息...'); // 使用 fetchReply 獲取回覆
+        const reply = await interaction.editReply('開始刪除訊息...');
         progressMessage = reply;
 
         // 根據條件過濾訊息
@@ -117,6 +116,8 @@ module.exports = {
             const untilIndex = filteredMessages.findIndex(msg => msg.id === until);
             if (untilIndex !== -1) {
                 filteredMessages = filteredMessages.slice(0, untilIndex + 1);
+            } else {
+                return await interaction.editReply({ content: '我找不到指定訊息欸...' });
             };
         };
 
@@ -171,6 +172,9 @@ module.exports = {
             replyContent += `\n來自使用者: ${user.tag}`;
         };
         replyContent += `\n進度：100%\n${full.repeat(20)}`;
+        if (until) {
+            replyContent += `\n刪除直到訊息ID: ${until}`;
+        };
 
         try {
             await progressMessage.edit(replyContent);

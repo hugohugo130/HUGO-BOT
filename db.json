@@ -1,15 +1,40 @@
 {
-  "counting_num": 1421,
-  "counting_highest": 1421,
+  "counting_num": 1427,
+  "counting_highest": 1427,
   "guess_num": {},
   "vote": {
-    "active": false,
-    "title": null,
-    "description": null,
-    "options": [],
-    "endtime": null,
-    "message_id": null,
-    "channel_id": null,
-    "participants": {}
+    "active": true,
+    "host": "898836485397180426",
+    "title": "just for test :)",
+    "description": "無描述",
+    "options": [
+      "huh 1",
+      "okeee 2",
+      "hmm e 3"
+    ],
+    "endtime": 1739791887,
+    "message_id": "1340994026408640606",
+    "channel_id": "1218367644328132617",
+    "participants": {
+      "0": {
+        "option": "huh 1",
+        "count": 1,
+        "user_ids": [
+          "898836485397180426"
+        ]
+      },
+      "1": {
+        "option": "okeee 2",
+        "count": 0,
+        "user_ids": []
+      },
+      "2": {
+        "option": "hmm e 3",
+        "count": 1,
+        "user_ids": [
+          "1205472385663242241"
+        ]
+      }
+    }
   }
 }

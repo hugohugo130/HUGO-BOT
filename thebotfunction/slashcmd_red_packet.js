@@ -7,7 +7,7 @@ function loadredpacketData() {
         const rawData = fs.readFileSync(redpacketfilename);
         return JSON.parse(rawData);
     } else {
-        return {};
+        return [];
     };
 };
 
@@ -18,6 +18,8 @@ function saveredpacketData(data) {
 };
 
 module.exports = {
+    loadredpacketData,
+    saveredpacketData,
     setup(client) {
         try {
             let redpacketMessageID = 0;
@@ -32,18 +34,19 @@ module.exports = {
                 const { red_packet_Channel_ID } = require("../config.json");
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 let redpacketdata = loadredpacketData();
-                let isredpacketIng = Boolean(redpacketdata.expiredts);
                 if (interaction.commandName == "結束紅包") {
                     if (!loadData()[interaction.user.id].admin) return await interaction.editReply("你不是機器人管理員! (機器人每1分鐘刷新一次)");
-                    if (!loadredpacketData().expiredts) return await interaction.editReply("沒有紅包!");
-                    let redpacketUserID = redpacketdata.userid;
-                    let redpacketremain = redpacketdata.remainhacoin;
-                    let redpacketMessageID = redpacketdata.messageID;
+                    const packet = loadredpacketData().find(packet => packet.messageID == interaction.options.getString("訊息id"));
+                    if (!packet) return await interaction.editReply("沒有紅包!");
+                    let redpacketUserID = packet.userid;
+                    let redpacketremain = packet.remainhacoin;
+                    let redpacketMessageID = packet.messageID;
                     sethacoin(redpacketUserID, redpacketremain, true);
                     let channel = await client.channels.fetch(red_packet_Channel_ID);
                     let message = await channel.messages.fetch(redpacketMessageID);
                     await message.edit("紅包已被管理員結束!");
-                    saveredpacketData({});
+                    redpacketdata = redpacketdata.filter(packet => packet.messageID !== redpacketMessageID);
+                    saveredpacketData(redpacketdata);
                     return await interaction.editReply("已結束紅包!");
                 };
                 let amount = interaction.options.getNumber("數量");
@@ -61,14 +64,16 @@ module.exports = {
                     let newredpacketexpire = redpacketexpire.replace(new RegExp(key, 'g'), "");
                     if (newredpacketexpire != redpacketexpire) {
                         redpacketexpire = parseInt(newredpacketexpire) * multiples[key];
-                        return false
+                        return false;
                     };
                     return true;
                 });
+                if (redpacketexpire < 60) return await interaction.editReply("紅包過期時間不能少於1分鐘!");
+                if (redpacketexpire > 10 * 12 * 30 * 24 * 60 * 60) return await interaction.editReply("你過期時間超過10年是怎樣啦...");
+                if (redpacketexpire > 6 * 30 * 24 * 60 * 60) return await interaction.editReply("紅包過期時間不能超過6個月!");
                 let expiredts = Math.floor(Date.now() / 1000) + redpacketexpire;
                 let user = interaction.user;
                 let userid = user.id;
-                if (isredpacketIng) return await interaction.editReply(`目前已經有紅包了!快搶!`);
                 if (amount <= 0) return await interaction.editReply(`紅包要有多少?...${amount}哈狗幣?蛤?`);
                 if (packets <= 0) return await interaction.editReply(`紅包要有多少封?...${packets}封?蛤?`);
                 let data = loadData(userid);
@@ -91,12 +96,12 @@ module.exports = {
 剩餘時間: <t:${expiredts}:R>
             `;
                 const channel = await client.channels.cache.get(red_packet_Channel_ID);
-                const message = await channel.send(qmsg);
+                const message = await channel.send({ content: qmsg, allowedMentions: { repliedUser: false } });
                 await message.react("🎉");
 
 
                 redpacketMessageID = message.id;
-                redpacketdata = {
+                redpacketdata.push({
                     userid: redpacketUserID,
                     expiredts: expiredts,
                     hacoin: redpacketAmount,
@@ -104,7 +109,7 @@ module.exports = {
                     packets: redpacketsAmount,
                     remainhacoin: redpacketremain,
                     messageID: redpacketMessageID
-                };
+                });
 
                 saveredpacketData(redpacketdata);
                 await interaction.editReply(`已成功發起紅包: ${message.url}`);
@@ -119,26 +124,28 @@ module.exports = {
                 const { randomDecimal } = require("../module_getrandomhacoin.js");
                 const { red_packet_Channel_ID, red_packet_min } = require("../config.json");
                 let redpacketdata = loadredpacketData(); // 讀取紅包數據
-                let isredpacketIng = Boolean(redpacketdata.expiredts); // 是否正在進行紅包
+                let isredpacketIng = redpacketdata.some(packet => packet.expiredts); // 是否正在進行紅包
                 if (!isredpacketIng) return; // 如果不在進行紅包，則返回
+                const packet = redpacketdata.find(packet => packet.expiredts);
                 const message = reaction.message;
                 const channel = message.channel;
-                const redpacketgotmember = redpacketdata.gotmember;
+                const redpacketgotmember = packet.gotmember;
                 if (channel.id != red_packet_Channel_ID) return; // 如果消息不在紅包頻道，則返回
                 if (user.bot) return; // 如果用戶是機器人，則返回
                 if (reaction.emoji.name != "🎉") return; // 如果反應不是🎉，則返回
                 if (redpacketgotmember.includes(user.id)) return; // 如果用戶已經領取過紅包，則返回
 
                 // 確保剩餘的哈狗幣數量足夠分配
-                let redpacketremain = redpacketdata.remainhacoin; // 剩餘的哈狗幣數量
-                let redpacketAmount = redpacketdata.hacoin; // 紅包總數量
-                let redpacketsAmount = redpacketdata.packets; // 紅包封數量
-                let redpacketUserID = redpacketdata.userid; // 發起人ID
-                let expiredts = redpacketdata.expiredts; // 紅包結束timestamp
+                let redpacketremain = packet.remainhacoin; // 剩餘的哈狗幣數量
+                let redpacketAmount = packet.hacoin; // 紅包總數量
+                let redpacketsAmount = packet.packets; // 紅包封數量
+                let redpacketUserID = packet.userid; // 發起人ID
+                let expiredts = packet.expiredts; // 紅包結束timestamp
                 let maxpackethacoin = redpacketremain / 2; // 每個紅包的最大哈狗幣數量
                 if (Math.floor(Date.now() / 1000) >= expiredts) { // 如果紅包已經結束
                     sethacoin(redpacketUserID, redpacketremain, true); // 將剩餘的哈狗幣歸還給發起人
-                    saveredpacketData({}); // 清空紅包數據
+                    redpacketdata = redpacketdata.filter(packet => packet.expiredts !== expiredts);
+                    saveredpacketData(redpacketdata); // 清空紅包數據
                     message.edit(`
 ## 紅包結束啦!
 發起人: <@${redpacketUserID}>
@@ -154,11 +161,17 @@ module.exports = {
 
                 redpacketremain -= gothacoin; // 減去已分配的哈狗幣
                 redpacketgotmember.push(user.id); // 將用戶ID加入已領取列表
-                saveredpacketData({ // 保存紅包數據
-                    ...redpacketdata,
-                    gotmember: redpacketgotmember,
-                    remainhacoin: redpacketremain,
+                redpacketdata = redpacketdata.map(packet => {
+                    if (packet.expiredts === expiredts) {
+                        return {
+                            ...packet,
+                            gotmember: redpacketgotmember,
+                            remainhacoin: redpacketremain,
+                        };
+                    }
+                    return packet;
                 });
+                saveredpacketData(redpacketdata); // 保存紅包數據
                 sethacoin(user.id, gothacoin, true); // 給用戶分配哈狗幣
                 channel.send(`${user.globalName || user.username} 獲得了 ${gothacoin} 哈狗幣!`); // 發送消息
                 let qmsg = `
@@ -172,7 +185,8 @@ ${redpacketgotmember.length} 人已領取 / ${redpacketsAmount}
                 message.edit(qmsg); // 更新消息
                 if (redpacketgotmember.length == redpacketsAmount && isredpacketIng) { // 如果紅包被領完
                     sethacoin(redpacketUserID, redpacketremain, true); // 將剩餘的哈狗幣歸還給發起人
-                    saveredpacketData({}); // 清空紅包數據
+                    redpacketdata = redpacketdata.filter(packet => packet.expiredts !== expiredts);
+                    saveredpacketData(redpacketdata); // 清空紅包數據
                     let redpacketgotmembers = []
                     for (let i = 0; i < redpacketgotmember.length; i++) {
                         let member = await client.users.fetch(redpacketgotmember[i]);
