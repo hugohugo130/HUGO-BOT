@@ -41,8 +41,8 @@ module.exports = {
 嗨${user.toString()}!
 你在 <t:${jointimestamp}:D> <t:${jointimestamp}:T> 加入了 ${data.guild.name}
 歡迎歡迎!!
-請閱讀完規則後，領取解鎖身份組後即可開始聊天!
-建議開始聊天前，先[領取身份組](<https://discord.com/channels/${GuildID}/${get_role_channel_ID}>)哦!
+請記得去閱讀規則喲!感謝配合!
+建議在開始聊天之前，先[領取身份組](<https://discord.com/channels/${GuildID}/${get_role_channel_ID}>)!
 `)
                         .setImage(useravator);
                     await channel.send({ embeds: [welcome_embed] });
@@ -57,8 +57,8 @@ module.exports = {
                     .setDescription(`
 嗨${user.toString()}!
 歡迎來到哈狗伺服器!
-加入伺服器後請[閱讀規則](<https://discord.com/channels/${GuildID}/${rule_channel_ID}>)，同意請點表情符號獲得解鎖頻道身份組!
-如果要領取其他身份組，請進入身份組[頻道](<https://discord.com/channels/${GuildID}/${get_role_channel_ID}>)獲取身份組!
+加入伺服器後請[閱讀規則](<https://discord.com/channels/${GuildID}/${rule_channel_ID}>)
+如果要領取其他身份組，請進入[獲取身份組的頻道](<https://discord.com/channels/${GuildID}/${get_role_channel_ID}>)獲取身份組!
                 `);
                 try {
                     await user.send({ embeds: [dm_embed] });

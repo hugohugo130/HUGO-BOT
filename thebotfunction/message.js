@@ -74,7 +74,7 @@ async function message_command_handler({ client, message }) {
             "pin <訊息ID>": "釘選訊息",
             "unpin <訊息ID>": "取消釘選訊息",
             "vping": "顯示語音延遲",
-            "ip": "顯示伺服器IP"
+            "ip": "顯示Minecraft伺服器IP"
         };
 
         let mathConstants = {
@@ -248,7 +248,7 @@ async function message_command_handler({ client, message }) {
         };
 
         if (cmd === "ip") {
-            return message.reply({ content: `\`ouo.yanpl.com:25303\``, allowedMentions: { repliedUser: false } });
+            return message.reply({ content: `\`mc.yanpl.com:25105\``, allowedMentions: { repliedUser: false } });
         };
     } catch (error) {
         require("../module_senderr").senderr({ client: client, msg: `處理訊息指令時出錯：${error.stack}`, clientready: true });
@@ -262,8 +262,6 @@ let lock = {
 };
 
 module.exports = {
-
-
     setup(client) {
         // 計算訊息數量
         client.on(Events.MessageCreate, async (message) => {

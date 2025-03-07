@@ -205,7 +205,7 @@ module.exports = {
                     .setTimestamp();
                 await backendchannel.send({ embeds: [embed] });
             } catch (error) {
-                requ; ire("../module_senderr").senderr({ client: client, msg: `發送頻道更新記錄時出錯：${error.stack}`, clientready: true });
+                require("../module_senderr").senderr({ client: client, msg: `發送頻道更新記錄時出錯：${error.stack}`, clientready: true });
             }
         });
 
