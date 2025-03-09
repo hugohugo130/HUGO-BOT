@@ -12,9 +12,9 @@ module.exports = {
         .addIntegerOption(option =>
             option.setName("回答選項數")
                 .setDescription("投票回答選項數")
-                .setRequired(true)
                 .setMinValue(2)
-                .setMaxValue(10),
+                .setMaxValue(10)
+                .setRequired(true),
         )
         .addStringOption(option =>
             option.setName("描述")
@@ -25,7 +25,10 @@ module.exports = {
             option.setName("期間")
                 .setDescription("投票期間")
                 .addChoices(
+                    { name: "15分鐘", value: 15 * 60 },
+                    { name: "30分鐘", value: 30 * 60 },
                     { name: "1小時", value: 60 * 60 },
+                    { name: "2小時", value: 2 * 60 * 60 },
                     { name: "4小時", value: 4 * 60 * 60 },
                     { name: "8小時", value: 8 * 60 * 60 },
                     { name: "1天", value: 24 * 60 * 60 },
@@ -36,19 +39,25 @@ module.exports = {
                 .setRequired(false),
         )
         .addBooleanOption(option =>
+            option.setName("匿名投票")
+                .setDescription("投票者是否不顯示名稱")
+                .setRequired(false),
+        )
+        .addBooleanOption(option =>
             option.setName("強制")
                 .setDescription("是否強制投票(覆蓋已經存在的投票, 如有, 僅限機器人管理員可用)")
                 .setRequired(false),
         ),
     async execute(interaction) {
-        const { load_db, save_db, loadData } = require("../../../module_database.js");
-        const { default_value } = require("../../../config.json");
+        const { load_db, save_db, loadData } = require("../../module_database.js");
+        const { default_value } = require("../../config.json");
         let db = load_db();
 
         const title = interaction.options.getString('標題');
         const optionnum = interaction.options.getInteger('回答選項數');
         const description = interaction.options.getString('描述') ?? "無描述";
         const period = interaction.options.getInteger('期間') ?? 60 * 60;
+        const anonymous = interaction.options.getBoolean('匿名投票') ?? false;
         const force = interaction.options.getBoolean('強制') ?? false;
 
         if (force && !loadData(interaction.user.id).admin) return interaction.reply({ content: "你不是機器人管理員，不能啟用強制投票模式", ephemeral: true });
@@ -130,6 +139,7 @@ module.exports = {
             endtime: endtime,
             message_id: message.id,
             channel_id: message.channel.id,
+            anonymous: anonymous,
             participants: {
                 ...optionValues.map(option => ({
                     option: option,

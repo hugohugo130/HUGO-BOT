@@ -20,10 +20,19 @@ let { default_value } = require('./config.json');
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
 for (const file of database_files) {
     if (!fs.existsSync(file)) {
-        fs.writeFileSync(file, JSON.stringify(default_value[file]));
+        fs.writeFileSync(file, JSON.stringify(default_value[file], null, 4));
     };
 };
 updateDatabaseDefaults();
+
+// 刪除temp資料夾和queue.json檔案
+if (fs.existsSync("temp")) {
+    fs.rmSync("temp", { recursive: true, force: true });
+};
+
+if (fs.existsSync("queue.json")) {
+    fs.unlinkSync("queue.json");
+};
 
 let client = getclient();
 client.setMaxListeners(Infinity); // 設定最大監聽器數量為無限

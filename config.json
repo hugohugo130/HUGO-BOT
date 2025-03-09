@@ -108,6 +108,7 @@
         "endtime": null,
         "message_id": null,
         "channel_id": null,
+        "anonymous": false,
         "participants": {}
       }
     },

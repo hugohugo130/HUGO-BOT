@@ -38,14 +38,14 @@ function saveUserData(userid, userData) {
     };
 
     data[userid] = { ...data[userid], ...userData };
-    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 2));
+    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
 };
 
 function deleteUserData(userid) {
     const { databasefilename } = require("./config.json");
     let data = loadData(null, 1); // 取得所有資料
     delete data[userid]; // 刪除資料
-    data = JSON.stringify(data, null, 2); // 轉換成 JSON 格式
+    data = JSON.stringify(data, null, 4); // 轉換成 JSON 格式
     fs.writeFileSync(databasefilename, data); // 寫入檔案
 };
 
@@ -61,7 +61,7 @@ function load_db() {
 
 function save_db(data) {
     const databasefilename = "./db.json";
-    data = JSON.stringify(data, null, 2); // 轉換成 JSON 格式
+    data = JSON.stringify(data, null, 4); // 轉換成 JSON 格式
     fs.writeFileSync(databasefilename, data); // 寫入檔案
 };
 

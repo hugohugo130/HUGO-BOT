@@ -336,31 +336,26 @@ module.exports = {
 
         });
 
-        // // 訊息回應
-        // client.on(Events.MessageCreate, async (message) => {
-        //     if (message.author.bot) return;
-        //     const { beta } = require("../config.json");
-        //     const channel = message.channel;
-        //     if (message.content === "哈狗") {
-        //         await channel.send("哈狗!我的創造者!");
-        //         const msg = await channel.send("他是大佬!");
-        //         msg.react(beta ? "👍" : "<:good:1238854252282122372>");
-        //         // 如果beta為true，則反應👍 (因為beta機器人伺服器沒有這個表情符號)，否則反應good表情符號
-        //         await message.reply("送你一個熱狗");
-        //         return channel.send("🌭");
-        //     };
+        // 訊息回應
+        client.on(Events.MessageCreate, async (message) => {
+            if (message.author.bot) return;
+            const channel = message.channel;
 
-        //     if (
-        //         message.content === "暗夜" ||
-        //         message.content === "風暴" ||
-        //         message.content === "風暴." ||
-        //         message.content === "袋子" ||
-        //         message.content.toLowerCase() === "darknight" ||
-        //         message.content.toLowerCase() === "daiz" ||
-        //         message.content.toLowerCase() === "daiz01"
-        //     ) {
-        //         return channel.send("大佬!!我非常肯定!他是!大佬!!!");
-        //     };
-        // });
+            if (message.content === "." && message.author.id === "1197913368519004191") {
+                return message.reply("點什麼點 =w=");
+            };
+
+            if (
+                message.content === "暗夜" ||
+                message.content === "風暴" ||
+                message.content === "風暴." ||
+                message.content === "袋子" ||
+                message.content.toLowerCase() === "darknight" ||
+                message.content.toLowerCase() === "daiz" ||
+                message.content.toLowerCase() === "daiz01"
+            ) {
+                return channel.send("大佬!!我非常肯定!他是!大佬!!!");
+            };
+        });
     },
 };

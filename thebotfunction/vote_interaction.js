@@ -38,11 +38,11 @@ module.exports = {
                 .addFields(
                     ...Object.entries(db.vote.participants).map(([i, participant]) => ({
                         name: db.vote.options[i],
-                        value: `投票結果: ${db.vote.options[i]} - ${participant.count}票`
+                        value: `票數: ${participant.count}票${db.vote.anonymous ? "" : `\n投票者: ${participant.user_ids.map(id => `<@${id}>`).join(", ") || "無"}`}`
                     }))
                 );
 
-            interaction.update({ embeds: [interaction.message.embeds[0], option_choose_result_embed], components: [interaction.message.components[0]] });
+            await interaction.update({ embeds: [interaction.message.embeds[0], option_choose_result_embed], components: [interaction.message.components[0]] });
             save_db(db);
         });
     },
