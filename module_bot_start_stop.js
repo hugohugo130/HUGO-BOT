@@ -4,10 +4,8 @@ module.exports = {
     start_send_msg: async function ({ client, amount, reload }) {
         const { time } = require("./module_time.js");
         const { BotAnnouncementChannelID, slashcmd } = require("./config.json");
-        const { saveQueue } = require("./module_music.js");
         const channel = client.channels.cache.get(BotAnnouncementChannelID);
         if (reload) return;
-        saveQueue(new Map());
         if (!channel) return console.log("[警告] 機器人無法發送訊息，請檢查config.json的BotAnnouncementChannelID是否正確");
         let text = "";
         // text = log;
@@ -48,20 +46,17 @@ module.exports = {
     stop_send_msg: async function (client) {
         const { time } = require("./module_time.js");
         const { BotAnnouncementChannelID } = require("./config.json");
-        const { saveQueue } = require("./module_music.js");
         try {
             const channel = client.channels.cache.get(BotAnnouncementChannelID);
             if (!channel) return;
             console.log(`[${time()}] 正在關機...`);
             const embed = new EmbedBuilder()
                 .setColor(0x00BBFF)
-                .setTitle("哈狗機器人已關機!")
-                .setDescription("### 我會再次為大家服務的!!")
+                .setTitle("哈狗機器人已關機!");
             await channel.send({ embeds: [embed] });
         } catch (error) {
             console.error(`[${time()}] 無法發送關機訊息:`, error);
         } finally {
-            saveQueue(new Map());
             await client.destroy();
             process.exit();
         };

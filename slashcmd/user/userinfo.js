@@ -3,10 +3,21 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('獲取用戶資訊')
-        .setDescription('獲取伺服器中用戶的資訊 userinfo')
+        .setDescription('獲取伺服器中用戶的資訊')
+        .setNameLocalizations({
+            "zh-TW": "獲取用戶資訊",
+            "zh-CN": "获取用户信息",
+            "en-US": "get_user_information",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "獲取伺服器中用戶的資訊",
+            "zh-CN": "获取服务器中用户的资讯",
+            "en-US": "Get user information of the server",
+        })
         .addUserOption(option =>
             option.setName("用戶")
                 .setDescription("要獲取資訊的用戶")
+                .setRequired(false),
         ),
     async execute(interaction) {
         const { loadData } = require("../../module_database.js");

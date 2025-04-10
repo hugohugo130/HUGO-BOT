@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, ActivityType } = require("discord.js");
 const fs = require("fs");
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
                 const Folder = `${process.cwd()}/${thebotfunctionFolderPath}`;
                 let FolderFiles = fs.readdirSync(Folder).filter(file => file.endsWith('.js')).filter(file => !load_skiplist.includes(file));
                 start_send_msg({ client: client, amount: FolderFiles.length, reload: false });
+                client.user.setActivity({ name: `啟動時間: ${new Date(client.readyTimestamp).toLocaleString('zh-TW', { hour12: false })}`, type: ActivityType.Custom });
             } catch (error) {
                 require("../module_senderr.js").senderr({ client: client, msg: `機器人啟動時出錯：${error.stack}`, clientready: true });
             };

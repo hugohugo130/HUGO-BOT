@@ -1,40 +1,33 @@
 {
-  "counting_num": 1535,
-  "counting_highest": 1535,
+  "counting_num": 1601,
+  "counting_highest": 1601,
   "guess_num": {},
   "vote": {
-    "active": true,
+    "active": false,
     "host": "898836485397180426",
-    "title": "just for test :)",
-    "description": "無描述",
+    "title": "增加匠魂模組(Tinkers Construct 3)",
+    "description": "https://www.mcmod.cn/class/3725.html",
     "options": [
-      "huh 1",
-      "okeee 2",
-      "hmm e 3"
+      "裝裝裝！",
+      "不裝"
     ],
-    "endtime": 1739791887,
-    "message_id": "1340994026408640606",
-    "channel_id": "1218367644328132617",
+    "endtime": 1741504902,
+    "message_id": "1348133621294301238",
+    "channel_id": "1291706115872129097",
+    "anonymous": false,
     "participants": {
       "0": {
-        "option": "huh 1",
-        "count": 1,
+        "option": "裝裝裝！",
+        "count": 2,
         "user_ids": [
-          "898836485397180426"
+          "898836485397180426",
+          "1197913368519004191"
         ]
       },
       "1": {
-        "option": "okeee 2",
+        "option": "不裝",
         "count": 0,
         "user_ids": []
-      },
-      "2": {
-        "option": "hmm e 3",
-        "count": 2,
-        "user_ids": [
-          "1205472385663242241",
-          "1124563905960751154"
-        ]
       }
     }
   }

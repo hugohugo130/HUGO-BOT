@@ -3,7 +3,17 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("我的等級")
-        .setDescription("查看你的等級 mylvl"),
+        .setDescription("查看你的等級 mylvl")
+        .setNameLocalizations({
+            "zh-TW": "我的等級",
+            "zh-CN": "我的等级",
+            "en-US": "my_level",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "查看你的等級 mylvl",
+            "zh-CN": "查看你的等级 mylvl",
+            "en-US": "Check your level mylvl",
+        }),
     async execute(interaction) {
         const { exp_need } = require("../../config.json");
         const { loadData } = require("../../module_database.js");

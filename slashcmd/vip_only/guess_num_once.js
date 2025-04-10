@@ -3,7 +3,17 @@ const { SlashCommandBuilder } = require("discord.js")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("猜數字一次")
-        .setDescription("只猜一次數字 guess num once")
+        .setDescription("只猜一次數字")
+        .setNameLocalizations({
+            "zh-TW": "猜數字一次",
+            "zh-CN": "猜数字一次",
+            "en-US": "guess_a_number_once",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "只猜一次數字",
+            "zh-CN": "只猜一次数字",
+            "en-US": "Guess a number once",
+        })
         .addIntegerOption(option =>
             option.setName("min")
                 .setDescription("隨機數的最小值")

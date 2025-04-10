@@ -3,7 +3,17 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('紅包')
-        .setDescription('發起紅包 red packet')
+        .setDescription('發起紅包')
+        .setNameLocalizations({
+            "zh-TW": "紅包",
+            "zh-CN": "红包",
+            "en-US": "red_packet",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "發起紅包 red packet",
+            "zh-CN": "发起红包 red packet",
+            "en-US": "Create a red packet",
+        })
         .addNumberOption(option =>
             option.setName("數量")
                 .setDescription("哈狗幣數量")

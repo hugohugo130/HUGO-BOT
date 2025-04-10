@@ -6,7 +6,7 @@
     "@discordjs/voice": "^0.18.0",
     "@google-cloud/translate": "^8.5.0",
     "axios": "^1.7.7",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.18.0",
     "ffmpeg-static": "^5.2.0",
     "fs": "^0.0.1-security",
     "ioredis": "^5.4.1",

@@ -4,51 +4,58 @@ const { rlcmd } = require("./module_readlinecmd.js")
 const { getclient } = require("./module_createclient.js");
 const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
-const { time } = require("./module_time.js");
 const { Events } = require("discord.js");
 const { updateDatabaseDefaults } = require("./module_database.js");
 const fs = require("fs");
 
-const database_files = [
-    "data_red_packet.json",
-    "database.json",
-    "db.json",
-    "giveaway.json",
-]
-
 let { default_value } = require('./config.json');
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
+const database_files = Object.keys(default_value);
+
 for (const file of database_files) {
     if (!fs.existsSync(file)) {
         fs.writeFileSync(file, JSON.stringify(default_value[file], null, 4));
+    } else {
+        let fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
+        let defaultData = default_value[file];
+        let modified = false;
+
+        for (const key in defaultData) {
+            if (!(key in fileData)) {
+                fileData[key] = defaultData[key];
+                modified = true;
+            };
+        };
+
+        if (!modified) continue;
+        fs.writeFileSync(file, JSON.stringify(fileData, null, 4));
     };
 };
 updateDatabaseDefaults();
 
 let client = getclient();
-client.setMaxListeners(Infinity); // 設定最大監聽器數量為無限
+client.setMaxListeners(Infinity);
 
-if (slashcmd) {
-    client.commands = loadslashcmd(true);
-} else {
-    console.log(`[${time()}] 斜線指令已禁用，建議啟用`);
-};
-
-if (botfunction) {
-    loadbotfunction(client);
-} else {
-    console.log(`[${time()}] 機器人功能已禁用，建議啟用`);
-};
+if (slashcmd) client.commands = loadslashcmd(true);
+if (botfunction) loadbotfunction(client);
 
 getrl().on("line", async (input) => {
     rlcmd(client, input);
 });
 
+const temp_folder = `${process.cwd()}/temp`;
+if (fs.existsSync(temp_folder)) {
+    const files = fs.readdirSync(temp_folder);
+    for (const file of files) {
+        if (file.startsWith('backup') && file.endsWith('.txt')) {
+            fs.unlinkSync(`${temp_folder}/${file}`);
+        };
+    };
+};
+
 client.on(Events.Error, (error) => {
     if (error.code != "UND_ERR_CONNECT_TIMEOUT") {
-        require("./module_senderr.js").senderr({ client: client, msg: `機器人發生了錯誤：${error.stack}`, clientready: true, channel: 2 });
-    } else { // 採用另外一種方式來處理連接超時的錯誤
-        console.log(`[${time()}] 網絡連接連接超時 :|`);
+        require(`${process.cwd()}/module_senderr.js`).senderr({ client: client, msg: `機器人發生了錯誤：${error.stack}`, clientready: true, channel: 2 });
     };
 });
 

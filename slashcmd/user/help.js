@@ -3,7 +3,17 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('幫助')
-        .setDescription('顯示所有可用的指令 help'),
+        .setDescription('顯示所有可用的指令')
+        .setNameLocalizations({
+            "zh-TW": "幫助",
+            "zh-CN": "帮助",
+            "en-US": "help",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "顯示所有可用的指令",
+            "zh-CN": "显示所有可用的指令",
+            "en-US": "Show all available commands",
+        }),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
 
@@ -16,5 +26,5 @@ module.exports = {
         });
 
         await interaction.editReply(reply);
-    }
+    },
 };

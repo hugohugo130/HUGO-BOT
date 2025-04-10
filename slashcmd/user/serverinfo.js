@@ -3,10 +3,21 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('伺服器資訊')
-        .setDescription('查看本伺服器的資訊 serverinfo')
+        .setDescription('查看本伺服器的資訊')
+        .setNameLocalizations({
+            "zh-TW": "伺服器資訊",
+            "zh-CN": "服务器信息",
+            "en-US": "serverinfo",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "查看本伺服器的資訊",
+            "zh-CN": "查看本服务器的資訊",
+            "en-US": "Check the information of this server",
+        })
         .addBooleanOption(option =>
             option.setName("快速模式")
-                .setDescription("快速模式可能不準確,預設啟用,這可以讓機器人回覆更快"),
+                .setDescription("快速模式可能不準確,預設啟用,這可以讓機器人回覆更快")
+                .setRequired(false),
         ),
     async execute(interaction) {
         await interaction.deferReply();

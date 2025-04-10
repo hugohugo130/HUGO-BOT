@@ -1,5 +1,35 @@
-const { Events, EmbedBuilder } = require("discord.js");
+const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { getVoiceConnection } = require('@discordjs/voice');
+
+async function unlock_waiting_handler(lock_name) {
+    await new Promise((resolve) => {
+        const startTime = Date.now();
+        const checkLock = () => {
+            if (!lock[lock_name]) {
+                resolve();
+            } else if (Date.now() - startTime >= 20000) {
+                console.warn(`等待${lock_name}解鎖超時，已進行操作(強制解鎖)`);
+                resolve();
+            } else {
+                setTimeout(checkLock, 100);
+            };
+        };
+        checkLock();
+    });
+};
+
+function generateRandomEmoji(amount) {
+    const emojis = [
+        ':eyes:', // 內建表情符號
+        '<:angry:1279090863879884901>', // 自訂表情符號
+        '<:bruh:1261592422094475284>' // 自訂表情符號
+    ];
+    const result = [];
+    for (let i = 0; i < amount; i++) {
+        result.push(emojis[Math.floor(Math.random() * emojis.length)]);
+    };
+    return result;
+};
 
 function message_count_handler({ client, message, user }) {
     try {
@@ -36,7 +66,7 @@ async function level_exp_handler({ client, message, user }) {
             data.exp -= exp_need;
             data.level++;
             if (channel) {
-                await channel.send(`${user} 已達到 ${data.level} 級!`);
+                await channel.send({ content: `${user} 已達到 ${data.level} 級!`, allowedMentions: { repliedUser: false } });
             };
         };
         saveUserData(userid, data);
@@ -255,104 +285,91 @@ async function message_command_handler({ client, message }) {
     };
 };
 
+function get_number_of_items(name, userid) {
+    const { load_rpg_data } = require("../module_database.js");
+    const { name: name_list } = require("../rpg.js");
+    const rpg_data = load_rpg_data(userid);
+    const items = rpg_data.inventory;
+
+    // 如果輸入的是中文名稱，找到對應的英文key
+    let item_key = name;
+    if (Object.values(name_list).includes(name)) {
+        item_key = Object.keys(name_list).find(key => name_list[key] === name);
+    };
+
+    if (!items[item_key]) return 0;
+    return items[item_key];
+};
+
 let lock = {
-    "message_count_handler": false,
-    "level_exp_handler": false,
-    "message_command_handler": false
+    message_count_handler: false,
+    level_exp_handler: false,
+    message_command_handler: false,
 };
 
 module.exports = {
     setup(client) {
         // 計算訊息數量
         client.on(Events.MessageCreate, async (message) => {
-            if (lock.message_count_handler) {
-                return await new Promise((resolve) => {
-                    const startTime = Date.now();
-                    const checkLock = () => {
-                        if (!lock.message_count_handler) {
-                            resolve();
-                        } else if (Date.now() - startTime >= 20000) {
-                            console.log("等待message_count_handler解鎖超時");
-                            resolve();
-                        } else {
-                            setTimeout(checkLock, 100);
-                        };
-                    };
-                    checkLock();
-                });
+            try {
+                if (lock.message_count_handler) {
+                    await unlock_waiting_handler("message_count_handler");
+                };
+                lock.message_count_handler = true;
+                message_count_handler({ client: client, message: message, user: message.author });
+            } finally {
+                lock.message_count_handler = false;
             };
-            lock.message_count_handler = true;
-            message_count_handler({ client: client, message: message, user: message.author });
-            lock.message_count_handler = false;
         });
 
 
 
         // 等級, 經驗值
         client.on(Events.MessageCreate, async (message) => {
-            if (lock.level_exp_handler) {
-                return await new Promise((resolve) => {
-                    const startTime = Date.now();
-                    const checkLock = () => {
-                        if (!lock.level_exp_handler) {
-                            resolve();
-                        } else if (Date.now() - startTime >= 20000) {
-                            console.log("等待level_exp_handler解鎖超時");
-                            resolve();
-                        } else {
-                            setTimeout(checkLock, 100);
-                        };
-                    };
-                    checkLock();
-                });
+            try {
+                if (lock.level_exp_handler) {
+                    await unlock_waiting_handler("level_exp_handler");
+                };
+                lock.level_exp_handler = true;
+                await level_exp_handler({ client: client, message: message, user: message.author });
+            } finally {
+                lock.level_exp_handler = false;
             };
-            lock.level_exp_handler = true;
-            await level_exp_handler({ client: client, message: message, user: message.author });
-            lock.level_exp_handler = false;
         });
 
 
         // 訊息指令
         client.on(Events.MessageCreate, async (message) => {
-            if (lock.message_command_handler) {
-                return await new Promise((resolve) => {
-                    const startTime = Date.now();
-                    const checkLock = () => {
-                        if (!lock.message_command_handler) {
-                            resolve();
-                        } else if (Date.now() - startTime >= 20000) {
-                            console.log("等待message_command_handler解鎖超時");
-                            resolve();
-                        } else {
-                            setTimeout(checkLock, 100);
-                        };
-                    };
-                    checkLock();
-                });
+            try {
+                if (lock.message_command_handler) {
+                    await unlock_waiting_handler("message_command_handler");
+                };
+                lock.message_command_handler = true;
+                await message_command_handler({ client: client, message: message });
+            } finally {
+                lock.message_command_handler = false;
             };
-            lock.message_command_handler = true;
-            await message_command_handler({ client: client, message: message });
-            lock.message_command_handler = false;
-
         });
 
         // 訊息回應
         client.on(Events.MessageCreate, async (message) => {
             if (message.author.bot) return;
             const channel = message.channel;
+            const content = message.content;
 
-            if (message.content === "." && message.author.id === "1197913368519004191") {
-                return message.reply("點什麼點 =w=");
+            if (content === "." && message.author.id === "1197913368519004191") {
+                const randomEmoji = generateRandomEmoji(Math.floor(Math.random() * 3) + 2); // 2~4個
+                return message.reply(`<@1197913368519004191> 點什麼點 ${randomEmoji.join(" ")}`);
             };
 
             if (
-                message.content === "暗夜" ||
-                message.content === "風暴" ||
-                message.content === "風暴." ||
-                message.content === "袋子" ||
-                message.content.toLowerCase() === "darknight" ||
-                message.content.toLowerCase() === "daiz" ||
-                message.content.toLowerCase() === "daiz01"
+                content === "暗夜" ||
+                content === "風暴" ||
+                content === "風暴." ||
+                content === "袋子" ||
+                content.toLowerCase() === "darknight" ||
+                content.toLowerCase() === "daiz" ||
+                content.toLowerCase() === "daiz01"
             ) {
                 return channel.send("大佬!!我非常肯定!他是!大佬!!!");
             };

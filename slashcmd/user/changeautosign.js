@@ -3,7 +3,17 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("切換自動簽到")
-        .setDescription("開啟或關閉自動簽到功能 change autosign"),
+        .setDescription("開啟或關閉自動簽到功能")
+        .setNameLocalizations({
+            "zh-TW": "切換自動簽到",
+            "zh-CN": "切换自动签到",
+            "en-US": "toggle_auto_sign-in",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "開啟或關閉自動簽到功能",
+            "zh-CN": "开启或关闭自动签到功能",
+            "en-US": "Toggle auto sign-in",
+        }),
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
         await interaction.deferReply();

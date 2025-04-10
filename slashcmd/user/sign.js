@@ -29,7 +29,17 @@ function check_can_sign(userid) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("簽到")
-        .setDescription("簽到並獲得哈狗幣 sign"),
+        .setDescription("簽到並獲得哈狗幣")
+        .setNameLocalizations({
+            "zh-TW": "簽到",
+            "zh-CN": "签到",
+            "en-US": "sign",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "簽到並獲得哈狗幣",
+            "zh-CN": "签到并获得哈狗币",
+            "en-US": "Sign in and get hacoin",
+        }),
     async execute(interaction) {
         const { minhacoin, maxhacoin, BotChannelID } = require("../../config.json");
         const { loadData, sethacoin_forsign, sethacoin, get_boosters } = require("../../module_database.js");

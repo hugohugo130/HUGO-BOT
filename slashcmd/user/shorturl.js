@@ -4,12 +4,22 @@ const axios = require('axios');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('縮短url')
-        .setDescription('縮短一個 URL shorten url')
+        .setDescription('縮短一個 URL')
+        .setNameLocalizations({
+            "zh-TW": "縮短url",
+            "zh-CN": "缩短url",
+            "en-US": "shorten_url",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "縮短一個 URL",
+            "zh-CN": "缩短一个 URL",
+            "en-US": "Shorten a URL",
+        })
         .addStringOption(option =>
             option.setName('url')
                 .setDescription('要縮短的 URL')
-                .setRequired(true)),
-
+                .setRequired(true)
+        ),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
 

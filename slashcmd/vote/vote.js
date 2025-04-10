@@ -3,7 +3,17 @@ const { SlashCommandBuilder, EmbedBuilder, TextInputBuilder, TextInputStyle, Act
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("投票")
-        .setDescription("建立投票 vote")
+        .setDescription("建立投票")
+        .setNameLocalizations({
+            "zh-TW": "投票",
+            "zh-CN": "投票",
+            "en-US": "vote",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "建立投票",
+            "zh-CN": "建立投票",
+            "en-US": "Create a vote",
+        })
         .addStringOption(option =>
             option.setName("標題")
                 .setDescription("投票標題")

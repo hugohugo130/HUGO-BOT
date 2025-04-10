@@ -3,10 +3,20 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('轉賬')
-        .setDescription('把自己的哈狗幣給其他人 transfer')
+        .setDescription('把自己的哈狗幣給其他人')
+        .setNameLocalizations({
+            "zh-TW": "轉賬",
+            "zh-CN": "转账",
+            "en-US": "transfer_hacoin",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "把自己的哈狗幣給其他人",
+            "zh-CN": "把自己的哈狗币给其他人",
+            "en-US": "Transfer hacoin to other users",
+        })
         .addUserOption(option =>
-            option.setName('用戶')
-                .setDescription('要給的人')
+            option.setName("用戶")
+                .setDescription("要給的人")
                 .setRequired(true),
         )
         .addNumberOption(option =>

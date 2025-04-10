@@ -1,1 +1,1 @@
-start cmd /K "git pull & npm i --upgrade & npm audit fix & node register_commands.js & node index.js"
+start cmd /K "git pull & npm i --upgrade & npm update & npm audit fix --force & node --trace-deprecation --trace-warnings register_commands.js & node --trace-deprecation --trace-warnings index.js"

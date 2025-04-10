@@ -5,14 +5,24 @@ win = [true, false, false, false];
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('賭注')
-        .setDescription('賭! 贏幾率為25%, 贏了獲得兩倍哈狗幣 bet')
+        .setDescription('賭! 贏幾率為25%, 贏了獲得兩倍哈狗幣')
         .addNumberOption(option =>
             option.setName("數量")
                 .setDescription("賭多少哈狗幣")
                 .setRequired(true)
                 .setMinValue(1)
                 .setMaxValue(500),
-        ),
+        )
+        .setNameLocalizations({
+            "zh-TW": "賭注",
+            "zh-CN": "赌注",
+            "en-US": "bet",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "賭! 贏幾率為25%, 贏了獲得兩倍哈狗幣",
+            "zh-CN": "赌! 赢几率为25%, 赢了获得两倍哈狗币",
+            "en-US": "Bet! The winning probability is 25%, and if you win, you will receive twice the amount of哈狗币",
+        }),
     async execute(interaction) {
         const { loadData, sethacoin } = require("../../module_database.js");
         await interaction.deferReply();

@@ -3,14 +3,24 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("哈狗幣")
-        .setDescription("看看你自己有多少哈狗幣 hacoin")
+        .setDescription("看看你自己有多少哈狗幣")
+        .setNameLocalizations({
+            "zh-TW": "哈狗幣",
+            "zh-CN": "哈狗币",
+            "en-US": "hacoin",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "看看你自己有多少哈狗幣 hacoin",
+            "zh-CN": "看看你自己有多少哈狗币 hacoin",
+            "en-US": "Check how many hacoin you have",
+        })
         .addUserOption(option =>
             option.setName("用戶")
                 .setDescription("要查看的用戶(非必填)")
                 .setRequired(false),
         ),
     async execute(interaction) {
-        const { loadData, saveUserData } = require("../../module_database.js");
+        const { loadData } = require("../../module_database.js");
         await interaction.deferReply();
         let member = interaction.member;
         let user = interaction.options.getUser("用戶") ?? member.user;

@@ -11,7 +11,7 @@ module.exports = {
                     GatewayIntentBits.DirectMessageReactions,
                     GatewayIntentBits.DirectMessageTyping,
                     GatewayIntentBits.DirectMessages,
-                    GatewayIntentBits.GuildEmojisAndStickers,
+                    GatewayIntentBits.GuildExpressions,
                     GatewayIntentBits.GuildIntegrations,
                     GatewayIntentBits.GuildInvites,
                     GatewayIntentBits.GuildMembers,
@@ -30,6 +30,9 @@ module.exports = {
                 rest: {
                     timeout: 15000, // 設定更長的超時時間（預設是 10 秒）
                     retries: 3     // 設定重試次數
+                },
+                allowedMentions: {
+                    repliedUser: false,
                 },
             });
             return client;

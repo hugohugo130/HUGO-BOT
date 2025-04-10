@@ -3,7 +3,17 @@ const { SlashCommandBuilder, ChannelType } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("匿名訊息")
-        .setDescription("匿名發送訊息 anonymous")
+        .setDescription("匿名發送訊息")
+        .setNameLocalizations({
+            "zh-TW": "匿名訊息",
+            "zh-CN": "匿名消息",
+            "en-US": "anonymous_message",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "匿名發送訊息",
+            "zh-CN": "匿名发送消息",
+            "en-US": "Send an anonymous message",
+        })
         .addStringOption(option =>
             option.setName("訊息內容")
                 .setDescription("要發送的訊息內容")

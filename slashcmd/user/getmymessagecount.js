@@ -3,7 +3,17 @@ const { loadData } = require('../../module_database');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('我的訊息數量')
-        .setDescription('查看你的訊息數量 get my message count'),
+        .setDescription('查看你的訊息數量')
+        .setNameLocalizations({
+            "zh-TW": "我的訊息數量",
+            "zh-CN": "我的消息数量",
+            "en-US": "my_message_count",
+        })
+        .setDescriptionLocalizations({
+            "zh-TW": "查看你的訊息數量",
+            "zh-CN": "查看你的消息数量",
+            "en-US": "View your message count",
+        }),
     async execute(interaction) {
         await interaction.deferReply();
         let userid = interaction.user.id;

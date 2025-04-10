@@ -77,7 +77,9 @@
     "898836485397180426",
     "896026226924331008",
     "1001016404289536051",
-    "600953168443998209"
+    "600953168443998209",
+    "1061310060455800852",
+    "1299274108155985920"
   ],
   "vip": [
     "898836485397180426",
@@ -95,6 +97,22 @@
     "1299997171210387547"
   ],
   "load_skiplist": [],
+  "rpg_emptyeg": {
+    "money": 1000,
+    "hungry": 20,
+    "lastRunTimestamp": 0,
+    "inventory": {},
+    "transactions": []
+  },
+  "shop_emptyeg": {
+    "status": false,
+    "items": {}
+  },
+  "shop_item_emptyeg": {
+    "name": "",
+    "amount": 0,
+    "price": 0
+  },
   "default_value": {
     "db.json": {
       "counting_num": 0,
@@ -113,6 +131,8 @@
       }
     },
     "data_red_packet.json": {},
-    "database.json": {}
+    "database.json": {},
+    "backup_database_send_queue.json": [],
+    "rpg_database.json": {}
   }
 }
