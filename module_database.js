@@ -44,8 +44,7 @@ function saveUserData(userid, userData, backup = true) {
 
     data[userid] = { ...data[userid], ...userData };
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
-    if (!backup) return;
-    if (old_data === data) return;
+    if (!backup || JSON.stringify(old_data) === JSON.stringify(data)) return;
 
     let backupdb_queue = [];
     if (fs.existsSync(backupdb_queue_file)) {
