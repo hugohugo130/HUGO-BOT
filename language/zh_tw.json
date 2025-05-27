@@ -1,0 +1,49 @@
+{
+    "bot": {
+        "name": "哈狗機器人",
+        "slogan": "哈狗機器人 ∙ 由哈狗製作"
+    },
+    "errors": {
+        "bot_error": "機器人發生了錯誤：{error}",
+        "lock_timeout": "等待{lock_name}解鎖超時，已進行操作(強制解鎖)",
+        "deprecated_command": "傳送包含hr!的指令名已棄用，現在只需要傳送指令名稱",
+        "deprecated_hint": "請使用不含hr!的指令名稱"
+    },
+    "rpg": {
+        "commands": {
+            "mine": {
+                "title": "挖礦",
+                "description": "獲得礦石，可以與其他玩家交易"
+            },
+            "hew": {
+                "title": "伐木",
+                "description": "獲得木頭，合成出的木材可以與其他物品製作成武器和防具"
+            },
+            "shop": {
+                "title": "商店",
+                "description": "對你的商店進行任何操作"
+            },
+            "ls": {
+                "title": "查看背包",
+                "description": "查看背包中的物品"
+            },
+            "buy": {
+                "title": "購買",
+                "description": "購買其他人上架的物品"
+            },
+            "sell": {
+                "title": "出售",
+                "description": "出售物品"
+            },
+            "cd": {
+                "title": "冷卻",
+                "description": "查看冷卻時間"
+            }
+        },
+        "messages": {
+            "mode_0": "也回復訊息",
+            "mode_1": "只回傳訊息參數",
+            "find_chinese_name": "如果輸入的是中文名稱，找到對應的英文key"
+        }
+    }
+} 

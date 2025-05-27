@@ -4,6 +4,7 @@ module.exports = {
     setup(client) {
         client.on(Events.MessageCreate, async (msg) => {
             const { load_db, save_db, end_guess_num_game } = require("../module_database.js");
+            const { sleep } = require("../module_sleep");
             const db = load_db();
             const reference = msg.reference;
             const user = msg.author;
@@ -32,8 +33,7 @@ module.exports = {
                 msg.react("✅");
                 if (min === max) {
                     await msg.reply(`哇!猜對了!`);
-                    const { sleep } = require("../module_sleep");
-                    await sleep(1000);
+                    sleep(1000);
                     await msg.channel.send(`吶!看吧`);
                 } else {
                     await msg.reply(`哇!猜對了!棒棒!`);

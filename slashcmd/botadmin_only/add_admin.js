@@ -14,6 +14,7 @@ module.exports = {
 
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
+        const { sleep } = require("../../module_sleep.js");
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const currentSeconds = new Date().getSeconds();
         const targetSeconds = 4;
@@ -21,8 +22,7 @@ module.exports = {
 
         if (diff <= 5) {
             await interaction.editReply("正在處理...");
-            const { sleep } = require("../../module_sleep.js");
-            await sleep(10000);
+            sleep(10000);
         };
 
         let config = JSON.parse(fs.readFileSync(path.join(__dirname, "../../config.json"), "utf8"));

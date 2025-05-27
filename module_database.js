@@ -1,5 +1,6 @@
 const fs = require("fs");
 const backupdb_queue_file = `${process.cwd()}/backup_database_send_queue.json`;
+const isEqual = require('lodash.isequal');
 
 function loadData(userid = null, mode = 0) {
     /*
@@ -43,8 +44,31 @@ function saveUserData(userid, userData, backup = true) {
     };
 
     data[userid] = { ...data[userid], ...userData };
-    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
-    if (!backup || JSON.stringify(old_data) === JSON.stringify(data)) return;
+
+    // 增加重試機制
+    let retries = 3;
+    let lastError = null;
+    
+    while (retries > 0) {
+        try {
+            fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
+            break;
+        } catch (error) {
+            lastError = error;
+            retries--;
+            if (retries > 0) {
+                // 使用 Atomics.wait 來實現同步延遲
+                const sharedArray = new Int32Array(new SharedArrayBuffer(4));
+                Atomics.wait(sharedArray, 0, 0, 1000); // 等待 1000 毫秒
+            };
+        };
+    };
+
+    if (retries === 0) {
+        throw lastError;
+    };
+
+    if (!backup || isEqual(old_data, data)) return;
 
     let backupdb_queue = [];
     if (fs.existsSync(backupdb_queue_file)) {

@@ -7,7 +7,6 @@ module.exports = {
     async execute(interaction) {
         const { BotAnnouncementChannelID } = require("../../config.json");
         const { loadData } = require("../../module_database.js");
-        const { saveQueue } = require("../../module_music.js");
         const { time } = require("../../module_time.js");
 
         await interaction.deferReply();
@@ -19,7 +18,6 @@ module.exports = {
         if (channel) {
             await channel.send({ content: `哈狗機器人已關機! (${user.toString()} 要求我關機)`, allowedMentions: { repliedUser: false } });
         };
-        saveQueue(new Map());
         await interaction.client.destroy();
         process.exit();
     },

@@ -465,5 +465,61 @@
         "lastRunTimestamp": 0,
         "inventory": {},
         "transactions": []
+    },
+    "1205547763459162173": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "874527892866990141": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "1046268942328537088": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "1360457299185107097": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "442323545176145920": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "1360882823770144828": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "754553206578741249": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
+    },
+    "1371498031823720588": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": 0,
+        "inventory": {},
+        "transactions": []
     }
 }

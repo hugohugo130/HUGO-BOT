@@ -18,17 +18,17 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
         await interaction.editReply("哈狗 熱狗 🌭");
-        await sleep(1000);
+        sleep(1000);
         await interaction.editReply("哈狗");
-        await sleep(1000);
+        sleep(1000);
         await interaction.editReply("熱狗");
-        await sleep(1000);
+        sleep(1000);
         for (let i = 1; i < 10 + 1; i++) {
             // 1 到 10
             await interaction.editReply("🌭".repeat(i));
-            await sleep(1000);
+            sleep(1000);
         };
-        await sleep(1000);
+        sleep(1000);
         await interaction.editReply("💥");
     },
 };

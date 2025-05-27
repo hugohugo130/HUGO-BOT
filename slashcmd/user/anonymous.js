@@ -65,7 +65,7 @@ module.exports = {
         const msg = await sendchannel.send(msgcontent);
         await interaction.editReply(`已發送訊息於 ${sendchannel.toString()} 訊息內容如下:\n${msg.content}`);
         if (!afterdelete) return;
-        await sleep(afterdelete * 1000);
+        sleep(afterdelete * 1000);
         await msg.delete();
         await interaction.followUp({ content: "訊息已刪除", ephemeral: true });
     }

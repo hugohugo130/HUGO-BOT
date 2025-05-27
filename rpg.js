@@ -87,6 +87,78 @@ const foods = {
     golden_beef: "golden_beef",
 };
 
+const animals = {
+    cow: "cow",
+    pig: "pig",
+    chicken: "chicken",
+    duck: "duck",
+    shrimp: "shrimp"
+};
+
+const animal_products = {
+    cow: "raw_beef",
+    pig: "raw_pork",
+    chicken: "raw_chicken",
+    duck: "raw_duck",
+    shrimp: "raw_shrimp"
+};
+
+const shop_lowest_price = {
+    coal: 50,
+    iron_ore: 50,
+    gold_ore: 50,
+    diamond_ore: 50,
+    emerald_ore: 50,
+    ruby_ore: 50,
+    sapphire_ore: 50,
+    stone: 50,
+    iron: 50,
+    gold: 50,
+    diamond: 50,
+    emerald: 50,
+    ruby: 50,
+    sapphire: 50,
+    oak_log: 50,
+    spruce_log: 50,
+    birch_log: 50,
+    jungle_log: 50,
+    acacia_log: 50,
+    dark_oak_log: 50,
+    crimson_log: 50,
+    warped_log: 50,
+    god_log: 50,
+    oak_planks: 50,
+    spruce_planks: 50,
+    birch_planks: 50,
+    jungle_planks: 50,
+    acacia_planks: 50,
+    dark_oak_planks: 50,
+    crimson_planks: 50,
+    warped_planks: 50,
+    shrimp: 50,
+    pork: 50,
+    beef: 50,
+    chicken: 50,
+    duck: 50,
+    raw_shrimp: 50,
+    raw_pork: 50,
+    raw_beef: 50,
+    raw_chicken: 50,
+    raw_duck: 50,
+    bread: 50,
+    cookie: 50,
+    cake: 50,
+    candy: 50,
+    chocolate: 50,
+    pumpkin_pie: 50,
+    melon_slice: 50,
+    golden_apple: 50,
+    enchanted_golden_apple: 50,
+    golden_carrot: 50,
+    golden_beef: 50
+
+};
+
 const food_data = {
     shrimp: 3,
     pork: 3,
@@ -167,6 +239,11 @@ const name = {
     enchanted_golden_apple: "附魔金蘋果",
     golden_carrot: "金蘿蔔",
     golden_beef: "金牛肉",
+    cow: "牛",
+    pig: "豬",
+    chicken: "雞",
+    duck: "鴨",
+    shrimp: "蝦"
 };
 
 const name_reverse = Object.entries(name).reduce((acc, [key, value]) => {
@@ -183,4 +260,7 @@ module.exports = {
     name,
     name_reverse,
     recipes,
+    animals,
+    animal_products,
+    shop_lowest_price
 };

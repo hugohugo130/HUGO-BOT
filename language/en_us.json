@@ -1,0 +1,49 @@
+{
+    "bot": {
+        "name": "Hugo Bot",
+        "slogan": "Hugo Bot ∙ Made by Hugo"
+    },
+    "errors": {
+        "bot_error": "Bot encountered an error: {error}",
+        "lock_timeout": "Waiting for {lock_name} unlock timeout, operation performed (forced unlock)",
+        "deprecated_command": "Sending commands with hr! prefix is deprecated, now just send the command name",
+        "deprecated_hint": "Please use command name without hr! prefix"
+    },
+    "rpg": {
+        "commands": {
+            "mine": {
+                "title": "Mining",
+                "description": "Get ores that can be traded with other players"
+            },
+            "hew": {
+                "title": "Woodcutting",
+                "description": "Get wood that can be crafted into weapons and armor"
+            },
+            "shop": {
+                "title": "Shop",
+                "description": "Manage your shop"
+            },
+            "ls": {
+                "title": "Inventory",
+                "description": "View items in your inventory"
+            },
+            "buy": {
+                "title": "Buy",
+                "description": "Buy items from other players"
+            },
+            "sell": {
+                "title": "Sell",
+                "description": "Sell items"
+            },
+            "cd": {
+                "title": "Cooldown",
+                "description": "Check cooldown time"
+            }
+        },
+        "messages": {
+            "mode_0": "Also reply to message",
+            "mode_1": "Only return message parameters",
+            "find_chinese_name": "If input is Chinese name, find corresponding English key"
+        }
+    }
+} 

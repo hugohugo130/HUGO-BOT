@@ -17,7 +17,7 @@ module.exports = {
             if (endtime <= now + 60) {
                 while (Math.abs(Date.now() / 1000 - endtime) > 0.5) {
                     if (now > endtime) break;
-                    await sleep(100);
+                    sleep(100);
                     now = Date.now() / 1000;
                 };
             };

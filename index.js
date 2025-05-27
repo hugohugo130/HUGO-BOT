@@ -55,7 +55,12 @@ if (fs.existsSync(temp_folder)) {
 
 client.on(Events.Error, (error) => {
     if (error.code != "UND_ERR_CONNECT_TIMEOUT") {
-        require(`${process.cwd()}/module_senderr.js`).senderr({ client: client, msg: `機器人發生了錯誤：${error.stack}`, clientready: true, channel: 2 });
+        require(`./module_senderr.js`).senderr({
+            client: client,
+            msg: `機器人發生了錯誤：${error.stack}`,
+            clientready: true,
+            channel: 2
+        });
     };
 });
 

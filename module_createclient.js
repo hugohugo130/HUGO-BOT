@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
 
 module.exports = {
     getclient() {
@@ -10,6 +10,7 @@ module.exports = {
                     GatewayIntentBits.DirectMessagePolls,
                     GatewayIntentBits.DirectMessageReactions,
                     GatewayIntentBits.DirectMessageTyping,
+                    // GatewayIntentBits.GuildEmojisAndStickers,
                     GatewayIntentBits.DirectMessages,
                     GatewayIntentBits.GuildExpressions,
                     GatewayIntentBits.GuildIntegrations,
@@ -26,6 +27,14 @@ module.exports = {
                     GatewayIntentBits.GuildWebhooks,
                     GatewayIntentBits.Guilds,
                     GatewayIntentBits.MessageContent,
+                ],
+                partials: [
+                    Partials.Message,
+                    Partials.Channel,
+                    Partials.GuildMember,
+                    Partials.User,
+                    Partials.GuildScheduledEvent,
+                    Partials.Reaction,
                 ],
                 rest: {
                     timeout: 15000, // 設定更長的超時時間（預設是 10 秒）

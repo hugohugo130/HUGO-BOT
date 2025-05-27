@@ -21,7 +21,7 @@ module.exports = {
         if (diff <= 5) {
             await interaction.editReply("正在處理...");
             const { sleep } = require("../../module_sleep.js");
-            await sleep(10000);
+            sleep(10000);
         };
 
         let config = JSON.parse(fs.readFileSync(path.join(__dirname, "../../config.json"), "utf8"));

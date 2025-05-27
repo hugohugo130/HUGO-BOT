@@ -1,0 +1,49 @@
+{
+    "bot": {
+        "name": "ハゴーボット",
+        "slogan": "ハゴーボット ∙ ハゴーが作成"
+    },
+    "errors": {
+        "bot_error": "ボットでエラーが発生しました：{error}",
+        "lock_timeout": "{lock_name}のロック解除待機がタイムアウトしました。操作を実行しました（強制解除）",
+        "deprecated_command": "hr!を含むコマンド名の送信は非推奨です。コマンド名のみを送信してください",
+        "deprecated_hint": "hr!を含まないコマンド名を使用してください"
+    },
+    "rpg": {
+        "commands": {
+            "mine": {
+                "title": "採掘",
+                "description": "他のプレイヤーと取引できる鉱石を入手"
+            },
+            "hew": {
+                "title": "伐採",
+                "description": "武器や防具に加工できる木材を入手"
+            },
+            "shop": {
+                "title": "ショップ",
+                "description": "ショップの管理"
+            },
+            "ls": {
+                "title": "インベントリ",
+                "description": "インベントリのアイテムを表示"
+            },
+            "buy": {
+                "title": "購入",
+                "description": "他のプレイヤーからアイテムを購入"
+            },
+            "sell": {
+                "title": "売却",
+                "description": "アイテムを売却"
+            },
+            "cd": {
+                "title": "クールダウン",
+                "description": "クールダウン時間を確認"
+            }
+        },
+        "messages": {
+            "mode_0": "メッセージにも返信",
+            "mode_1": "メッセージパラメータのみ返信",
+            "find_chinese_name": "中国語名が入力された場合、対応する英語キーを検索"
+        }
+    }
+} 

@@ -5,7 +5,7 @@ module.exports = {
         try {
             client.on(Events.InviteCreate, async (invite) => {
                 const { invite_link } = require("../config.json");
-                const { sleep } = require("../module_sleep");
+                const { sleep } = require("../module_sleep.js");
                 let creator = invite.inviter;
                 let createts = Math.floor(invite.createdTimestamp / 1000);
                 let code = invite.code;
@@ -13,7 +13,7 @@ module.exports = {
                 if (invite_link_code === code) return;
                 let msg = `你在 <t:${createts}> 創建的邀請(` + code + `)已被刪除, 請使用 ` + "`" + invite_link + "`" + " 邀請用戶!"
                 await creator.send(msg);
-                await sleep(5000);
+                sleep(5000);
                 await invite.delete();
             });
         } catch (error) {
