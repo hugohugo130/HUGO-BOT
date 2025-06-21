@@ -1,34 +1,34 @@
 {
-  "counting_num": 1710,
-  "counting_highest": 1710,
-  "guess_num": {},
-  "vote": {
-    "active": false,
-    "host": "898836485397180426",
-    "title": "增加匠魂模組(Tinkers Construct 3)",
-    "description": "https://www.mcmod.cn/class/3725.html",
-    "options": [
-      "裝裝裝！",
-      "不裝"
-    ],
-    "endtime": 1741504902,
-    "message_id": "1348133621294301238",
-    "channel_id": "1291706115872129097",
-    "anonymous": false,
-    "participants": {
-      "0": {
-        "option": "裝裝裝！",
-        "count": 2,
-        "user_ids": [
-          "898836485397180426",
-          "1197913368519004191"
-        ]
-      },
-      "1": {
-        "option": "不裝",
-        "count": 0,
-        "user_ids": []
-      }
+    "counting_num": 1710,
+    "counting_highest": 1710,
+    "guess_num": {},
+    "vote": {
+        "active": false,
+        "host": "898836485397180426",
+        "title": "增加匠魂模組(Tinkers Construct 3)",
+        "description": "https://www.mcmod.cn/class/3725.html",
+        "options": [
+            "裝裝裝！",
+            "不裝"
+        ],
+        "endtime": 1741504902,
+        "message_id": "1348133621294301238",
+        "channel_id": "1291706115872129097",
+        "anonymous": false,
+        "participants": {
+            "0": {
+                "option": "裝裝裝！",
+                "count": 2,
+                "user_ids": [
+                    "898836485397180426",
+                    "1197913368519004191"
+                ]
+            },
+            "1": {
+                "option": "不裝",
+                "count": 0,
+                "user_ids": []
+            }
+        }
     }
-  }
 }

@@ -1,23 +1,31 @@
 {
     "898836485397180426": {
-        "hacoin": 814739.6958350095,
-        "latestdate": "2025 5 27",
+        "hacoin": 814791.6958350095,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": true,
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
+<<<<<<< Updated upstream
         "count_for_e": 1198,
         "message_count": 3422,
         "installment": {},
         "exp": 85,
         "level": 122,
+=======
+        "count_for_e": 1518,
+        "message_count": 3787,
+        "installment": {},
+        "exp": 81,
+        "level": 133,
+>>>>>>> Stashed changes
         "vip": true,
         "boost_date": ""
     },
     "896026226924331008": {
-        "hacoin": 5348,
-        "latestdate": "2025 5 27",
+        "hacoin": 5416,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": true,
         "infsign": false,
@@ -32,8 +40,8 @@
         "boost_date": ""
     },
     "1197913368519004191": {
-        "hacoin": 338,
-        "latestdate": "2025 5 27",
+        "hacoin": 407,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -112,8 +120,8 @@
         "boost_date": ""
     },
     "1205472385663242241": {
-        "hacoin": 1404.6281211367186,
-        "latestdate": "2025 5 27",
+        "hacoin": 1446.6281211367186,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -132,7 +140,16 @@
         "latestdate": "",
         "autosign": false,
         "admin": false,
-        "infsign": false
+        "infsign": false,
+        "vip": false,
+        "installment": {},
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 0,
+        "level": 0,
+        "exp": 0,
+        "boost_date": ""
     },
     "951058650435289150": {
         "hacoin": 0,
@@ -286,11 +303,19 @@
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
+<<<<<<< Updated upstream
         "count_for_e": 315,
         "message_count": 320,
         "installment": [],
         "level": 9,
         "exp": 66,
+=======
+        "count_for_e": 573,
+        "message_count": 584,
+        "installment": [],
+        "level": 17,
+        "exp": 69,
+>>>>>>> Stashed changes
         "vip": false,
         "boost_date": ""
     },
@@ -588,8 +613,8 @@
         "boost_date": ""
     },
     "1124563905960751154": {
-        "hacoin": 85,
-        "latestdate": "2025 5 27",
+        "hacoin": 148,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -604,8 +629,8 @@
         "boost_date": ""
     },
     "1093122447177429052": {
-        "hacoin": 868,
-        "latestdate": "2025 5 27",
+        "hacoin": 928,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -699,8 +724,8 @@
         "boost_date": ""
     },
     "600953168443998209": {
-        "hacoin": 722,
-        "latestdate": "2025 5 27",
+        "hacoin": 774,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": true,
         "infsign": false,
@@ -731,8 +756,8 @@
         "boost_date": ""
     },
     "1095342279805386864": {
-        "hacoin": 407,
-        "latestdate": "2025 5 27",
+        "hacoin": 463,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -795,8 +820,8 @@
         "boost_date": ""
     },
     "936168925455081482": {
-        "hacoin": 389403.30953612464,
-        "latestdate": "2025 5 27",
+        "hacoin": 389462.30953612464,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -843,8 +868,8 @@
         "boost_date": ""
     },
     "746126438326992959": {
-        "hacoin": 542,
-        "latestdate": "2025 5 27",
+        "hacoin": 595,
+        "latestdate": "2025 6 21",
         "autosign": true,
         "admin": false,
         "infsign": false,
@@ -1321,10 +1346,129 @@
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
+<<<<<<< Updated upstream
         "count_for_e": 21,
         "message_count": 25,
         "level": 0,
         "exp": 82,
+=======
+        "count_for_e": 276,
+        "message_count": 290,
+        "level": 8,
+        "exp": 67,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1259064322777157641": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 1,
+        "message_count": 4,
+        "level": 0,
+        "exp": 8,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "614296936396357672": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 2,
+        "level": 0,
+        "exp": 3,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1307752611646013471": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 1,
+        "level": 0,
+        "exp": 1,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1223953738406821961": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 0,
+        "level": 0,
+        "exp": 0,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1051465691020140567": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 0,
+        "level": 0,
+        "exp": 0,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1127858769938878464": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 0,
+        "message_count": 1,
+        "level": 0,
+        "exp": 2,
+        "boost_date": "",
+        "vip": false,
+        "installment": {}
+    },
+    "1385245350192742483": {
+        "hacoin": 0,
+        "latestdate": "",
+        "autosign": false,
+        "admin": false,
+        "infsign": false,
+        "birthday": "",
+        "birthday_year": "",
+        "count_for_e": 55,
+        "message_count": 58,
+        "level": 1,
+        "exp": 93,
+>>>>>>> Stashed changes
         "boost_date": "",
         "vip": false,
         "installment": {}
