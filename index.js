@@ -6,7 +6,6 @@ const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
 const { Events } = require("discord.js");
 const { updateDatabaseDefaults } = require("./module_database.js");
-const {check_item_name} = require("./rpg.js");
 const fs = require("fs");
 
 let { default_value } = require('./config.json');
@@ -34,8 +33,6 @@ for (const file of database_files) {
 };
 updateDatabaseDefaults();
 
-check_item_name()
-
 let client = getclient();
 client.setMaxListeners(Infinity);
 
@@ -43,7 +40,7 @@ if (slashcmd) client.commands = loadslashcmd(true);
 if (botfunction) loadbotfunction(client);
 
 getrl().on("line", async (input) => {
-    await rlcmd(client, input);
+    rlcmd(client, input);
 });
 
 const temp_folder = `${process.cwd()}/temp`;
@@ -66,7 +63,5 @@ client.on(Events.Error, (error) => {
         });
     };
 });
-
-client.cooking_interactions = [];
 
 client.login(BotToken);

@@ -275,21 +275,6 @@ function save_shop_data(userid, userData) {
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
 };
 
-function load_cooking_interactions() {
-    const databasefilename = "./cooking_interactions.json";
-    if (fs.existsSync(databasefilename)) {
-        const rawData = fs.readFileSync(databasefilename);
-        return JSON.parse(rawData);
-    } else {
-        return [];
-    };
-};
-
-function save_cooking_interactions(data) {
-    const databasefilename = "./cooking_interactions.json";
-    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
-};
-
 function sethacoin(userId, amount, add) {
     let userData = loadData(userId);
     if (add) {
@@ -330,8 +315,6 @@ module.exports = {
     save_rpg_data,
     load_shop_data,
     save_shop_data,
-    load_cooking_interactions,
-    save_cooking_interactions,
     sethacoin,
     sethacoin_forsign,
 };

@@ -8,9 +8,6 @@ function senderr({ client, msg, clientready, channel = 1 }) {
         });
         return;
     };
-    if (clientready == undefined) {
-        clientready = Boolean(client);
-    };
     const { HugoUserID, err_channel_ID, err2_channel_ID } = require("./config.json");
     const { time } = require("./module_time.js");
     if (msg.stack) {

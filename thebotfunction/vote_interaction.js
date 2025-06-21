@@ -6,7 +6,6 @@ module.exports = {
             if (!interaction.isButton()) return;
             if (!interaction.customId.startsWith("vote_")) return;
             const { load_db, save_db } = require("../module_database.js");
-
             let db = load_db();
             if (!db.vote.active) return;
             if (db.vote.message_id !== interaction.message.id) return;

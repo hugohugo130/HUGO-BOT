@@ -75,9 +75,9 @@ module.exports = {
                 const backendchannel = await client.channels.fetch(backend_channel_ID);
                 if (!backendchannel) return;
 
-                const channel = message.channel;
-                const user = message.author;
+                let user = message.author;
 
+                let channel = message.channel;
                 if (user.id === client.user.id &&
                     (
                         channel.id === backend_channel_ID ||

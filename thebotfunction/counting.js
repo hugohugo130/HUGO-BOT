@@ -1,15 +1,8 @@
-const { Events } = require("discord.js");
+const { Events, WebhookClient } = require("discord.js");
 const fs = require("fs");
 
-function handler1(messageContent, client) {
+function handler1(messageContent) {
     let countingInteger;
-    if (/<@!?\d+>/.test(messageContent)) {
-        const userID = messageContent.match(/<@!?\d+>/)[0].replace(/[<@!>]/g, "");
-        const user = client.users.cache.get(userID);
-        if (user) {
-            countingInteger = user.globalName || handler1(user.username, client);
-        };
-    };
     try {
         // 式子處理優先，因為如果不是式子，eval也會輸出一樣的數字
         countingInteger = eval(messageContent);
@@ -21,10 +14,10 @@ function handler1(messageContent, client) {
     return countingInteger;
 };
 
-function handler2(messageContent, message, client) {
+function handler2(messageContent, message) {
     let db = JSON.parse(fs.readFileSync("./db.json", "utf8"));
     messageContent = messageContent.split(" ")[0];
-    const countingInteger = handler1(messageContent, client);
+    const countingInteger = handler1(messageContent);
     if (!countingInteger) return message.react("🇪");
     if (countingInteger !== db.counting_num + 1) {
         if (countingInteger != 6) {
@@ -60,7 +53,7 @@ module.exports = {
             const { counting_channel_ID } = require("../config.json");
             try {
                 if (message.author.bot || message.channel.id !== counting_channel_ID) return;
-                handler2(message.content, message, client);
+                handler2(message.content, message);
             } catch (error) {
                 require("../module_senderr.js").senderr({ client: client, msg: `處理數數訊息時出錯：${error.stack}`, clientready: true });
             }
@@ -69,13 +62,13 @@ module.exports = {
             const { counting_channel_ID } = require("../config.json");
             if (msg.channel.id !== counting_channel_ID) return;
             if (msg.author.bot) return;
-            if (!/^\d+$/.test(handler1(msg.content.split(" ")[0], client))) return;
+            if (!/^\d+$/.test(handler1(msg.content.split(" ")[0]))) return;
 
             // const webhook = new WebhookClient({ url: "https://discord.com/api/webhooks/1310960260680515634/7h-fpo065VUJC1YebFD1VGPRagkoNaRnPbc0HtGevs9GAUy5UxAAAuRmmRyDzSdYeUUE" });
             // let db = JSON.parse(fs.readFileSync("./db.json", "utf8"));
             // const webhook = new WebhookClient({ url: beta ? beta_webhook_url : main_webhook_url });
             const webhook = await msg.channel.createWebhook({ name: msg.author.globalName || msg.author.username });
-            const counting_num = handler1(msg.content.split(" ")[0], client);
+            const counting_num = handler1(msg.content.split(" ")[0]);
             // await webhook.send({ content: `
             // ${msg.author.toString()} 刪除了${counting_num === db.counting_num ? "新的" : "舊的"}數字 ${counting_num}!
             // 目前的數字是 ${db.counting_num}!
@@ -107,7 +100,7 @@ module.exports = {
             const msg = await channel.send(`機器人已恢復運作，正在處理之前未處理的${messages.length}則訊息`);
 
             for (const msg of messages) {
-                const counting_num = handler1(msg.content.split(" ")[0], client);
+                const counting_num = handler1(msg.content.split(" ")[0]);
                 if (!counting_num) {
                     await msg.react("🇪");
                     continue;

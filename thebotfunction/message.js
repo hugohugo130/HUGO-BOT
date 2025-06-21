@@ -357,10 +357,10 @@ module.exports = {
             const channel = message.channel;
             const content = message.content;
 
-            // if (content === "." && message.author.id === "1197913368519004191") {
-            //     const randomEmoji = generateRandomEmoji(Math.floor(Math.random() * 3) + 2); // 2~4個
-            //     return message.reply(`<@1197913368519004191> 點什麼點 ${randomEmoji.join(" ")}`);
-            // };
+            if (content === "." && message.author.id === "1197913368519004191") {
+                const randomEmoji = generateRandomEmoji(Math.floor(Math.random() * 3) + 2); // 2~4個
+                return message.reply(`<@1197913368519004191> 點什麼點 ${randomEmoji.join(" ")}`);
+            };
 
             if (
                 content === "暗夜" ||
