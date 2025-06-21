@@ -37,6 +37,6 @@ module.exports = {
         // }
 
         // await interaction.editReply({ embeds: [embed], components: [row] });
-        await interaction.reply("Command Disabled");
+        await interaction.reply("已放棄，小孩很累。所以有空的時候(例如暑假)再做。");
     },
 };

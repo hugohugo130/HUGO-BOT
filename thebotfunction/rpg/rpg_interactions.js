@@ -4,10 +4,16 @@ function show_transactions(userid) {
     const { load_rpg_data } = require("../../module_database.js");
     const { transactions = [] } = load_rpg_data(userid);
 
+    /* transactions 列表中的每個字典應該包含:
+    timestamp: 時間戳記 (Unix timestamp) 單位: 秒
+    detail: 交易詳情 (字串)
+    amount: 金額 (數字)
+    type: 交易類型 (字串，例如: "出售物品所得"、"購買物品付款" 等)
+    */
     return transactions
         .slice(-10)
-        .map(({ timestamp, detail, amount, type }) =>
-            `- <t:${timestamp}:R> ${detail} ${amount}(${type})`
+        .map(({ timestamp, originalUser, targetUser, amount, type }) =>
+            `- <t:${timestamp}:R> ${originalUser} \`>\` ${targetUser} \`${amount.toLocaleString()}$\` (${type})`
         ).join('\n');
 };
 
@@ -42,10 +48,10 @@ function get_help_embed(category, client) {
 
     // 分類指令
     const commandCategories = {
-        gathering: ['mine', 'hew', 'fell', 'herd'],
+        gathering: ['mine', 'hew', 'fell', 'herd', 'lazy'],
         shop: ['shop', 'buy'],
-        inventory: ['ls'],
-        others: ['m', 'money', 'cd', 'pay', 'help']
+        inventory: ['ls', 'bag', 'item'],
+        others: ['m', 'mo', 'money', 'cd', 'pay', 'help', 'privacy']
     };
 
     let description = '';
@@ -118,8 +124,12 @@ module.exports = {
     setup(client) {
         client.on(Events.InteractionCreate, async (interaction) => {
             if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
+            if (interaction.customId.startsWith("vote_")) return;
+            const { time } = require("../../module_time.js");
+
             const message = interaction.message;
             const user = interaction.user;
+
             if (message.author.id !== client.user.id) return;
 
             // 從 customId 提取 UserID
@@ -141,6 +151,8 @@ module.exports = {
                 return;
             };
 
+            console.log(`[${time()}] ${user.username}${user.globalName ? `(${user.globalName})` : ""} 正在觸發互動(rpg_interactions): ${interaction.customId}`);
+
             if (interaction.customId.startsWith('rpg_transaction')) {
                 await interaction.deferUpdate();
                 const embed = get_transaction_embed(interaction);
@@ -158,8 +170,9 @@ module.exports = {
             } else if (interaction.customId.startsWith('pay')) {
                 await interaction.deferUpdate();
                 const { load_rpg_data, save_rpg_data } = require("../../module_database.js");
-                const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
+                const { get_emoji, setEmbedFooter, add_money, remove_money } = require("./msg_handler.js");
 
+                const emoji_cross = get_emoji(interaction.guild, "crosS");
                 if (interaction.customId.startsWith('pay_confirm')) {
                     const emoji_top = get_emoji(interaction.guild, "top");
                     const [_, userId, targetUserId, amount, timestamp] = interaction.customId.split('|');
@@ -169,15 +182,27 @@ module.exports = {
                     if (Date.now() - parseInt(timestamp) > 30000) {
                         const embed = new EmbedBuilder()
                             .setColor(0x00BBFF)
-                            .setTitle(`${emoji_top} | 付款失敗`)
-                            .setDescription(`付款已過期`);
+                            .setTitle(`${emoji_cross} | 付款失敗`)
+                            .setDescription(`付款確認已過期`);
 
                         await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
                         return;
                     };
 
-                    rpg_data.money -= parseInt(amount);
-                    target_user_rpg_data.money += parseInt(amount);
+                    rpg_data.money = remove_money({
+                        rpg_data,
+                        amount: parseInt(amount),
+                        originalUser: `<@${userId}>`,
+                        targetUser: `<@${targetUserId}>`,
+                        type: `付款給`,
+                    });
+                    target_user_rpg_data.money = add_money({
+                        rpg_data: target_user_rpg_data,
+                        amount: parseInt(amount),
+                        originalUser: `<@${userId}>`,
+                        targetUser: `<@${targetUserId}>`,
+                        type: `付款給`,
+                    });
                     save_rpg_data(userId, rpg_data);
                     save_rpg_data(targetUserId, target_user_rpg_data);
 
@@ -188,7 +213,6 @@ module.exports = {
 
                     await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
                 } else if (interaction.customId.startsWith('pay_cancel')) {
-                    const emoji_cross = get_emoji(interaction.guild, "crosS");
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji_cross} | 操作取消`);
@@ -254,7 +278,17 @@ module.exports = {
 
                 const privacy = interaction.values;
                 rpg_data.privacy = privacy;
+                rpg_data.privacy.sort((a, b) => {
+                    const order = { "money": 0, "backpack": 1, "partner": 2 };
+                    return order[a] - order[b];
+                });
                 save_rpg_data(userId, rpg_data);
+
+                let text;
+                if (rpg_data.privacy.length > 0) {
+                    text = rpg_data.privacy.join('、');
+                    text = text.replace("money", "金錢").replace("backpack", "背包").replace("partner", "夥伴");
+                } else text = "無";
 
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
@@ -262,15 +296,10 @@ module.exports = {
                     .setDescription(`
 為保護每個人的隱私，可以透過下拉選單來設定 **允許被公開的** 資訊
 
-目前的設定為：\`${rpg_data.privacy.length > 0 ? rpg_data.privacy.join('、') : '無'}\``);
+目前的設定為：\`${text}\``);
 
                 const selectMenu = new StringSelectMenuBuilder()
                     .setCustomId(`rpg_privacy_menu|${userId}`)
-                    /*
-                    修好了無法設定的問題:
-                    message.author.id -> userId
-                    因為訊息是機器人發送的，所以message.author.id會是機器人的ID，而不是使用者的ID
-                    */
                     .setPlaceholder('選擇要允許的項目')
                     .setMinValues(0)
                     .setMaxValues(3)
@@ -278,20 +307,23 @@ module.exports = {
                         {
                             label: '金錢',
                             description: '擁有的金錢數量、交易記錄',
-                            value: '金錢',
-                            emoji: '💰'
+                            value: 'money',
+                            emoji: '💰',
+                            default: rpg_data.privacy.includes("money"),
                         },
                         {
                             label: '背包',
                             description: '背包內的物品',
-                            value: '背包',
-                            emoji: emoji_backpack
+                            value: 'backpack',
+                            emoji: emoji_backpack,
+                            default: rpg_data.privacy.includes("backpack"),
                         },
                         {
                             label: '夥伴',
                             description: '夥伴的清單',
-                            value: '夥伴',
-                            emoji: emoji_partner
+                            value: 'partner',
+                            emoji: emoji_partner,
+                            default: rpg_data.privacy.includes("partner"),
                         }
                     ]);
 
@@ -299,6 +331,68 @@ module.exports = {
                     .addComponents(selectMenu);
 
                 return await interaction.editReply({ embeds: [setEmbedFooter(message, embed)], components: [row] });
+            } else if (interaction.customId.startsWith('choose_command')) {
+                await interaction.deferUpdate();
+                const { load_rpg_data, save_rpg_data } = require("../../module_database.js");
+                const { get_emoji, setEmbedFooter, rpg_handler, MockMessage, prefix } = require("./msg_handler.js");
+
+                const [_, __, command] = interaction.customId.split('|');
+
+                const message = new MockMessage(`${prefix}${command}`, interaction.channel, interaction.user, interaction.guild);
+                let response = await rpg_handler({ client: interaction.client, message, d: true, mode: 1 });
+
+                response.components ??= [];
+
+                await interaction.editReply(response);
+            } else if (interaction.customId.startsWith('ls')) {
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+                const { ls_function, MockMessage, prefix } = require("./msg_handler.js");
+                const { load_rpg_data } = require("../../module_database.js");
+                const [_, userId] = interaction.customId.split("|");
+                const message = new MockMessage(`${prefix}ls`, interaction.message.channel, interaction.user, interaction.guild);
+                const res = await ls_function({ client: interaction.client, message, rpg_data: load_rpg_data(userId), mode: 1 });
+                await interaction.followUp(res);
+            } else if (interaction.customId.startsWith("sell")) {
+                const { load_rpg_data, save_rpg_data } = require("../../module_database.js");
+                const { add_money, get_emoji, setEmbedFooter } = require("./msg_handler.js");
+                const { name } = require("../../rpg.js");
+                await interaction.deferUpdate();
+
+                let [_, userId, item_id, price, amount] = customIdParts;
+
+                price = parseInt(price);
+                amount = parseInt(amount);
+
+                const rpg_data = load_rpg_data(userId);
+
+                rpg_data.inventory[item_id] -= amount;
+                rpg_data.money = add_money({
+                    rpg_data,
+                    amount: price * amount,
+                    originalUser: "系統",
+                    targetUser: `<@${userId}>`,
+                    type: "出售物品所得",
+                })
+
+                save_rpg_data(userId, rpg_data);
+
+                const emoji_trade = get_emoji(interaction.guild, "trade");
+                const embed = new EmbedBuilder()
+                    .setColor(0x00BBFF)
+                    .setTitle(`${emoji_trade} | 成功售出了 ${amount} 個 ${name[item_id]}`);
+
+                await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
+            } else if (interaction.customId === "cancel") {
+                const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
+                await interaction.deferUpdate();
+
+                const emoji_cross = get_emoji(interaction.guild, "crosS");
+
+                const embed = new EmbedBuilder()
+                    .setColor(0xF04A47)
+                    .setTitle(`${emoji_cross} | 操作取消`);
+
+                await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
             }
         });
     },

@@ -100,9 +100,11 @@
   "rpg_emptyeg": {
     "money": 1000,
     "hungry": 20,
-    "lastRunTimestamp": 0,
+    "lastRunTimestamp": {},
+    "count": {},
     "inventory": {},
-    "transactions": []
+    "transactions": [],
+    "privacy": []
   },
   "shop_emptyeg": {
     "status": false,
