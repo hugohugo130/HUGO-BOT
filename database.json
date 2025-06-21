@@ -7,19 +7,11 @@
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
-<<<<<<< Updated upstream
-        "count_for_e": 1198,
-        "message_count": 3422,
-        "installment": {},
-        "exp": 85,
-        "level": 122,
-=======
         "count_for_e": 1518,
         "message_count": 3787,
         "installment": {},
         "exp": 81,
         "level": 133,
->>>>>>> Stashed changes
         "vip": true,
         "boost_date": ""
     },
@@ -303,19 +295,11 @@
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
-<<<<<<< Updated upstream
-        "count_for_e": 315,
-        "message_count": 320,
-        "installment": [],
-        "level": 9,
-        "exp": 66,
-=======
         "count_for_e": 573,
         "message_count": 584,
         "installment": [],
         "level": 17,
         "exp": 69,
->>>>>>> Stashed changes
         "vip": false,
         "boost_date": ""
     },
@@ -1346,12 +1330,6 @@
         "infsign": false,
         "birthday": "",
         "birthday_year": "",
-<<<<<<< Updated upstream
-        "count_for_e": 21,
-        "message_count": 25,
-        "level": 0,
-        "exp": 82,
-=======
         "count_for_e": 276,
         "message_count": 290,
         "level": 8,
