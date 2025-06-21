@@ -28,14 +28,14 @@ module.exports = {
                     GatewayIntentBits.Guilds,
                     GatewayIntentBits.MessageContent,
                 ],
-                partials: [
-                    Partials.Message,
-                    Partials.Channel,
-                    Partials.GuildMember,
-                    Partials.User,
-                    Partials.GuildScheduledEvent,
-                    Partials.Reaction,
-                ],
+                // partials: [
+                //     Partials.Message,
+                //     Partials.Channel,
+                //     Partials.GuildMember,
+                //     Partials.User,
+                //     Partials.GuildScheduledEvent,
+                //     Partials.Reaction,
+                // ],
                 rest: {
                     timeout: 15000, // 設定更長的超時時間（預設是 10 秒）
                     retries: 3     // 設定重試次數

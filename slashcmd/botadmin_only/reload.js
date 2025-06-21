@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { loadbotfunction } = require("../../module_loadbotfunction.js")
 const { loadslashcmd } = require("../../module_regcmd");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,6 +16,7 @@ module.exports = {
                     { name: '功能與指令', value: '功能與指令' },
                     { name: '模塊', value: '模塊' },
                     { name: '設定檔', value: '設定檔' },
+                    { name: '所有', value: 'all' },
                 ),
         ),
     async execute(interaction) {
@@ -23,35 +26,35 @@ module.exports = {
         const type = interaction.options.getString('類型');
         let error = false;
         const { time } = require("../../module_time.js");
-        if (type === '功能與指令') {
+        if (type === '功能與指令' || type === "all") {
             try {
                 interaction.client.commands = loadslashcmd(true); // 重新載入指令
                 interaction.client.removeAllListeners(); // 移除所有事件監聽器
                 loadbotfunction(interaction.client, true); // 重新載入功能
             } catch (error) {
-                console.error(`[${time()}] 無法重載功能與指令: ${error.message}`);
-                await interaction.followUp(`[${time()}] 無法重載功能與指令: ${error.message}`);
+                console.error(`[${time()}] 無法重載功能與指令: ${error.stack}`);
+                await interaction.followUp(`[${time()}] 無法重載功能與指令: ${error.stack}`);
                 error = true;
             };
-        } else if (type === '模塊') {
-            let deletelist = ["../../module_database.js", "../../module_getrandomhacoin.js", "../../module_regcmd.js", "../../module_sleep.js"];
+        } else if (type === '模塊' || type === "all") {
+            let deletelist = fs.readdirSync(process.cwd()).filter(file => file.endsWith(".js"));
             for (const module of deletelist) {
                 try {
-                    delete require.cache[require.resolve(module)];
+                    delete require.cache[require.resolve(path.join(process.cwd(), module))];
                 } catch (error) {
-                    console.error(`[${time()}] 無法重載模塊 ${module}: ${error.message}`);
-                    await interaction.followUp(`[${time()}] 無法重載模塊 ${module}: ${error.message}`);
+                    console.error(`[${time()}] 無法重載模塊 ${module}: ${error.stack}`);
+                    await interaction.followUp(`[${time()}] 無法重載模塊 ${module}: ${error.stack}`);
                     error = true;
                 };
             };
-        } else {
+        } else if (type === '設定檔' || type === "all") {
             let deletelist = ["../../config.json"];
             for (const module of deletelist) {
                 try {
                     delete require.cache[require.resolve(module)];
                 } catch (error) {
-                    console.error(`[${time()}] 無法重載設定檔 ${module}: ${error.message}`);
-                    await interaction.followUp(`[${time()}] 無法重載設定檔 ${module}: ${error.message}`);
+                    console.error(`[${time()}] 無法重載設定檔 ${module}: ${error.stack}`);
+                    await interaction.followUp(`[${time()}] 無法重載設定檔 ${module}: ${error.stack}`);
                     error = true;
                 };
             };

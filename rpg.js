@@ -19,16 +19,16 @@ const ingots = {
 };
 
 const logs = {
-    oak_log: "oak_log",
-    spruce_log: "spruce_log",
-    birch_log: "birch_log",
-    jungle_log: "jungle_log",
-    acacia_log: "acacia_log",
-    dark_oak_log: "dark_oak_log",
-    crimson_log: "crimson_log",
-    warped_log: "warped_log",
-    god_log: "god_log",
-    ha_log: "ha_log"
+    oak_wood: "oak_wood",
+    spruce_wood: "spruce_wood",
+    birch_wood: "birch_wood",
+    jungle_wood: "jungle_wood",
+    acacia_wood: "acacia_wood",
+    dark_oak_wood: "dark_oak_wood",
+    crimson_wood: "crimson_wood",
+    warped_wood: "warped_wood",
+    god_wood: "god_wood",
+    ha_wood: "ha_wood"
 };
 
 const planks = {
@@ -44,11 +44,94 @@ const planks = {
     ha_planks: "ha_planks"
 }
 
-const recipes = {};
+const wood_productions = {
+    stick: "stick",
+}
+
+const recipes = {
+    wooden_hoe: {
+        input: [
+            { item: "stick", amount: 2 },
+            { item: "#planks", amount: 1 }
+        ],
+        output: "wooden_hoe",
+        amount: 1
+    },
+    iron_hoe: {
+        input: [
+            { item: "stick", amount: 2 },
+            { item: "iron", amount: 1 }
+        ],
+        output: "iron_hoe",
+        amount: 1
+    },
+    stick: {
+        input: [
+            { item: "#planks", amount: 2 }
+        ],
+        output: "stick",
+        amount: 1
+    },
+    stone_short_knife: {
+        input: [
+            { item: "stick", amount: 1 },
+            { item: "stone", amount: 1 }
+        ],
+        output: "stone_short_knife",
+        amount: 1
+    },
+    iron_short_knife: {
+        input: [
+            { item: "stick", amount: 1 },
+            { item: "iron", amount: 1 }
+        ],
+        output: "iron_short_knife",
+        amount: 1
+    },
+    stone_sword: {
+        input: [
+            { item: "stick", amount: 1 },
+            { item: "stone", amount: 3 }
+        ],
+        output: "stone_sword",
+        amount: 1
+    },
+    iron_sword: {
+        input: [
+            { item: "stick", amount: 1 },
+            { item: "iron", amount: 3 }
+        ],
+        output: "iron_sword",
+        amount: 1
+    },
+    stone_axe: {
+        input: [
+            { item: "stick", amount: 2 },
+            { item: "stone", amount: 3 }
+        ],
+        output: "stone_axe",
+        amount: 1
+    },
+    iron_axe: {
+        input: [
+            { item: "stick", amount: 2 },
+            { item: "iron", amount: 3 }
+        ],
+        output: "iron_axe",
+        amount: 1
+    },
+    iron_armor: {
+        input: [
+            { item: "iron", amount: 28 }
+        ],
+        output: "iron_armor",
+        amount: 1
+    }
+};
 
 // 動態生成木材到木板的合成配方，比例 1:4
 Object.entries(logs).forEach(([logKey, logValue]) => {
-    const plankKey = logKey.replace('_log', '_planks');
+    const plankKey = logKey.replace('_wood', '_planks');
     if (planks[plankKey]) {
         recipes[planks[plankKey]] = {
             input: [
@@ -63,7 +146,22 @@ Object.entries(logs).forEach(([logKey, logValue]) => {
     };
 });
 
-const foods = {
+const tags = {
+    "planks": Object.keys(planks),
+};
+
+const foods_crops = {
+    bread: "bread",
+    potato: "potato",
+    cookie: "cookie",
+    cake: "cake",
+    candy: "candy",
+    chocolate: "chocolate",
+    pumpkin_pie: "pumpkin_pie",
+    melon_slice: "melon_slice",
+};
+
+const foods_meat = {
     shrimp: "shrimp",
     pork: "pork",
     beef: "beef",
@@ -74,33 +172,45 @@ const foods = {
     raw_beef: "raw_beef",
     raw_chicken: "raw_chicken",
     raw_duck: "raw_duck",
-    bread: "bread",
-    cookie: "cookie",
-    cake: "cake",
-    candy: "candy",
-    chocolate: "chocolate",
-    pumpkin_pie: "pumpkin_pie",
-    melon_slice: "melon_slice",
+    cod: "cod",
+    salmon: "salmon",
+    tropical_fish: "tropical_fish",
+    pufferfish: "pufferfish",
+    clownfish: "clownfish",
+    tuna: "tuna",
+    swordfish: "swordfish",
+    anglerfish: "anglerfish",
+    jellyfish: "jellyfish",
+    octopus: "octopus",
+    squid: "squid",
+    crab: "crab",
+    lobster: "lobster",
+    eel: "eel",
+    catfish: "catfish",
+    goldfish: "goldfish",
+    koi: "koi",
+    shark: "shark",
+    whale: "whale",
     golden_apple: "golden_apple",
     enchanted_golden_apple: "enchanted_golden_apple",
     golden_carrot: "golden_carrot",
     golden_beef: "golden_beef",
 };
 
+const foods = { ...foods_crops, ...foods_meat };
+
 const animals = {
     cow: "cow",
     pig: "pig",
-    chicken: "chicken",
-    duck: "duck",
-    shrimp: "shrimp"
+    a_chicken: "a_chicken",
+    a_duck: "a_duck",
 };
 
 const animal_products = {
     cow: "raw_beef",
     pig: "raw_pork",
-    chicken: "raw_chicken",
-    duck: "raw_duck",
-    shrimp: "raw_shrimp"
+    a_chicken: "raw_chicken",
+    a_duck: "raw_duck",
 };
 
 const shop_lowest_price = {
@@ -112,21 +222,21 @@ const shop_lowest_price = {
     ruby_ore: 50,
     sapphire_ore: 50,
     stone: 50,
-    iron: 50,
+    iron: 250,
     gold: 50,
     diamond: 50,
     emerald: 50,
     ruby: 50,
     sapphire: 50,
-    oak_log: 50,
-    spruce_log: 50,
-    birch_log: 50,
-    jungle_log: 50,
-    acacia_log: 50,
-    dark_oak_log: 50,
-    crimson_log: 50,
-    warped_log: 50,
-    god_log: 50,
+    oak_wood: 50,
+    spruce_wood: 50,
+    birch_wood: 50,
+    jungle_wood: 50,
+    acacia_wood: 50,
+    dark_oak_wood: 50,
+    crimson_wood: 50,
+    warped_wood: 50,
+    god_wood: 50,
     oak_planks: 50,
     spruce_planks: 50,
     birch_planks: 50,
@@ -146,6 +256,7 @@ const shop_lowest_price = {
     raw_chicken: 50,
     raw_duck: 50,
     bread: 50,
+    potato: 50,
     cookie: 50,
     cake: 50,
     candy: 50,
@@ -155,14 +266,14 @@ const shop_lowest_price = {
     golden_apple: 50,
     enchanted_golden_apple: 50,
     golden_carrot: 50,
-    golden_beef: 50
-
+    golden_beef: 50,
+    regen_potion: 100,
 };
 
 const food_data = {
     shrimp: 3,
-    pork: 3,
-    beef: 3,
+    pork: 4,
+    beef: 4,
     chicken: 3,
     duck: 3,
     raw_shrimp: 1,
@@ -171,6 +282,7 @@ const food_data = {
     raw_chicken: 1,
     raw_duck: 1,
     bread: 2,
+    potato: 2,
     cookie: 2,
     cake: 2,
     candy: 1,
@@ -181,9 +293,181 @@ const food_data = {
     enchanted_golden_apple: 4,
     golden_carrot: 3,
     golden_beef: 3,
+    cod: 0,
+    salmon: 3,
+    tropical_fish: 0,
+    pufferfish: 0,
+    clownfish: 0,
+    tuna: 3,
+    swordfish: 0,
+    anglerfish: 0,
+    jellyfish: 0,
+    octopus: 0,
+    squid: 0,
+    crab: 0,
+    lobster: 0,
+    eel: 0,
+    catfish: 0,
+    goldfish: 0,
+    koi: 0,
+    shark: 0,
+    whale: 0,
+};
+
+const brew = {
+    regen_potion: "regen_potion",
+    poison_potion: "poison_potion",
+    floating_potion: "floating_potion",
+    invisibility_potion: "invisibility_potion",
+    mystery_potion: "mystery_potion",
+    eye_potion: "eye_potion",
+    ha_potion: "ha_potion",
+    jump_potion: "jump_potion",
+    lucky_potion: "lucky_potion",
+    dizzy_potion: "dizzy_potion",
+    unlucky_potion: "unlucky_potion",
+    nausea_potion: "nausea_potion",
+    hair_growth_potion: "hair_growth_potion",
+    revive_potion: "revive_potion",
+    gold_potion: "gold_potion",
+    cough_potion: "cough_potion",
+};
+
+const fish = {
+    raw_shrimp: "raw_shrimp",
+    raw_cod: "raw_cod",
+    raw_salmon: "raw_salmon",
+    raw_tropical_fish: "raw_tropical_fish",
+    raw_pufferfish: "raw_pufferfish",
+    raw_clownfish: "raw_clownfish",
+    raw_tuna: "raw_tuna",
+    raw_swordfish: "raw_swordfish",
+    raw_anglerfish: "raw_anglerfish",
+    raw_jellyfish: "raw_jellyfish",
+    raw_octopus: "raw_octopus",
+    raw_squid: "raw_squid",
+    raw_crab: "raw_crab",
+    raw_lobster: "raw_lobster",
+    raw_shrimp: "raw_shrimp",
+    raw_eel: "raw_eel",
+    raw_catfish: "raw_catfish",
+    raw_goldfish: "raw_goldfish",
+    raw_koi: "raw_koi",
+    raw_shark: "raw_shark",
+    raw_whale: "raw_whale",
+};
+
+const weapons_armor = {
+    wooden_hoe: "wooden_hoe",
+    iron_hoe: "iron_hoe",
+    stone_short_knife: "stone_short_knife",
+    iron_short_knife: "iron_short_knife",
+    stone_sword: "stone_sword",
+    iron_sword: "iron_sword",
+    stone_axe: "stone_axe",
+    iron_axe: "iron_axe",
+    iron_armor: "iron_armor",
+};
+
+const bake = {
+    raw_pork: 10,
+    raw_duck: 10,
+    raw_beef: 10,
+    raw_chicken: 10,
+    raw_salmon: 10,
+    raw_shrimp: 10,
+    raw_tuna: 10,
+};
+
+const sell_data = {
+    coal: 45,
+    iron_ore: 45,
+    gold_ore: 50,
+    diamond_ore: 50,
+    emerald_ore: 50,
+    ruby_ore: 50,
+    sapphire_ore: 50,
+    stone: 45,
+    iron: 50,
+    gold: 50,
+    diamond: 50,
+    emerald: 50,
+    ruby: 50,
+    sapphire: 50,
+    oak_wood: 50,
+    spruce_wood: 50,
+    birch_wood: 50,
+    jungle_wood: 50,
+    acacia_wood: 50,
+    dark_oak_wood: 50,
+    crimson_wood: 50,
+    warped_wood: 50,
+    god_wood: 50,
+    ha_wood: 50,
+    oak_planks: 50,
+    spruce_planks: 50,
+    birch_planks: 50,
+    jungle_planks: 50,
+    acacia_planks: 50,
+    dark_oak_planks: 50,
+    crimson_planks: 50,
+    warped_planks: 50,
+    god_planks: 50,
+    ha_planks: 50,
+    bread: 50,
+    cookie: 50,
+    cake: 50,
+    candy: 50,
+    chocolate: 50,
+    pumpkin_pie: 50,
+    melon_slice: 50,
+    shrimp: 50,
+    pork: 50,
+    beef: 50,
+    chicken: 50,
+    duck: 50,
+    raw_shrimp: 50,
+    raw_pork: 50,
+    raw_beef: 50,
+    raw_chicken: 50,
+    raw_duck: 50,
+    cod: 50,
+    salmon: 50,
+    tropical_fish: 50,
+    pufferfish: 50,
+    clownfish: 50,
+    tuna: 50,
+    swordfish: 50,
+    anglerfish: 50,
+    jellyfish: 50,
+    octopus: 50,
+    squid: 50,
+    crab: 50,
+    lobster: 50,
+    eel: 50,
+    catfish: 50,
+    goldfish: 50,
+    koi: 50,
+    shark: 50,
+    whale: 50,
+    golden_apple: 50,
+    enchanted_golden_apple: 50,
+    golden_carrot: 50,
+    golden_beef: 50,
+    wooden_hoe: 50,
+    iron_hoe: 50,
+    stick: 50,
+    stone_short_knife: 50,
+    iron_short_knife: 50,
+    stone_sword: 50,
+    iron_sword: 50,
+    stone_axe: 50,
+    iron_axe: 50,
+    iron_armor: 1080,
 };
 
 const name = {
+    // ==============礦物==============
     coal: "煤炭",
     iron_ore: "鐵礦",
     gold_ore: "金礦",
@@ -198,16 +482,17 @@ const name = {
     emerald: "綠寶石",
     ruby: "紅寶石",
     sapphire: "藍寶石",
-    oak_log: "橡木",
-    spruce_log: "雲杉木",
-    birch_log: "白樺木",
-    jungle_log: "叢林木",
-    acacia_log: "金合歡木",
-    dark_oak_log: "深色橡木",
-    crimson_log: "緋紅木",
-    warped_log: "凋零木",
-    god_log: "神木",
-    ha_log: "哈木",
+    // ==============木材==============
+    oak_wood: "橡木",
+    spruce_wood: "雲杉木",
+    birch_wood: "白樺木",
+    jungle_wood: "叢林木",
+    acacia_wood: "金合歡木",
+    dark_oak_wood: "深色橡木",
+    crimson_wood: "緋紅木",
+    warped_wood: "凋零木",
+    god_wood: "神木",
+    ha_wood: "哈木",
     oak_planks: "橡木板",
     spruce_planks: "雲杉木板",
     birch_planks: "白樺木板",
@@ -218,15 +503,17 @@ const name = {
     warped_planks: "凋零木板",
     god_planks: "神木板",
     ha_planks: "哈木板",
+    stick: "木棒",
+    // ==============食物(烤魚類也是食物)==============
     shrimp: "烤蝦",
     pork: "烤豬肉",
-    beef: "烤牛肉", 
+    beef: "烤牛肉",
     chicken: "烤雞肉",
     duck: "烤鴨肉",
     raw_shrimp: "生蝦",
     raw_pork: "生豬肉",
     raw_beef: "生牛肉",
-    raw_chicken: "生雞肉", 
+    raw_chicken: "生雞肉",
     raw_duck: "生鴨肉",
     bread: "麵包",
     cookie: "餅乾",
@@ -239,11 +526,85 @@ const name = {
     enchanted_golden_apple: "附魔金蘋果",
     golden_carrot: "金蘿蔔",
     golden_beef: "金牛肉",
+    // ==============動物==============
     cow: "牛",
     pig: "豬",
-    chicken: "雞",
-    duck: "鴨",
-    shrimp: "蝦"
+    a_chicken: "雞",
+    a_duck: "鴨",
+    // ==============藥水==============
+    regen_potion: "回復藥水",
+    poison_potion: "中毒藥水",
+    floating_potion: "漂浮藥水",
+    invisibility_potion: "隱形藥水",
+    mystery_potion: "神秘藥水",
+    eye_potion: "眼藥水",
+    ha_potion: "哈藥水",
+    jump_potion: "跳躍藥水",
+    lucky_potion: "幸運藥水",
+    dizzy_potion: "眩暈藥水",
+    unlucky_potion: "倒楣藥水",
+    nausea_potion: "噁心藥水",
+    hair_growth_potion: "增髮藥水",
+    revive_potion: "復活藥水",
+    gold_potion: "黃金藥水",
+    cough_potion: "咳嗽藥水",
+    // ==============魚類==============
+    raw_shrimp: "生蝦",
+    raw_cod: "生鱈魚",
+    raw_salmon: "生鮭魚",
+    raw_tropical_fish: "生熱帶魚",
+    raw_pufferfish: "生河豚",
+    raw_clownfish: "生小丑魚",
+    raw_tuna: "生鮪魚",
+    raw_swordfish: "生劍魚",
+    raw_anglerfish: "生燈籠魚",
+    raw_jellyfish: "生水母",
+    raw_octopus: "生章魚",
+    raw_squid: "生魷魚",
+    raw_crab: "生螃蟹",
+    raw_lobster: "生龍蝦",
+    raw_shrimp: "生蝦子",
+    raw_eel: "生鰻魚",
+    raw_catfish: "生鯰魚",
+    raw_goldfish: "生金魚",
+    raw_koi: "生錦鯉",
+    raw_shark: "生鯊魚",
+    raw_whale: "生鯨魚",
+    shrimp: "烤蝦",
+    cod: "烤鱈魚",
+    salmon: "烤鮭魚",
+    tropical_fish: "烤熱帶魚",
+    pufferfish: "烤河豚",
+    clownfish: "烤小丑魚",
+    tuna: "烤鮪魚",
+    swordfish: "烤劍魚",
+    anglerfish: "烤燈籠魚",
+    jellyfish: "烤水母",
+    octopus: "烤章魚",
+    squid: "烤魷魚",
+    crab: "烤螃蟹",
+    lobster: "烤龍蝦",
+    shrimp: "烤蝦子",
+    eel: "烤鰻魚",
+    catfish: "烤鯰魚",
+    goldfish: "烤金魚",
+    koi: "烤錦鯉",
+    shark: "烤鯊魚",
+    whale: "烤鯨魚",
+    // ==============武器 & 防具==============
+    wooden_hoe: "木鋤",
+    iron_hoe: "鐵鋤",
+    stone_short_knife: "石短刀",
+    iron_short_knife: "鐵短刀",
+    stone_sword: "石劍",
+    iron_sword: "鐵劍",
+    stone_axe: "石斧",
+    iron_axe: "鐵斧",
+    iron_armor: "鐵製盔甲",
+    // ==============tags==============
+    "#planks": "任意木板"
+    // ==============....==============
+
 };
 
 const name_reverse = Object.entries(name).reduce((acc, [key, value]) => {
@@ -251,16 +612,53 @@ const name_reverse = Object.entries(name).reduce((acc, [key, value]) => {
     return acc;
 }, {});
 
+function check_item_name() {
+    // 檢查所有物品ID是否都有對應的名稱
+    const all_items = [
+        ...Object.values(mine_gets),
+        ...Object.values(ingots),
+        ...Object.values(logs),
+        ...Object.values(planks),
+        ...Object.values(foods_crops),
+        ...Object.values(foods_meat),
+        ...Object.keys(recipes),
+        ...Object.values(wood_productions)
+    ];
+
+    for (const item_id of all_items) {
+        if (!name[item_id]) {
+            console.warn(`[警告] 物品ID "${item_id}" 沒有對應的名稱`);
+        };
+    };
+
+    for (const item_id of all_items) {
+        if (!sell_data[item_id]) {
+            console.warn(`[警告] 物品ID "${item_id}" 沒有對應的出售價格`);
+        };
+    };
+};
+
 module.exports = {
     mine_gets,
     ingots,
     logs,
+    planks,
     foods,
+    foods_crops,
+    foods_meat,
     food_data,
     name,
     name_reverse,
     recipes,
     animals,
     animal_products,
-    shop_lowest_price
+    shop_lowest_price,
+    brew,
+    fish,
+    wood_productions,
+    weapons_armor,
+    tags,
+    bake,
+    sell_data,
+    check_item_name,
 };

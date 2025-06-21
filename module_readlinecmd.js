@@ -5,22 +5,22 @@ const path = require('path');
 
 module.exports = {
     setup() { },
-    rlcmd(client, input) {
+    async rlcmd(client, input) {
         try {
             console.log("----------");
             if (input === "stop" && !stopping) {
                 stopping = true;
                 const { stop_send_msg } = require("./module_bot_start_stop.js");
-                stop_send_msg(client);
+                await stop_send_msg(client);
             } else if (input.startsWith("schedule ")) {
                 const args = input.slice(9).split(" ");
                 if (args[0] === "list") {
                     const schedule_dir = path.join(__dirname, 'schedule');
                     const everymin_dir = path.join(schedule_dir, 'everymin');
                     const everysec_dir = path.join(schedule_dir, 'everysec');
-                    
+
                     console.log("可用的排程任務：");
-                    
+
                     if (fs.existsSync(everymin_dir)) {
                         const min_files = fs.readdirSync(everymin_dir)
                             .filter(file => file.endsWith('.js'))
@@ -30,7 +30,7 @@ module.exports = {
                     } else {
                         console.log("\n每分鐘排程目錄不存在");
                     };
-                    
+
                     if (fs.existsSync(everysec_dir)) {
                         const sec_files = fs.readdirSync(everysec_dir)
                             .filter(file => file.endsWith('.js'))
@@ -45,14 +45,14 @@ module.exports = {
                     const schedule_dir = path.join(__dirname, 'schedule');
                     const everymin_dir = path.join(schedule_dir, 'everymin');
                     const everysec_dir = path.join(schedule_dir, 'everysec');
-                    
+
                     let taskPath = null;
                     if (fs.existsSync(path.join(everymin_dir, `${taskName}.js`))) {
                         taskPath = path.join(everymin_dir, `${taskName}.js`);
                     } else if (fs.existsSync(path.join(everysec_dir, `${taskName}.js`))) {
                         taskPath = path.join(everysec_dir, `${taskName}.js`);
                     };
-                    
+
                     if (taskPath) {
                         try {
                             delete require.cache[require.resolve(taskPath)];
@@ -74,7 +74,13 @@ module.exports = {
                     console.log("schedule list - 列出所有可用的排程任務");
                     console.log("schedule run <任務名稱> - 執行指定的排程任務");
                 };
-            };
+            } else if (input === "fixed") {
+                const { err_channel_ID, err2_channel_ID } = require("./config.json");
+                const channel1 = client.channels.cache.get(err_channel_ID) || await client.channels.fetch(err_channel_ID);
+                const channel2 = client.channels.cache.get(err2_channel_ID) || await client.channels.fetch(err2_channel_ID);
+                await channel1.send("已修復所有錯誤");
+                await channel2.send("已修復所有錯誤");
+            }
             console.log("----------");
         } catch (error) {
             require("./module_senderr").senderr({ client: client, msg: `處理readline時出錯：${error.stack}`, clientready: true });
