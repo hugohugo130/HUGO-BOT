@@ -1343,28 +1343,30 @@ const rpg_commands = {
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
     }],
     lazy: ["懶惰", "懶惰地遊玩這個遊戲", async function ({ client, message, rpg_data, data, args, mode }) {
-        const embeds = []
-        const cmds = ["mine", "hew", "herd", "brew", "fish"];
-        for (const cmd of cmds) {
-            const res = await redirect({ client, message, command: cmd, mode: 1 });
-            for (const embed of res.embeds) {
-                embeds.push(embed);
+        if (new Date().getMinutes() % 2 === 0) {
+            const embeds = []
+            const cmds = ["mine", "hew", "herd", "brew", "fish"];
+            for (const cmd of cmds) {
+                const res = await redirect({ client, message, command: cmd, mode: 1 });
+                for (const embed of res.embeds) {
+                    embeds.push(embed);
+                };
             };
+
+            if (mode === 1) return { embeds };
+            return await message.reply({ embeds });
+        } else {
+            const emoji_cross = get_emoji(message.guild, "crosS");
+
+            const embed = new EmbedBuilder()
+                .setTitle(`${emoji_cross} | 太懶了辣！`)
+                .setColor(0x00BBFF)
+                .setThumbnail("https://cdn.discordapp.com/emojis/1368436829371764867.webp?size=96")
+                .setDescription("你太懶了，所以我不給你用!lazy了 owo");
+
+            if (mode === 1) return { embeds: [embed] };
+            return await message.reply({ embeds: [embed] });
         };
-
-        if (mode === 1) return { embeds };
-        return await message.reply({ embeds });
-
-        // const emoji_cross = get_emoji(message.guild, "crosS");
-
-        // const embed = new EmbedBuilder()
-        //     .setTitle(`${emoji_cross} | 太懶了辣！`)
-        //     .setColor(0x00BBFF)
-        //     .setThumbnail("https://cdn.discordapp.com/emojis/1368436829371764867.webp?size=96")
-        //     .setDescription("你太懶了，所以我不給你用!lazy了 owo");
-
-        // if (mode === 1) return { embeds: [embed] };
-        // return await message.reply({ embeds: [embed] });
     }],
     eat: ["吃東西", "吃東西回復飽食度", async function ({ client, message, rpg_data, data, args, mode }) {
         const { save_rpg_data } = require("../../module_database.js");
