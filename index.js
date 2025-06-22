@@ -8,6 +8,7 @@ const { Events } = require("discord.js");
 const { updateDatabaseDefaults } = require("./module_database.js");
 const {check_item_name} = require("./rpg.js");
 const fs = require("fs");
+require("dotenv").config();
 
 let { default_value } = require('./config.json');
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
@@ -69,4 +70,4 @@ client.on(Events.Error, (error) => {
 
 client.cooking_interactions = [];
 
-client.login(BotToken);
+client.login(process.env.TOKEN);

@@ -1,10 +1,11 @@
-const { slashcmd, BotToken, BotID } = require("./config.json");
+const { slashcmd, BotID } = require("./config.json");
 if (!slashcmd) return;
 const { REST, Routes } = require("discord.js");
 const { loadslashcmd } = require("./module_regcmd.js");
+require("dotenv").config();
 
 let commands = loadslashcmd(false);
-const rest = new REST().setToken(BotToken);
+const rest = new REST().setToken(process.env.TOKEN);
 
 (async () => {
     try {
