@@ -1,31 +1,31 @@
 {
-  "GuildID": "1218367644307034112",
-  "LoginDone_identity_ID": "1218367644307034119",
-  "BotChannelID": "1244136132468539412",
-  "BotAnnouncementChannelID": "1245311433256996864",
+  "GuildID": "1254693349231820821",
+  "LoginDone_identity_ID": "1254694546227462247",
+  "BotChannelID": "1254694780198195201",
+  "BotAnnouncementChannelID": "1254694818819473428",
   "HugoUserID": "898836485397180426",
-  "Apply_identity_channel_ID": "1218367644684652686",
-  "BotID": "1244177022159421511",
-  "ServerMsgChannelID": "1218367644328132618",
-  "question_channel_ID": "1218367644684652678",
-  "red_packet_Channel_ID": "1279000937649934377",
-  "counting_channel_ID": "1289569484163518536",
-  "backup_database_channel_ID": "1291317016325656657",
-  "backend_channel_ID": "1294971011787264002",
-  "rule_channel_ID": "1218367644328132616",
-  "get_role_channel_ID": "1218367644684652686",
-  "level_channel_ID": "1296079503570767872",
-  "chatting_channel_ID": "1218367644684652678",
-  "giveaway_channel_ID": "1302207326580637757",
-  "err_channel_ID": "1330075748089860097",
-  "err2_channel_ID": "1330075782038683659",
-  "spam_free_channel_ID": "1261682601056534579",
-  "invite_link": "https://discord.gg/gnXuUY78eY",
+  "Apply_identity_channel_ID": "1254694867653886083",
+  "BotID": "1254691788619255829",
+  "ServerMsgChannelID": "1254785089234272267",
+  "question_channel_ID": "1274638700181061632",
+  "red_packet_Channel_ID": "1276542714502053931",
+  "counting_channel_ID": "1289582648863228005",
+  "backup_database_channel_ID": "1291317227785556000",
+  "backend_channel_ID": "1294972946376429600",
+  "rule_channel_ID": "1295748806394249216",
+  "get_role_channel_ID": "1295748875147284601",
+  "level_channel_ID": "1296083218612879463",
+  "chatting_channel_ID": "1254693349231820825",
+  "giveaway_channel_ID": "1301887912538935367",
+  "err_channel_ID": "1330078689152598046",
+  "err2_channel_ID": "1330078702171721728",
+  "spam_free_channel_ID": "1296083568073900063",
+  "invite_link": "https://discord.gg/Qv8hsFwbmK",
   "exp_need": 100,
   "red_packet_min": 0.01,
   "slashcmd": true,
   "botfunction": true,
-  "beta": false,
+  "beta": true,
   "authorname": "Hugo哈狗 (happyhugoe)",
   "databasefilename": "./database.json",
   "redpacketfilename": "./data_red_packet.json",
@@ -78,22 +78,23 @@
     "1001016404289536051",
     "600953168443998209",
     "1061310060455800852",
-    "1299274108155985920"
+    "1299274108155985920",
+    "1127858769938878464"
   ],
   "vip": [
     "898836485397180426",
-    "1197913368519004191"
+    "placeholder"
   ],
   "can_apply_identities": [
-    "1218367644307034119",
-    "1218367644307034113",
-    "1233264212374192140"
+    "1254694546227462247",
+    "placeholder",
+    "placeholder"
   ],
   "anonymous_channel_can_use": [
-    "1218367644684652678",
-    "1299997140205961216",
-    "1299997155586474015",
-    "1299997171210387547"
+    "1254694780198195201",
+    "placeholder",
+    "placeholder",
+    "placeholder"
   ],
   "load_skiplist": [],
   "rpg_emptyeg": {
@@ -134,6 +135,7 @@
     "data_red_packet.json": {},
     "database.json": {},
     "backup_database_send_queue.json": [],
-    "rpg_database.json": {}
+    "rpg_database.json": {},
+    "cooking_interactions.json": []
   }
 }

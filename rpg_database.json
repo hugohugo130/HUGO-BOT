@@ -1,581 +1,393 @@
 {
-    "898836485397180426": {
-        "money": 1294,
-        "hungry": 20,
-        "inventory": {
-            "coal": 2923,
-            "diamond_ore": 2582,
-            "emerald_ore": 6470,
-            "gold_ore": 4569,
-            "iron_ore": 9918,
-            "ruby_ore": 5158,
-            "sapphire_ore": 6887,
-            "stone": 7597,
-            "ha_log": 1003,
-            "oak_log": 2136,
-            "crimson_log": 543
+    "544741151882739744": {
+        "money": 1000,
+        "hungry": 15,
+        "lastRunTimestamp": {
+            "mine": 1749476360552,
+            "hew": 1749476360560,
+            "herd": 1749476360569,
+            "brew": 1749476360579,
+            "fish": 1749476360588
         },
-        "lastRunTimestamp": 1743686678886,
-        "transactions": []
+        "count": {
+            "mine": 2,
+            "hew": 2,
+            "herd": 2,
+            "brew": 2,
+            "fish": 2
+        },
+        "inventory": {
+            "sapphire_ore": 7,
+            "spruce_wood": 4,
+            "raw_chicken": 10,
+            "raw_catfish": 1,
+            "oak_wood": 4,
+            "raw_shrimp": 12,
+            "raw_octopus": 8,
+            "stone": 4,
+            "dark_oak_wood": 6,
+            "raw_crab": 4,
+            "god_wood": 1,
+            "raw_whale": 4,
+            "gold_ore": 4,
+            "raw_beef": 3,
+            "iron_ore": 9,
+            "ha_wood": 2,
+            "jungle_wood": 9,
+            "raw_pork": 6,
+            "raw_squid": 3,
+            "raw_duck": 11,
+            "raw_pufferfish": 2,
+            "coal": 3,
+            "warped_wood": 1,
+            "raw_goldfish": 3,
+            "ruby_ore": 2,
+            "raw_shark": 3,
+            "diamond_ore": 1,
+            "acacia_wood": 1,
+            "hair_growth_potion": 3,
+            "crimson_wood": 1,
+            "invisibility_potion": 2
+        },
+        "transactions": [],
+        "privacy": []
     },
     "600953168443998209": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
+    },
+    "778197135741026325": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": {
+            "mine": 1749728223225,
+            "hew": 1749728223234,
+            "herd": 1749728223241,
+            "brew": 1749728223247,
+            "fish": 1749728223253
+        },
+        "count": {
+            "mine": 1,
+            "hew": 1,
+            "herd": 1,
+            "brew": 1,
+            "fish": 1
+        },
+        "inventory": {
+            "dark_oak_wood": 3,
+            "raw_pork": 6,
+            "raw_pufferfish": 2,
+            "gold_ore": 4,
+            "ha_wood": 5,
+            "raw_shrimp": 5,
+            "raw_anglerfish": 1,
+            "raw_swordfish": 2,
+            "coal": 2,
+            "warped_wood": 1,
+            "oak_wood": 3,
+            "raw_chicken": 1,
+            "raw_catfish": 3,
+            "ruby_ore": 4,
+            "birch_wood": 4,
+            "raw_beef": 2,
+            "raw_shark": 3,
+            "raw_duck": 2,
+            "raw_salmon": 2,
+            "diamond_ore": 3,
+            "spruce_wood": 2,
+            "regen_potion": 2,
+            "raw_cod": 1
+        },
+        "transactions": [],
+        "privacy": []
     },
     "872755459885514782": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "896026226924331008": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
+    },
+    "898836485397180426": {
+        "money": 1090,
+        "hungry": 6,
+        "lastRunTimestamp": {
+            "mine": 1749791230066,
+            "hew": 1749791230078,
+            "herd": 1749791230088,
+            "brew": 1749791230096,
+            "fish": 1749791230104
+        },
+        "count": {
+            "mine": 1,
+            "hew": 1,
+            "herd": 1,
+            "brew": 1,
+            "fish": 1
+        },
+        "inventory": {
+            "iron_ore": 14507,
+            "raw_chicken": 28926,
+            "dizzy_potion": 7261,
+            "raw_shark": 5745,
+            "coal": 14564,
+            "god_wood": 11812,
+            "raw_shrimp": 5780,
+            "unlucky_potion": 7068,
+            "raw_lobster": 5758,
+            "emerald_ore": 14568,
+            "jungle_wood": 11355,
+            "raw_pork": 32191,
+            "eye_potion": 7040,
+            "raw_anglerfish": 5874,
+            "gold_ore": 14429,
+            "acacia_wood": 11841,
+            "floating_potion": 7187,
+            "raw_salmon": 5759,
+            "spruce_wood": 11438,
+            "raw_duck": 28746,
+            "mystery_potion": 7330,
+            "raw_catfish": 5622,
+            "diamond_ore": 14363,
+            "revive_potion": 7201,
+            "raw_tuna": 5898,
+            "jump_potion": 7199,
+            "raw_tropical_fish": 5686,
+            "crimson_wood": 11267,
+            "raw_goldfish": 5647,
+            "lucky_potion": 7185,
+            "stone": 14231,
+            "raw_beef": 28507,
+            "poison_potion": 7183,
+            "sapphire_ore": 14335,
+            "raw_squid": 5853,
+            "raw_swordfish": 5779,
+            "warped_planks": 5,
+            "ruby_ore": 14250,
+            "cough_potion": 7334,
+            "ha_potion": 7151,
+            "raw_whale": 5637,
+            "raw_cod": 5687,
+            "raw_jellyfish": 5778,
+            "ha_wood": 11286,
+            "raw_octopus": 5826,
+            "tuna": 25,
+            "warped_wood": 11384,
+            "regen_potion": 7315,
+            "raw_eel": 5885,
+            "oak_wood": 11847,
+            "dark_oak_wood": 11416,
+            "invisibility_potion": 7303,
+            "birch_wood": 11627,
+            "hair_growth_potion": 7081,
+            "raw_pufferfish": 5870,
+            "raw_clownfish": 5751,
+            "raw_koi": 5883,
+            "raw_crab": 5785,
+            "nausea_potion": 7028,
+            "gold_potion": 7288,
+            "pork": 1999999913916
+        },
+        "transactions": [
+            {
+                "timestamp": 1749713920,
+                "originalUser": "系統",
+                "targetUser": "<@898836485397180426>",
+                "amount": 45,
+                "type": "出售物品所得"
+            },
+            {
+                "timestamp": 1749713978,
+                "originalUser": "系統",
+                "targetUser": "<@898836485397180426>",
+                "amount": 45,
+                "type": "出售物品所得"
+            }
+        ],
+        "privacy": [
+            "money",
+            "backpack",
+            "partner"
+        ]
     },
     "936168925455081482": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "946356935765143562": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "1001016404289536051": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
+    },
+    "1051744314109214791": {
+        "money": 1000,
+        "hungry": 20,
+        "lastRunTimestamp": {},
+        "count": {},
+        "inventory": {},
+        "transactions": [],
+        "privacy": []
     },
     "1061310060455800852": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "1093122447177429052": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
-    },
-    "1185608807280292003": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1197913368519004191": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1299274108155985920": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "undefined": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "804330717794009109": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1016182228641927198": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1355086091144794185": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "899903597444210760": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1145965517669158964": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "994013790016389120": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1027597395585925200": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1003175596723023942": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "641584049034493952": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1045999158311534592": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "622001495143088128": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "746126438326992959": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "954670906406473748": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "610413774352154637": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "1126441219728363531": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
-    "1012590426559098930": {
+    "1127858769938878464": {
+        "money": 1000,
+        "hungry": 0,
+        "lastRunTimestamp": {
+            "mine": 1749718629914,
+            "hew": 1749718629949,
+            "herd": 1749718629970,
+            "brew": 1749718629984,
+            "fish": 1749718629995
+        },
+        "count": {
+            "mine": 1,
+            "hew": 1,
+            "herd": 1,
+            "brew": 1,
+            "fish": 1
+        },
+        "inventory": {
+            "crimson_wood": 6,
+            "iron_ore": 12,
+            "raw_shrimp": 22,
+            "spruce_wood": 9,
+            "stone": 6,
+            "oak_wood": 12,
+            "raw_pork": 25,
+            "ruby_ore": 9,
+            "raw_beef": 16,
+            "ha_wood": 6,
+            "raw_chicken": 22,
+            "emerald_ore": 11,
+            "acacia_wood": 9,
+            "diamond_ore": 9,
+            "jungle_wood": 12,
+            "raw_duck": 12,
+            "whale": 2,
+            "gold_ore": 13,
+            "warped_wood": 9,
+            "eel": 2,
+            "raw_catfish": 5,
+            "coal": 10,
+            "raw_clownfish": 2,
+            "raw_eel": 5,
+            "sapphire_ore": 7,
+            "god_wood": 8,
+            "raw_swordfish": 8,
+            "raw_goldfish": 4,
+            "raw_koi": 9,
+            "raw_crab": 3,
+            "raw_lobster": 5,
+            "dark_oak_wood": 14,
+            "birch_wood": 7,
+            "raw_squid": 7,
+            "raw_shark": 6,
+            "ha_potion": 8,
+            "raw_anglerfish": 1,
+            "floating_potion": 2,
+            "mystery_potion": 6,
+            "raw_tuna": 3,
+            "regen_potion": 3,
+            "raw_octopus": 1,
+            "gold_potion": 3,
+            "poison_potion": 2,
+            "hair_growth_potion": 5,
+            "dizzy_potion": 3,
+            "pork": 2,
+            "revive_potion": 2
+        },
+        "transactions": [],
+        "privacy": [
+            "money",
+            "backpack",
+            "partner"
+        ]
+    },
+    "1185608807280292003": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
-    "1104076826294366208": {
+    "1197913368519004191": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
-    },
-    "844936555134058517": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "751793251262136340": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "559004897316569090": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "970109380479569971": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1205472385663242241": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1124563905960751154": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1124315753345188001": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1116898308170981437": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "609189792571457550": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1197454885734588466": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1138768915128913960": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1248292531721076848": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1290871676862468178": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1160497398628495362": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1084070937776889907": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "747058172694626334": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1202920341123375114": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1032840164487221338": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1071015800221204480": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "905433558921920562": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1286623232669126666": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1198140483453603944": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "983275460425314324": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "647606268449652737": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1134002743904845825": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1093522892890853386": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "996980353317208114": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1095342279805386864": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1212218086552371240": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "864878584475942922": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1168081409244667919": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "959790690693419058": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1068084229277225001": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1201126295334047776": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "951058650435289150": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1205547763459162173": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "874527892866990141": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1046268942328537088": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1360457299185107097": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "442323545176145920": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1360882823770144828": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     },
     "754553206578741249": {
         "money": 1000,
         "hungry": 20,
-        "lastRunTimestamp": 0,
+        "lastRunTimestamp": {},
+        "count": {},
         "inventory": {},
-        "transactions": []
-    },
-    "1371498031823720588": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1259064322777157641": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "614296936396357672": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1307752611646013471": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1223953738406821961": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "931848512633700384": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1051465691020140567": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1127858769938878464": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
-    },
-    "1385245350192742483": {
-        "money": 1000,
-        "hungry": 20,
-        "lastRunTimestamp": 0,
-        "inventory": {},
-        "transactions": []
+        "transactions": [],
+        "privacy": []
     }
 }

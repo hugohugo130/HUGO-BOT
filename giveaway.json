@@ -1,12 +1,14 @@
 {
-  "host_userid": "",
-  "name": null,
-  "note": null,
-  "amount": 0,
-  "participants": [],
-  "endts": 0,
-  "messageID": "",
-  "winner": null,
+  "host_userid": "898836485397180426",
+  "name": "5000哈狗幣!",
+  "note": "e",
+  "amount": 5000,
+  "participants": [
+    "898836485397180426"
+  ],
+  "endts": 1730472598,
+  "messageID": "1301913637182640158",
+  "winner": "898836485397180426",
   "active": false,
   "emoji": "🎉"
 }

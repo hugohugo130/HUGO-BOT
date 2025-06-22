@@ -12,8 +12,24 @@
         "items": {}
     },
     "898836485397180426": {
-        "status": false,
-        "items": {}
+        "status": true,
+        "items": {
+            "diamond_ore": {
+                "name": "diamond_ore",
+                "amount": 2582,
+                "price": 600
+            },
+            "ha_wood": {
+                "name": "ha_wood",
+                "amount": 2,
+                "price": 500
+            },
+            "coal": {
+                "name": "coal",
+                "amount": 11,
+                "price": 50
+            }
+        }
     },
     "936168925455081482": {
         "status": false,
@@ -47,59 +63,7 @@
         "status": false,
         "items": {}
     },
-    "804330717794009109": {
-        "status": false,
-        "items": {}
-    },
-    "1016182228641927198": {
-        "status": false,
-        "items": {}
-    },
-    "1355086091144794185": {
-        "status": false,
-        "items": {}
-    },
-    "899903597444210760": {
-        "status": false,
-        "items": {}
-    },
-    "1145965517669158964": {
-        "status": false,
-        "items": {}
-    },
-    "994013790016389120": {
-        "status": false,
-        "items": {}
-    },
-    "1027597395585925200": {
-        "status": false,
-        "items": {}
-    },
-    "1003175596723023942": {
-        "status": false,
-        "items": {}
-    },
-    "641584049034493952": {
-        "status": false,
-        "items": {}
-    },
-    "1045999158311534592": {
-        "status": false,
-        "items": {}
-    },
-    "622001495143088128": {
-        "status": false,
-        "items": {}
-    },
-    "746126438326992959": {
-        "status": false,
-        "items": {}
-    },
-    "954670906406473748": {
-        "status": false,
-        "items": {}
-    },
-    "610413774352154637": {
+    "584213384409382953": {
         "status": false,
         "items": {}
     },
@@ -107,191 +71,21 @@
         "status": false,
         "items": {}
     },
-    "1012590426559098930": {
+    "1127858769938878464": {
+        "status": true,
+        "items": {
+            "ha_wood": {
+                "name": "ha_wood",
+                "amount": 1,
+                "price": 999
+            }
+        }
+    },
+    "1051744314109214791": {
         "status": false,
         "items": {}
     },
-    "1104076826294366208": {
-        "status": false,
-        "items": {}
-    },
-    "844936555134058517": {
-        "status": false,
-        "items": {}
-    },
-    "751793251262136340": {
-        "status": false,
-        "items": {}
-    },
-    "559004897316569090": {
-        "status": false,
-        "items": {}
-    },
-    "970109380479569971": {
-        "status": false,
-        "items": {}
-    },
-    "1205472385663242241": {
-        "status": false,
-        "items": {}
-    },
-    "1124563905960751154": {
-        "status": false,
-        "items": {}
-    },
-    "1124315753345188001": {
-        "status": false,
-        "items": {}
-    },
-    "1116898308170981437": {
-        "status": false,
-        "items": {}
-    },
-    "609189792571457550": {
-        "status": false,
-        "items": {}
-    },
-    "1197454885734588466": {
-        "status": false,
-        "items": {}
-    },
-    "1138768915128913960": {
-        "status": false,
-        "items": {}
-    },
-    "1248292531721076848": {
-        "status": false,
-        "items": {}
-    },
-    "1290871676862468178": {
-        "status": false,
-        "items": {}
-    },
-    "1160497398628495362": {
-        "status": false,
-        "items": {}
-    },
-    "1084070937776889907": {
-        "status": false,
-        "items": {}
-    },
-    "747058172694626334": {
-        "status": false,
-        "items": {}
-    },
-    "1202920341123375114": {
-        "status": false,
-        "items": {}
-    },
-    "1032840164487221338": {
-        "status": false,
-        "items": {}
-    },
-    "1071015800221204480": {
-        "status": false,
-        "items": {}
-    },
-    "905433558921920562": {
-        "status": false,
-        "items": {}
-    },
-    "1286623232669126666": {
-        "status": false,
-        "items": {}
-    },
-    "1198140483453603944": {
-        "status": false,
-        "items": {}
-    },
-    "983275460425314324": {
-        "status": false,
-        "items": {}
-    },
-    "647606268449652737": {
-        "status": false,
-        "items": {}
-    },
-    "1134002743904845825": {
-        "status": false,
-        "items": {}
-    },
-    "1093522892890853386": {
-        "status": false,
-        "items": {}
-    },
-    "996980353317208114": {
-        "status": false,
-        "items": {}
-    },
-    "1095342279805386864": {
-        "status": false,
-        "items": {}
-    },
-    "1212218086552371240": {
-        "status": false,
-        "items": {}
-    },
-    "864878584475942922": {
-        "status": false,
-        "items": {}
-    },
-    "1168081409244667919": {
-        "status": false,
-        "items": {}
-    },
-    "959790690693419058": {
-        "status": false,
-        "items": {}
-    },
-    "1068084229277225001": {
-        "status": false,
-        "items": {}
-    },
-    "1201126295334047776": {
-        "status": false,
-        "items": {}
-    },
-    "951058650435289150": {
-        "status": false,
-        "items": {}
-    },
-    "1205547763459162173": {
-        "status": false,
-        "items": {}
-    },
-    "874527892866990141": {
-        "status": false,
-        "items": {}
-    },
-    "1046268942328537088": {
-        "status": false,
-        "items": {}
-    },
-    "1360457299185107097": {
-        "status": false,
-        "items": {}
-    },
-    "442323545176145920": {
-        "status": false,
-        "items": {}
-    },
-    "1360882823770144828": {
-        "status": false,
-        "items": {}
-    },
-    "754553206578741249": {
-        "status": false,
-        "items": {}
-    },
-    "1371498031823720588": {
-        "status": false,
-        "items": {}
-    },
-    "1259064322777157641": {
-        "status": false,
-        "items": {}
-    },
-    "614296936396357672": {
+    "1085150892786974801": {
         "status": false,
         "items": {}
     },
@@ -299,23 +93,27 @@
         "status": false,
         "items": {}
     },
-    "1223953738406821961": {
+    "778197135741026325": {
         "status": false,
-        "items": {}
+        "items": {
+            "stone": {
+                "name": "stone",
+                "amount": 5,
+                "price": 50
+            }
+        }
     },
-    "931848512633700384": {
+    "544741151882739744": {
         "status": false,
-        "items": {}
+        "items": {
+            "diamond_ore": {
+                "name": "diamond_ore",
+                "amount": 3,
+                "price": 600
+            }
+        }
     },
-    "1051465691020140567": {
-        "status": false,
-        "items": {}
-    },
-    "1127858769938878464": {
-        "status": false,
-        "items": {}
-    },
-    "1385245350192742483": {
+    "754553206578741249": {
         "status": false,
         "items": {}
     }
