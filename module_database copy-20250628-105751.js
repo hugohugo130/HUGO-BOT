@@ -4,21 +4,9 @@ const readline = require('readline');
 const isEqual = require('lodash.isequal');
 const axios = require('axios');
 const path = require('path');
-const { beta } = require("./config.json")
+const { beta } = require("../config.json")
 
 const backupdb_queue_file = `${process.cwd()}/backup_database_send_queue.json`;
-
-// === 資料庫檔案清單 ===
-const databaseFiles = [
-    'backup_database_send_queue.json',
-    'cooking_interactions.json',
-    'data_red_packet.json',
-    'database.json',
-    'db.json',
-    'giveaway.json',
-    'rpg_database.json',
-    'rpg_shop.json',
-];
 
 function loadData(userid = null, mode = 0) {
     /*
@@ -375,26 +363,8 @@ async function onlineDB_downloadFile(filename, savePath = null) {
 // 上傳檔案
 async function onlineDB_uploadFile(filepath) {
     try {
-        // === 備份遠端檔案 ===
-        const filename = path.basename(filepath);
-        const folderName = filename.endsWith('.json') ? filename.slice(0, -5) : filename;
-        const backupDir = `backup/${folderName}`;
-        const now = new Date();
-        const pad = n => n.toString().padStart(2, '0');
-        const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-        const backupFile = `${backupDir}/${filename}-${timestamp}`;
-
-        // 建立 backupDir
-        await axios.post(`${SERVER_URL}/mkdir`, { dir: backupDir });
-        // 複製檔案
-        await axios.post(`${SERVER_URL}/copy`, { src: filename, dst: backupFile });
-
-        // === 上傳新檔案 ===
         const form = new FormData();
         form.append('file', fs.createReadStream(filepath));
-        // 新增：取得本地檔案 mtime 並一併上傳
-        const stats = fs.statSync(filepath);
-        form.append('mtime', stats.mtime.getTime());
         const res = await axios.post(`${SERVER_URL}/files`, form, { headers: form.getHeaders() });
         return res.data;
     } catch (err) {
@@ -487,7 +457,10 @@ async function onlineDB_checkFileLastModifiedDate(filename) {
     if (!IsGotErr(lastModifiedDate_remote)) {
 
         if (lastModifiedDate_local !== null && lastModifiedDate_local < lastModifiedDate_remote) {
-            let res = await onlineDB_uploadFile(filename);
+            const answer = await askUserWithTimeout(`[${filename}]本地檔案較新，是否要上傳本地檔案覆蓋遠端？(Y/N) `, filename);
+            if (answer === 'y') {
+                let res = await onlineDB_uploadFile(filename);
+            }
         } else if (lastModifiedDate_local !== null && lastModifiedDate_local > lastModifiedDate_remote) {
             const answer = await askUserWithTimeout(`[${filename}]遠端檔案較新，是否要下載遠端檔案覆蓋本地？(Y/N) `, filename);
             if (answer === 'y') {
@@ -519,37 +492,6 @@ async function test() {
     await onlineDB_checkFileLastModifiedDate("example.txt");
 };
 
-// === 批量檢查所有資料庫檔案 ===
-async function checkAllDatabaseFilesLastModified() {
-    for (const file of databaseFiles) {
-        await onlineDB_checkFileLastModifiedDate(file);
-    }
-}
-
-// === 批量上傳所有資料庫檔案 ===
-async function uploadAllDatabaseFiles() {
-    for (const file of databaseFiles) {
-        if (fs.existsSync(file)) {
-            await onlineDB_uploadFile(file);
-        }
-    }
-}
-
-// === 下載單一檔案到指定路徑 ===
-async function downloadDatabaseFile(src, dst = null) {
-    // 預設下載到 download/ 資料夾
-    if (!dst) {
-        const downloadDir = path.join(process.cwd(), 'download');
-        if (!fs.existsSync(downloadDir)) fs.mkdirSync(downloadDir);
-        dst = path.join(downloadDir, path.basename(src));
-    } else {
-        // 若dst資料夾不存在則自動建立
-        const dstDir = path.dirname(dst);
-        if (!fs.existsSync(dstDir)) fs.mkdirSync(dstDir, { recursive: true });
-    }
-    await onlineDB_downloadFile(src, dst);
-}
-
 // =========================================================================================================
 
 module.exports = {
@@ -575,8 +517,4 @@ module.exports = {
     onlineDB_downloadFile,
     onlineDB_listFiles,
     onlineDB_uploadFile,
-    databaseFiles,
-    checkAllDatabaseFilesLastModified,
-    uploadAllDatabaseFiles,
-    downloadDatabaseFile,
 };

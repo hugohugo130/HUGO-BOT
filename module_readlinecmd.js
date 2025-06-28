@@ -2,6 +2,7 @@ let stopping = false;
 const { scheduleJob, cancelJob, listJobs } = require('./module_schedule.js');
 const fs = require('fs');
 const path = require('path');
+const { uploadAllDatabaseFiles, downloadDatabaseFile, databaseFiles, onlineDB_uploadFile } = require('./module_database.js');
 
 module.exports = {
     setup() { },
@@ -11,6 +12,12 @@ module.exports = {
             if (input === "stop" && !stopping) {
                 stopping = true;
                 const { stop_send_msg } = require("./module_bot_start_stop.js");
+                try {
+                    await uploadAllDatabaseFiles();
+                    console.log("所有資料庫檔案已上傳");
+                } catch (error) {
+                    console.log(error.stack);
+                };
                 await stop_send_msg(client);
             } else if (input.startsWith("schedule ")) {
                 const args = input.slice(9).split(" ");
@@ -74,6 +81,40 @@ module.exports = {
                     console.log("schedule list - 列出所有可用的排程任務");
                     console.log("schedule run <任務名稱> - 執行指定的排程任務");
                 };
+            } else if (input.startsWith("upload ")) {
+                // upload src [dst]
+                const args = input.split(" ").slice(1);
+                if (args.length < 1) {
+                    console.log("用法: upload <src> [dst]");
+                } else {
+                    const src = args[0];
+                    const dst = args[1];
+                    try {
+                        if (!require('fs').existsSync(src)) {
+                            console.log(`找不到檔案: ${src}`);
+                        } else {
+                            await onlineDB_uploadFile(src, dst);
+                            console.log(`已上傳: ${src} ${dst ? `-> ${dst}` : ''}`);
+                        }
+                    } catch (error) {
+                        console.log(error.stack);
+                    }
+                }
+            } else if (input.startsWith("download ")) {
+                // download src [dst]
+                const args = input.split(" ").slice(1);
+                if (args.length < 1) {
+                    console.log("用法: download <src> [dst]");
+                } else {
+                    const src = args[0];
+                    const dst = args[1];
+                    try {
+                        await downloadDatabaseFile(src, dst);
+                        console.log(`已下載: ${src} ${dst ? `-> ${dst}` : ''}`);
+                    } catch (error) {
+                        console.log(error.stack);
+                    }
+                }
             } else if (input === "fixed") {
                 const { err_channel_ID, err2_channel_ID } = require("./config.json");
                 const channel1 = client.channels.cache.get(err_channel_ID) || await client.channels.fetch(err_channel_ID);
