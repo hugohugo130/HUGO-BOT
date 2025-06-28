@@ -43,6 +43,15 @@ module.exports = {
         console.log(`[${time()}] 輸入stop停止機器人`);
     },
 
+    /**
+     * @typedef {Object} NoReturn
+     * @description 類似Python的NoReturn類型，表示函數不會返回任何值(執行這個函數後即不會執行接下來的代碼)
+     */
+    
+    /**
+     * @type {NoReturn}
+     * @description 函數不會返回任何值(執行這個函數後即不會執行接下來的代碼)
+     */
     stop_send_msg: async function (client) {
         const { time } = require("./module_time.js");
         const { BotAnnouncementChannelID } = require("./config.json");
