@@ -3,3 +3,11 @@ node_modules/
 **/package-lock.json
 temp/
 .env
+backup_database_send_queue.json
+cooking_interactions.json
+data_red_packet.json
+database.json
+db.json
+giveaway.json
+rpg_database.json
+rpg_shop.json
