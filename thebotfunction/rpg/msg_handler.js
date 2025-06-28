@@ -631,6 +631,14 @@ const rpg_commands = {
         } else if (random_fish === "raw_tuna") {
             fish_text = "呼"
             description = `你等待了幾個小時，打撈到了 \`${show_amount}\` 條${fish_name}！`
+        } else if (random_fish === "raw_shark") {
+            if (Math.round(Math.random()) == - 1) {
+                fish_text = "a"
+                description = "欸不是這鯊魚也太大了吧 快跑"
+            } else {
+                fish_text = "小鯊魚"
+                description = `這鯊魚好小owo 先帶 \`${show_amount}\` 條 ${fish_name} 回家`
+            };
         } else {
             if (Math.round(Math.random()) === 0) {
                 fish_text = "好吃的魚魚！但要怎麼烤呢？"
@@ -1856,8 +1864,8 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         rpg_data.hungry -= 1;
     };
 
-    // if (rpg_cooldown[command] || command === "cd") {
-    if (false) {
+    if (rpg_cooldown[command] || command === "cd") {
+        // return;
         // 檢查上次執行時間是否為今天
         if (rpg_data.lastRunTimestamp && rpg_data.lastRunTimestamp[command]) {
             const lastRunDate = new Date(rpg_data.lastRunTimestamp[command]);
