@@ -114,14 +114,15 @@ module.exports = {
 
         let cooking_interactions = load_cooking_interactions();
 
-        // 將新的互動添加到陣列中
+        const sentMsg = await interaction.fetchReply();
         cooking_interactions.push({
             userid,
             item_id,
             amount,
             coal_amount,
             duration,
-            interaction,
+            channelId: interaction.channelId,
+            messageId: sentMsg.id,
             current: 0,
             legal: amount >= coal_amount,
         });
