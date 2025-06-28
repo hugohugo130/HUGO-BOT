@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { loadData } = require('../../module_database');
+const { loadData } = require('../../module_database.js');
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('我的訊息數量')
