@@ -2,6 +2,7 @@ ffmpeg/
 node_modules/
 **/package-lock.json
 temp/
+backup/
 .env
 backup_database_send_queue.json
 cooking_interactions.json

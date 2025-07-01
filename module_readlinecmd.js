@@ -81,7 +81,7 @@ module.exports = {
                     console.log("schedule list - 列出所有可用的排程任務");
                     console.log("schedule run <任務名稱> - 執行指定的排程任務");
                 };
-            } else if (input.startsWith("upload ")) {
+            } else if (input.startsWith("upload")) {
                 // upload src [dst]
                 const args = input.split(" ").slice(1);
                 if (args.length < 1) {

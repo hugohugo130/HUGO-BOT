@@ -351,6 +351,28 @@ function get_loophole_embed(client = cli, guild = Guild, text = null) {
 };
 
 async function ls_function({ client, message, rpg_data, data, args, mode }) {
+    if (!rpg_data.privacy.includes(privacy_data["ls"])) {
+        const bag_emoji = get_emoji(message.guild, "bag")
+        let embed = new EmbedBuilder()
+            .setTitle(`${bag_emoji} | 查看包包`)
+            .setColor(0x00BBFF)
+            .setDescription(`為保護包包內容隱私權，戳這顆按鈕來看你的包包，隱私權設定可以透過 \`${prefix}privacy\` 指令更改`);
+
+        embed = setEmbedFooter(client, embed);
+
+        const confirm_button = new ButtonBuilder()
+            .setCustomId(`ls|${userid}`)
+            .setEmoji(bag_emoji)
+            .setLabel("查看包包")
+            .setStyle(ButtonStyle.Success);
+
+        const row = new ActionRowBuilder()
+            .addComponents(confirm_button);
+
+        if (mode === 1) return { embeds: [embed], components: [row] };
+        return await message.reply({ embeds: [embed], components: [row] });
+    };
+
     const { name, mine_gets, ingots, logs, foods_crops, foods_meat, fish, weapons_armor, wood_productions, brew, planks } = require("../../rpg.js");
     const emojiNames = ["bag", "ore", "farmer", "cow", "swords", "potion"];
     const [bag_emoji, ore_emoji, farmer_emoji, cow_emoji, swords_emoji, potion_emoji] = emojiNames.map(name => {
@@ -470,6 +492,7 @@ const redirect_data = {
     bag: "ls",
     item: "ls",
     money: "m",
+    store: "shop",
     mo: "m",
     l: "lazy",
 };
@@ -1608,7 +1631,7 @@ const rpg_commands = {
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
             .setTitle(`${emoji_trade} | 出售確認`)
-            .setDescription(`你將要出售 \`${amount.toLocaleString()}\` 個 \`${item_name}\`，共獲得 \`${price.toLocaleString()}$\``);
+            .setDescription(`你將要出售 \`${amount.toLocaleString()}\` 個 \`${item_name}\`，共獲得 \`${(price*amount).toLocaleString()}$\``);
 
         if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: [row] };
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
@@ -1640,6 +1663,94 @@ const rpg_commands = {
 
         if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] };
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] });
+    }],
+    top: ["金錢排行榜", "who!誰是世界首富!是不是你!", async function ({ client, message, rpg_data, data, args, mode }) {
+        const { load_rpg_data } = require("../../module_database.js");
+        const { GuildID } = require('../../config.json');
+
+        const guild = client.guilds.cache.get(GuildID);
+        const members = guild.members.cache.filter(member => !member.user.bot);
+
+        const userDataList = [];
+        for (const member of members.values()) {
+            const userid = member.user.id;
+            userDataList.push({
+                user: member.user,
+                money: load_rpg_data(userid).money,
+            });
+        };
+
+        userDataList.sort((a, b) => b.money - a.money);
+
+        const emoji_top = get_emoji(message.guild, "top");
+
+        const embed = new EmbedBuilder()
+            .setColor(0x00BBFF)
+            .setTitle(`${emoji_top} | 金錢排行榜 Top 10`)
+
+        let description = "";
+        const topUsers = userDataList.slice(0, 10);
+
+        for (let i = 0; i < topUsers.length; i++) {
+            const userData = topUsers[i];
+            const rank = i + 1;
+
+            description += `${rank}. ${userData.user.toString()} - \`${userData.money.toLocaleString()}$\`\n`;
+        };
+
+        if (description === "") {
+            description = "奇怪餒，目前怎麼可能還沒有任何用戶擁有金錢？我壞掉了？";
+        };
+
+        embed.setDescription(description);
+
+        if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
+        return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
+    }],
+    last: ['"倒數"金錢排行榜', "讓我們看看誰最窮!嘿嘿", async function ({ client, message, rpg_data, data, args, mode }) {
+        const { load_rpg_data } = require("../../module_database.js");
+        const { GuildID } = require('../../config.json');
+
+        const guild = client.guilds.cache.get(GuildID);
+        const members = guild.members.cache.filter(member => !member.user.bot);
+
+        const userDataList = [];
+        for (const member of members.values()) {
+            const userid = member.user.id;
+            userDataList.push({
+                user: member.user,
+                money: load_rpg_data(userid).money,
+            });
+        };
+
+        // 按金錢排序（從高到低）
+        userDataList.sort((a, b) => b.money - a.money);
+
+        const emoji_decrease = get_emoji(message.guild, "decrease");
+
+        const embed = new EmbedBuilder()
+            .setColor(0x00BBFF)
+            .setTitle(`${emoji_decrease} | 「倒數」金錢排行榜 Top 10`)
+
+        let description = "";
+        const topUsers = userDataList.slice(-10);
+        topUsers.reverse();
+
+        for (let i = 0; i < topUsers.length; i++) {
+            const userData = topUsers[i];
+            const rank = i + 1;
+
+            description += `${rank}. ${userData.user.toString()} - \`${userData.money.toLocaleString()}$\`\n`;
+        };
+
+        if (description === "") {
+            description = "奇怪餒，目前怎麼可能還沒有任何用戶擁有金錢？我壞掉了？";
+        };
+
+        embed.setDescription(description);
+
+        if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
+        return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
     }],
     limited: ["???", "???", async function ({ client, message, rpg_data, data, args, mode }) {
         const { load_rpg_data } = require("../../module_database.js");
@@ -1706,7 +1817,8 @@ const rpg_commands = {
             };
             desc = desc.padEnd(13, '|');
 
-            if (completed % 1 === 0) {
+            // if (completed % 1 === 0) {
+            if (true) {
                 rpg_data = load_rpg_data(message.author.id);
             };
 
@@ -1864,8 +1976,8 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         rpg_data.hungry -= 1;
     };
 
-    if (rpg_cooldown[command] || command === "cd") {
-        // return;
+    // if (rpg_cooldown[command] || command === "cd") {
+    if (false) {
         // 檢查上次執行時間是否為今天
         if (rpg_data.lastRunTimestamp && rpg_data.lastRunTimestamp[command]) {
             const lastRunDate = new Date(rpg_data.lastRunTimestamp[command]);
@@ -1905,29 +2017,6 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
 
         rpg_data.lastRunTimestamp[command] = Date.now();
         save_rpg_data(userid, rpg_data);
-    };
-
-    // if (command === "ls" && !rpg_data.privacy.includes("backpack")) {
-    if (privacy_data[command] && !rpg_data.privacy.includes(privacy_data[command])) {
-        const bag_emoji = get_emoji(message.guild, "bag")
-        let embed = new EmbedBuilder()
-            .setTitle(`${bag_emoji} | 查看包包`)
-            .setColor(0x00BBFF)
-            .setDescription(`為保護包包內容隱私權，戳這顆按鈕來看你的包包，隱私權設定可以透過 \`${prefix}privacy\` 指令更改`);
-
-        embed = setEmbedFooter(client, embed);
-
-        const confirm_button = new ButtonBuilder()
-            .setCustomId(`ls|${userid}`)
-            .setEmoji(bag_emoji)
-            .setLabel("查看包包")
-            .setStyle(ButtonStyle.Success);
-
-        const row = new ActionRowBuilder()
-            .addComponents(confirm_button);
-
-        if (mode === 1) return { embeds: [embed], components: [row] };
-        return await message.reply({ embeds: [embed], components: [row] });
     };
 
     const result = await execute({ client, message, rpg_data, data, args, mode });

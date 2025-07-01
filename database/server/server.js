@@ -22,8 +22,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+function time() {
+    const now = new Date();
+    const pad = n => n.toString().padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
 // 獲取檔案最後修改日期
 app.get('/files/:filename/last-modified', (req, res) => {
+    let action = "獲取檔案最後修改日期";
+
+    console.log(`[${time()}] ${action}：GET /files/${req.params.filename}/last-modified - by ${req.ip}`);
     const filePath = path.join(FILES_DIR, req.params.filename);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
     fs.stat(filePath, (err, stats) => {
@@ -34,6 +43,9 @@ app.get('/files/:filename/last-modified', (req, res) => {
 
 // 列出所有檔案
 app.get('/files', (req, res) => {
+    let action = "列出所有檔案";
+
+    console.log(`[${time()}] ${action}：GET /files - by ${req.ip}`);
     fs.readdir(FILES_DIR, (err, files) => {
         if (err) return res.status(500).json({ error: err.stack });
         res.json({ files });
@@ -42,6 +54,9 @@ app.get('/files', (req, res) => {
 
 // 下載檔案
 app.get('/files/:filename', (req, res) => {
+    let action = "下載檔案";
+
+    console.log(`[${time()}] ${action}：GET /files/${req.params.filename} - by ${req.ip}`);
     const filePath = path.join(FILES_DIR, req.params.filename);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
     res.download(filePath);
@@ -49,6 +64,9 @@ app.get('/files/:filename', (req, res) => {
 
 // 上傳檔案
 app.post('/files', upload.single('file'), (req, res) => {
+    let action = "上傳檔案";
+
+    console.log(`[${time()}] ${action}：POST /files ${req.file ? req.file.originalname : ''} - by ${req.ip}`);
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     if (req.body.mtime) {
         const mtime = new Date(Number(req.body.mtime));
@@ -59,6 +77,9 @@ app.post('/files', upload.single('file'), (req, res) => {
 
 // 刪除檔案
 app.delete('/files/:filename', (req, res) => {
+    let action = "刪除檔案";
+
+    console.log(`[${time()}] ${action}：DELETE /files/${req.params.filename} - by ${req.ip}`);
     const filePath = path.join(FILES_DIR, req.params.filename);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
     fs.unlink(filePath, err => {
@@ -69,6 +90,9 @@ app.delete('/files/:filename', (req, res) => {
 
 // 建立資料夾
 app.post('/mkdir', (req, res) => {
+    let action = "建立資料夾";
+
+    console.log(`[${time()}] ${action}：POST /mkdir ${req.body.dir || ''} - by ${req.ip}`);
     const dir = req.body.dir;
     if (!dir) return res.status(400).json({ error: 'No dir specified' });
     const fullPath = path.isAbsolute(dir) ? dir : path.join(FILES_DIR, dir);
@@ -83,12 +107,14 @@ app.post('/mkdir', (req, res) => {
 // 複製遠端文件
 app.post('/copy', (req, res) => {
     const { src, dst } = req.body;
+    let action = "複製遠端文件"
+
+    console.log(`[${time()}] ${action}：POST /copy ${src && dst ? `${src} -> ${dst}` : ''} - by ${req.ip}`);
     if (!src || !dst) return res.status(400).json({ error: 'src and dst required' });
     const srcPath = path.isAbsolute(src) ? src : path.join(FILES_DIR, src);
     const dstPath = path.isAbsolute(dst) ? dst : path.join(FILES_DIR, dst);
     if (!fs.existsSync(srcPath)) return res.status(404).json({ error: 'Source file not found' });
     try {
-        // 確保目標資料夾存在
         fs.mkdirSync(path.dirname(dstPath), { recursive: true });
         fs.copyFileSync(srcPath, dstPath);
         res.json({ message: `File copied from ${srcPath} to ${dstPath}` });

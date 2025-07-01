@@ -336,8 +336,9 @@ function sethacoin_forsign(userId, amount, add = false) {
 };
 
 // =========================================================================================================
-let SERVER_URL = 'http://26.38.173.246:3001';
-if (!beta) SERVER_URL = 'http://26.38.173.246:3002';
+const IP = '26.146.150.194';
+let SERVER_URL = `http://${IP}:3001`;
+if (!beta) SERVER_URL = `http://${IP}:3002`;
 
 // 列出所有檔案
 async function onlineDB_listFiles() {
@@ -392,7 +393,7 @@ async function onlineDB_uploadFile(filepath) {
         // === 上傳新檔案 ===
         const form = new FormData();
         form.append('file', fs.createReadStream(filepath));
-        // 新增：取得本地檔案 mtime 並一併上傳
+        // 取得本地檔案的 mtime
         const stats = fs.statSync(filepath);
         form.append('mtime', stats.mtime.getTime());
         const res = await axios.post(`${SERVER_URL}/files`, form, { headers: form.getHeaders() });
@@ -492,32 +493,30 @@ async function onlineDB_checkFileLastModifiedDate(filename) {
             const answer = await askUserWithTimeout(`[${filename}]遠端檔案較新，是否要下載遠端檔案覆蓋本地？(Y/N) `, filename);
             if (answer === 'y') {
                 let res = await onlineDB_downloadFile(filename);
-            }
-        } else {
-            // console.log("本地與遠端檔案最後修改日期相同，無需同步。");
+            };
         };
     };
 }
 
-async function test() {
-    const filelist = await onlineDB_listFiles();
-    if (!IsGotErr(filelist))
-        console.log(`檔案列表: ${filelist}`);
+// async function test() {
+//     const filelist = await onlineDB_listFiles();
+//     if (!IsGotErr(filelist))
+//         console.log(`檔案列表: ${filelist}`);
 
-    let res = await onlineDB_downloadFile("example.txt");
-    if (!IsGotErr(res))
-        console.log(`下載完成: ${res}`);
+//     let res = await onlineDB_downloadFile("example.txt");
+//     if (!IsGotErr(res))
+//         console.log(`下載完成: ${res}`);
 
-    res = await onlineDB_uploadFile('example2.txt');
-    if (!IsGotErr(res))
-        console.log(`上載完成: ${res}`);
+//     res = await onlineDB_uploadFile('example2.txt');
+//     if (!IsGotErr(res))
+//         console.log(`上載完成: ${res}`);
 
-    res = await onlineDB_deleteFile('abc.txt');
-    if (!IsGotErr(res))
-        console.log(`已刪除檔案: ${res}`);
+//     res = await onlineDB_deleteFile('abc.txt');
+//     if (!IsGotErr(res))
+//         console.log(`已刪除檔案: ${res}`);
 
-    await onlineDB_checkFileLastModifiedDate("example.txt");
-};
+//     await onlineDB_checkFileLastModifiedDate("example.txt");
+// };
 
 // === 批量檢查所有資料庫檔案 ===
 async function checkAllDatabaseFilesLastModified() {
