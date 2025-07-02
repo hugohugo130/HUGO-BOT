@@ -1,5 +1,4 @@
 let stopping = false;
-const { scheduleJob, cancelJob, listJobs } = require('./module_schedule.js');
 const fs = require('fs');
 const path = require('path');
 const { uploadAllDatabaseFiles, downloadDatabaseFile, databaseFiles, onlineDB_uploadFile } = require('./module_database.js');
@@ -81,6 +80,8 @@ module.exports = {
                     console.log("schedule list - 列出所有可用的排程任務");
                     console.log("schedule run <任務名稱> - 執行指定的排程任務");
                 };
+            } else if (input === "uploadAll") {
+                await uploadAllDatabaseFiles();
             } else if (input.startsWith("upload")) {
                 // upload src [dst]
                 const args = input.split(" ").slice(1);

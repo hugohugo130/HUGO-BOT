@@ -559,6 +559,47 @@ async function downloadDatabaseFile(src, dst = null) {
 
 // =========================================================================================================
 
+let { default_value } = require('./config.json');
+const { giveaway_eg } = require('./config.json');
+default_value = { ...default_value, "giveaway.json": giveaway_eg };
+const database_files = Object.keys(default_value);
+
+async function check_database_files() {
+    for (const file of database_files) {
+        if (!fs.existsSync(file)) {
+            try {
+                await onlineDB_downloadFile(file);
+            } catch (err) {
+                if (err.response?.status === 404) {
+                    console.warn(`[警告] [module_database.check_database_files] 本地和遠端也沒有檔案 ${file}`)
+                } else {
+                    console.error(`[錯誤] 檢查本地資料庫文件是否存在時遇到未知錯誤：\n${err.stack}`)
+                };
+            };
+        };
+    };
+};
+
+function update_database_files() {
+    for (const file of database_files) {
+        if (fs.existsSync(file)) {
+            let fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
+            let defaultData = default_value[file];
+            let modified = false;
+
+            for (const key in defaultData) {
+                if (!(key in fileData)) {
+                    fileData[key] = defaultData[key];
+                    modified = true;
+                };
+            };
+
+            if (!modified) continue;
+            fs.writeFileSync(file, JSON.stringify(fileData, null, 4));
+        };
+    };
+};
+
 module.exports = {
     loadData,
     saveUserData,
@@ -586,4 +627,6 @@ module.exports = {
     checkAllDatabaseFilesLastModified,
     uploadAllDatabaseFiles,
     downloadDatabaseFile,
+    check_database_files,
+    update_database_files,
 };
