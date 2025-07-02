@@ -125,5 +125,5 @@ app.post('/copy', (req, res) => {
 
 // 伺服器 啟動！
 app.listen(PORT, () => {
-    console.log(`REST API 伺服器已啟動，埠號 ${PORT}\n目錄：${FILES_DIR}`);
+    console.log(`REST API 伺服器已啟動，埠號 ${PORT}`);
 });

@@ -82,7 +82,8 @@ module.exports = {
         const contentincluded = interaction.options.getString('contentincluded');
         const until = interaction.options.getString('until');
         const user = interaction.options.getUser('user');
-        
+        const messages = await getMessages(channel, msgnum + 1);
+
         let untilmsg;
         if (until) {
             try {
@@ -92,12 +93,9 @@ module.exports = {
                 return await interaction.editReply({ content: '指定的訊息ID無效，請重新輸入' });
             };
         };
-        
-        await interaction.editReply('[LOADING] 正在獲取訊息...');
-        const messages = await getMessages(channel, msgnum + 1);
 
         let progressMessage = null; // 追蹤進度訊息
-        const reply = await interaction.editReply('開始刪除訊息! ');
+        const reply = await interaction.editReply('開始刪除訊息...');
         progressMessage = reply;
 
         // 根據條件過濾訊息
