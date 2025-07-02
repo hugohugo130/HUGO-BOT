@@ -388,7 +388,15 @@ async function onlineDB_uploadFile(filepath) {
         // 建立 backupDir
         await axios.post(`${SERVER_URL}/mkdir`, { dir: backupDir });
         // 複製檔案
-        await axios.post(`${SERVER_URL}/copy`, { src: filename, dst: backupFile });
+        try {
+            await axios.post(`${SERVER_URL}/copy`, { src: filename, dst: backupFile });
+        } catch (err) {
+            if (err.response && err.response.status === 404) {
+                console.warn(`[警告] 備份遠端檔案時: 來源文件 ${filename} 不存在`);
+            } else {
+                throw err;
+            };
+        };
 
         // === 上傳新檔案 ===
         const form = new FormData();
