@@ -20,9 +20,11 @@ module.exports = {
                 await command.execute(interaction);
                 if (backend_channel) {
                     const embed = new EmbedBuilder()
-                        .addFields({ name: '指令執行者', value: username })
+                        .setTitle("指令執行")
+                        .addFields({ name: '指令執行者', value: interaction.user.toString() })
                         .addFields({ name: '指令名稱', value: interaction.commandName })
                         .addFields({ name: '選項', value: options ? options : '無' });
+
                     await backend_channel.send({ embeds: [embed] });
                 };
             } catch (error) {

@@ -82,6 +82,7 @@ module.exports = {
                 };
             } else if (input === "uploadAll") {
                 await uploadAllDatabaseFiles();
+                console.log("已上載所有資料庫檔案");
             } else if (input.startsWith("upload")) {
                 // upload src [dst]
                 const args = input.split(" ").slice(1);

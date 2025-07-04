@@ -378,12 +378,14 @@ async function onlineDB_uploadFile(filepath) {
     try {
         // === 備份遠端檔案 ===
         const filename = path.basename(filepath);
-        const folderName = filename.endsWith('.json') ? filename.slice(0, -5) : filename;
-        const backupDir = `backup/${folderName}`;
+        const filenameWithoutExt = filename.replace(/\.json$/, "");
         const now = new Date();
         const pad = n => n.toString().padStart(2, '0');
-        const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-        const backupFile = `${backupDir}/${filename}-${timestamp}`;
+        const year = now.getFullYear();
+        const month = pad(now.getMonth() + 1);
+        const backupDir = `backup/${year}-${month}/${filenameWithoutExt}`;
+        const timestamp = `${year}-${month}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+        const backupFile = `${backupDir}/${filename}-${timestamp}.json`;
 
         // 建立 backupDir
         await axios.post(`${SERVER_URL}/mkdir`, { dir: backupDir });
@@ -391,7 +393,7 @@ async function onlineDB_uploadFile(filepath) {
         try {
             await axios.post(`${SERVER_URL}/copy`, { src: filename, dst: backupFile });
         } catch (err) {
-            if (err.response && err.response.status === 404) {
+            if (err.response?.status === 404) {
                 console.warn(`[警告] 備份遠端檔案時: 來源文件 ${filename} 不存在`);
             } else {
                 throw err;
@@ -471,7 +473,7 @@ function askUserWithTimeout(question, filename) {
             } catch (err) {
                 console.error(`\n備份檔案時遇到錯誤: ${err.stack}`);
             }
-            resolve('y');
+            resolve('n');
         }, 10000);
 
         rl.question(question, (answer) => {
@@ -494,7 +496,6 @@ async function onlineDB_checkFileLastModifiedDate(filename) {
 
     const lastModifiedDate_remote = await onlineDB_FileEditDate(filename);
     if (!IsGotErr(lastModifiedDate_remote)) {
-
         if (lastModifiedDate_local !== null && lastModifiedDate_local < lastModifiedDate_remote) {
             let res = await onlineDB_uploadFile(filename);
         } else if (lastModifiedDate_local !== null && lastModifiedDate_local > lastModifiedDate_remote) {
@@ -504,7 +505,7 @@ async function onlineDB_checkFileLastModifiedDate(filename) {
             };
         };
     };
-}
+};
 
 // async function test() {
 //     const filelist = await onlineDB_listFiles();
@@ -562,13 +563,15 @@ async function downloadDatabaseFile(src, dst = null) {
 let { default_value } = require('./config.json');
 const { giveaway_eg } = require('./config.json');
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
-const database_files = Object.keys(default_value);
+// const database_files = Object.keys(default_value);
+const database_files = databaseFiles;
 
 async function check_database_files() {
     for (const file of database_files) {
         if (!fs.existsSync(file)) {
             try {
                 await onlineDB_downloadFile(file);
+                console.log(`[檢查本地資料庫文件] 文件 ${file} 在本地中不存在，已下載檔案`)
             } catch (err) {
                 if (err.response?.status === 404) {
                     console.warn(`[警告] [module_database.check_database_files] 本地和遠端也沒有檔案 ${file}`)

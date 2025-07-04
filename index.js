@@ -10,6 +10,20 @@ const { check_item_name } = require("./rpg.js");
 const fs = require("fs");
 require("dotenv").config();
 
+let client = getclient();
+client.setMaxListeners(Infinity);
+
+client.on(Events.Error, (error) => {
+    if (error.code != "UND_ERR_CONNECT_TIMEOUT") {
+        require(`./module_senderr.js`).senderr({
+            client: client,
+            msg: `機器人發生了錯誤：${error.stack}`,
+            clientready: true,
+            channel: 2
+        });
+    };
+});
+
 (async () => {
     await check_database_files();
 
@@ -19,9 +33,6 @@ require("dotenv").config();
     await checkAllDatabaseFilesLastModified();
 
     check_item_name()
-
-    let client = getclient();
-    client.setMaxListeners(Infinity);
 
     if (slashcmd) client.commands = loadslashcmd(true);
     if (botfunction) loadbotfunction(client);
@@ -39,17 +50,6 @@ require("dotenv").config();
             };
         };
     };
-
-    client.on(Events.Error, (error) => {
-        if (error.code != "UND_ERR_CONNECT_TIMEOUT") {
-            require(`./module_senderr.js`).senderr({
-                client: client,
-                msg: `機器人發生了錯誤：${error.stack}`,
-                clientready: true,
-                channel: 2
-            });
-        };
-    });
 
     // client.cooking_interactions = [];
 
