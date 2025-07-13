@@ -159,6 +159,7 @@ const foods_crops = {
     chocolate: "chocolate",
     pumpkin_pie: "pumpkin_pie",
     melon_slice: "melon_slice",
+    raw_potato: "raw_potato",
 };
 
 const foods_meat = {
@@ -167,11 +168,6 @@ const foods_meat = {
     beef: "beef",
     chicken: "chicken",
     duck: "duck",
-    raw_shrimp: "raw_shrimp",
-    raw_pork: "raw_pork",
-    raw_beef: "raw_beef",
-    raw_chicken: "raw_chicken",
-    raw_duck: "raw_duck",
     cod: "cod",
     salmon: "salmon",
     tropical_fish: "tropical_fish",
@@ -195,6 +191,11 @@ const foods_meat = {
     enchanted_golden_apple: "enchanted_golden_apple",
     golden_carrot: "golden_carrot",
     golden_beef: "golden_beef",
+    raw_shrimp: "raw_shrimp",
+    raw_pork: "raw_pork",
+    raw_beef: "raw_beef",
+    raw_chicken: "raw_chicken",
+    raw_duck: "raw_duck",
 };
 
 const foods = { ...foods_crops, ...foods_meat };
@@ -217,14 +218,14 @@ const shop_lowest_price = {
     coal: 50,
     iron_ore: 50,
     gold_ore: 50,
-    diamond_ore: 50,
+    diamond_ore: 150,
     emerald_ore: 50,
     ruby_ore: 50,
     sapphire_ore: 50,
     stone: 50,
     iron: 250,
     gold: 50,
-    diamond: 50,
+    diamond: 750,
     emerald: 50,
     ruby: 50,
     sapphire: 50,
@@ -250,12 +251,7 @@ const shop_lowest_price = {
     beef: 50,
     chicken: 50,
     duck: 50,
-    raw_shrimp: 50,
-    raw_pork: 50,
-    raw_beef: 50,
-    raw_chicken: 50,
-    raw_duck: 50,
-    bread: 50,
+    bread: 130,
     potato: 50,
     cookie: 50,
     cake: 50,
@@ -268,50 +264,59 @@ const shop_lowest_price = {
     golden_carrot: 50,
     golden_beef: 50,
     regen_potion: 100,
+    raw_potato: 85,
+    raw_shrimp: 50,
+    raw_pork: 50,
+    raw_beef: 50,
+    raw_chicken: 50,
+    raw_duck: 50,
+    wheat: 65,
 };
 
 const food_data = {
+    crab: 2,
+    lobster: 2,
+    eel: 4,
+    catfish: 3,
+    goldfish: 1,
+    koi: 1,
+    shark: 4,
+    whale: 4,
+    clownfish: 1,
+    jellyfish: 1,
+    candy: 1,
+    cod: 2,
+    tropical_fish: 2,
+    pufferfish: 2,
+    bread: 2,
+    potato: 2,
+    cookie: 2,
+    cake: 2,
+    chocolate: 2,
+    melon_slice: 2,
+    swordfish: 3,
     shrimp: 3,
-    pork: 4,
-    beef: 4,
     chicken: 3,
     duck: 3,
+    pumpkin_pie: 3,
+    golden_apple: 3,
+    golden_carrot: 3,
+    golden_beef: 3,
+    salmon: 3,
+    tuna: 3,
+    anglerfish: 4,
+    octopus: 4,
+    squid: 4,
+    pork: 4,
+    beef: 4,
+    enchanted_golden_apple: 4,
+    raw_potato: 1,
     raw_shrimp: 1,
     raw_pork: 1,
     raw_beef: 1,
     raw_chicken: 1,
     raw_duck: 1,
-    bread: 2,
-    potato: 2,
-    cookie: 2,
-    cake: 2,
-    candy: 1,
-    chocolate: 2,
-    pumpkin_pie: 3,
-    melon_slice: 2,
-    golden_apple: 3,
-    enchanted_golden_apple: 4,
-    golden_carrot: 3,
-    golden_beef: 3,
-    cod: 0,
-    salmon: 3,
-    tropical_fish: 0,
-    pufferfish: 0,
-    clownfish: 0,
-    tuna: 3,
-    swordfish: 0,
-    anglerfish: 0,
-    jellyfish: 0,
-    octopus: 0,
-    squid: 0,
-    crab: 0,
-    lobster: 0,
-    eel: 0,
-    catfish: 0,
-    goldfish: 0,
-    koi: 0,
-    shark: 0,
-    whale: 0,
+    raw_tuna: 1,
 };
 
 const brew = {
@@ -348,7 +353,6 @@ const fish = {
     raw_squid: "raw_squid",
     raw_crab: "raw_crab",
     raw_lobster: "raw_lobster",
-    raw_shrimp: "raw_shrimp",
     raw_eel: "raw_eel",
     raw_catfish: "raw_catfish",
     raw_goldfish: "raw_goldfish",
@@ -370,16 +374,19 @@ const weapons_armor = {
 };
 
 const bake = {
-    raw_pork: 10,
-    raw_duck: 10,
-    raw_beef: 10,
-    raw_chicken: 10,
-    raw_salmon: 10,
-    raw_shrimp: 10,
-    raw_tuna: 10,
+    raw_potato: "potato",
+    raw_pork: "pork",
+    raw_duck: "duck",
+    raw_beef: "beef",
+    raw_chicken: "chicken",
+    raw_salmon: "salmon",
+    raw_shrimp: "shrimp",
+    raw_tuna: "tuna",
+    wheat: "bread",
 };
 
 const sell_data = {
+    // ==============礦物==============
     coal: 45,
     iron_ore: 45,
     gold_ore: 50,
@@ -390,10 +397,11 @@ const sell_data = {
     stone: 45,
     iron: 50,
     gold: 50,
-    diamond: 50,
+    diamond: 675,
     emerald: 50,
     ruby: 50,
     sapphire: 50,
+    // ==============木材==============
     oak_wood: 50,
     spruce_wood: 50,
     birch_wood: 50,
@@ -414,13 +422,8 @@ const sell_data = {
     warped_planks: 50,
     god_planks: 50,
     ha_planks: 50,
-    bread: 50,
-    cookie: 50,
-    cake: 50,
-    candy: 50,
-    chocolate: 50,
-    pumpkin_pie: 50,
-    melon_slice: 50,
+    stick: 50,
+    // ==============食物(烤魚類也是食物)==============
     shrimp: 50,
     pork: 50,
     beef: 50,
@@ -431,6 +434,25 @@ const sell_data = {
     raw_beef: 50,
     raw_chicken: 50,
     raw_duck: 50,
+    raw_cod: 50,
+    raw_salmon: 50,
+    raw_tropical_fish: 50,
+    raw_pufferfish: 50,
+    raw_clownfish: 50,
+    raw_tuna: 50,
+    raw_swordfish: 50,
+    raw_anglerfish: 50,
+    raw_jellyfish: 50,
+    raw_octopus: 50,
+    raw_squid: 50,
+    raw_crab: 50,
+    raw_lobster: 50,
+    raw_eel: 50,
+    raw_catfish: 50,
+    raw_goldfish: 50,
+    raw_koi: 50,
+    raw_shark: 50,
+    raw_whale: 50,
     cod: 50,
     salmon: 50,
     tropical_fish: 50,
@@ -450,13 +472,24 @@ const sell_data = {
     koi: 50,
     shark: 50,
     whale: 50,
+    bread: 50,
+    raw_potato: 76,
+    potato: 117,
+    cookie: 50,
+    cake: 50,
+    candy: 50,
+    chocolate: 50,
+    pumpkin_pie: 50,
+    melon_slice: 50,
+    // ==============特殊食物==============
     golden_apple: 50,
     enchanted_golden_apple: 50,
     golden_carrot: 50,
     golden_beef: 50,
+    wheat: 58,
+    // ==============武器裝備==============
     wooden_hoe: 50,
     iron_hoe: 50,
-    stick: 50,
     stone_short_knife: 50,
     iron_short_knife: 50,
     stone_sword: 50,
@@ -464,6 +497,23 @@ const sell_data = {
     stone_axe: 50,
     iron_axe: 50,
     iron_armor: 1080,
+    // ==============藥水==============
+    regen_potion: 50,
+    poison_potion: 50,
+    floating_potion: 50,
+    invisibility_potion: 50,
+    mystery_potion: 50,
+    eye_potion: 50,
+    ha_potion: 50,
+    jump_potion: 50,
+    lucky_potion: 50,
+    dizzy_potion: 50,
+    unlucky_potion: 50,
+    nausea_potion: 50,
+    hair_growth_potion: 50,
+    revive_potion: 50,
+    gold_potion: 50,
+    cough_potion: 50,
 };
 
 const name = {
@@ -510,12 +560,8 @@ const name = {
     beef: "烤牛肉",
     chicken: "烤雞肉",
     duck: "烤鴨肉",
-    raw_shrimp: "生蝦",
-    raw_pork: "生豬肉",
-    raw_beef: "生牛肉",
-    raw_chicken: "生雞肉",
-    raw_duck: "生鴨肉",
     bread: "麵包",
+    potato: "烤馬鈴薯",
     cookie: "餅乾",
     cake: "蛋糕",
     candy: "糖果",
@@ -526,6 +572,13 @@ const name = {
     enchanted_golden_apple: "附魔金蘋果",
     golden_carrot: "金蘿蔔",
     golden_beef: "金牛肉",
+    raw_shrimp: "生蝦",
+    raw_pork: "生豬肉",
+    raw_beef: "生牛肉",
+    raw_chicken: "生雞肉",
+    raw_duck: "生鴨肉",
+    raw_potato: "馬鈴薯",
+    wheat: "小麥",
     // ==============動物==============
     cow: "牛",
     pig: "豬",
@@ -563,7 +616,6 @@ const name = {
     raw_squid: "生魷魚",
     raw_crab: "生螃蟹",
     raw_lobster: "生龍蝦",
-    raw_shrimp: "生蝦子",
     raw_eel: "生鰻魚",
     raw_catfish: "生鯰魚",
     raw_goldfish: "生金魚",
@@ -604,7 +656,6 @@ const name = {
     // ==============tags==============
     "#planks": "任意木板"
     // ==============....==============
-
 };
 
 const name_reverse = Object.entries(name).reduce((acc, [key, value]) => {
@@ -612,8 +663,7 @@ const name_reverse = Object.entries(name).reduce((acc, [key, value]) => {
     return acc;
 }, {});
 
-function check_item_name() {
-    // 檢查所有物品ID是否都有對應的名稱
+function check_item_data() {
     const all_items = [
         ...Object.values(mine_gets),
         ...Object.values(ingots),
@@ -622,8 +672,10 @@ function check_item_name() {
         ...Object.values(foods_crops),
         ...Object.values(foods_meat),
         ...Object.keys(recipes),
-        ...Object.values(wood_productions)
-    ];
+        ...Object.values(wood_productions),
+        ...Object.keys(name).filter(item => !item.startsWith("#")),
+    ].flat().filter(item => !["cow", "pig", "a_chicken", "a_duck"].includes(item));
+
 
     for (const item_id of all_items) {
         if (!name[item_id]) {
@@ -637,6 +689,8 @@ function check_item_name() {
         };
     };
 };
+
+const oven_slots = 3;
 
 module.exports = {
     mine_gets,
@@ -660,5 +714,6 @@ module.exports = {
     tags,
     bake,
     sell_data,
-    check_item_name,
+    check_item_data,
+    oven_slots,
 };

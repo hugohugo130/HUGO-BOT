@@ -41,11 +41,13 @@ module.exports = {
                 end_guess_num_game(gameUserId);
             } else {
                 const toobig = num > number;
-                const ez = num - 1 === number;
-                if (ez && toobig) {
-                    msg.reply(`猜大了，試試看小一點的數字吧....\n咦?下一個數字就是最大值了，那肯定就是${min}啦!`);
+                const ez = Math.abs(num - number) === 1;
+                const text = `猜${toobig ? "大" : "小"}了，試試看${toobig ? "小" : "大"}一點的數字吧`;
+
+                if (ez) {
+                    await msg.reply(`${text}....\nomg!!你和正確數字僅差1`);
                 } else {
-                    msg.reply(`猜${toobig ? "大" : "小"}了，試試看${toobig ? "小" : "大"}一點的數字吧!`);
+                    await msg.reply(`${text}!`);
                 };
                 guess.push(num);
                 save_db(db);

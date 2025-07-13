@@ -15,7 +15,7 @@ module.exports = {
             "en-US": "Start guessing the number game",
         })
         .addIntegerOption(option =>
-            option.setName("最小數字")
+            option.setName("min")
                 .setDescription("最小數字")
                 .setRequired(true)
         )
@@ -31,7 +31,7 @@ module.exports = {
         let db = load_db();
         const initialMsg = await interaction.reply({
             content: "正在初始化...",
-            fetchReply: true
+            withResponse: true
         });
         const number = Math.floor(Math.random() * (max - min + 1)) + min;
         const restart = Boolean(db.guess_num[interaction.user.id]);

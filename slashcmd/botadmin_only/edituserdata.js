@@ -32,7 +32,7 @@ module.exports = {
         await interaction.deferReply();
 
         let data = loadData(userid);
-        if (!data.admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
+        if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
 
         const user = interaction.options.getUser('用戶');
         const dataToEdit = interaction.options.getString('數據');

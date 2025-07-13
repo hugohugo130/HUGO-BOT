@@ -35,7 +35,7 @@ function processFileDiff(original_file, new_file) {
     };
 
     // 將差異內容分割成多個訊息
-    const chunks = currentDiff.match(/.{1,3900}/gs) || [];
+    const chunks = currentDiff.match(/.{1,1900}/gs) || [];
     chunks.forEach((chunk, index) => {
         if (index === 0) {
             diffMessages[0] += chunk;

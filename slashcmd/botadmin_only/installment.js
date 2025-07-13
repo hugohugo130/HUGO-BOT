@@ -28,11 +28,10 @@ module.exports = {
         const { loadData, saveUserData } = require("../../module_database.js");
         const { GuildID, BotAnnouncementChannelID } = require("../../config.json");
         await interaction.deferReply();
+        if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         let user = interaction.options.getUser("用戶");
         let userid = user.id;
         let data = loadData(userid);
-        let isadmin = data.admin;
-        if (!isadmin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         let amount = interaction.options.getNumber("數量");
         let times = interaction.options.getInteger("次數");
         let interval_day = interaction.options.getInteger("間隔");

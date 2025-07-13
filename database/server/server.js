@@ -28,6 +28,10 @@ function time() {
     return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 }
 
+app.get('/verify', (req, res) => {
+    return res.status(200).json({});
+});
+
 // 獲取檔案最後修改日期
 app.get('/files/:filename/last-modified', (req, res) => {
     let action = "獲取檔案最後修改日期";
@@ -71,7 +75,7 @@ app.post('/files', upload.single('file'), (req, res) => {
     if (req.body.mtime) {
         const mtime = new Date(Number(req.body.mtime));
         fs.utimesSync(req.file.path, mtime, mtime);
-    }
+    };
     res.json({ message: 'File uploaded', filename: req.file.filename });
 });
 
@@ -101,7 +105,7 @@ app.post('/mkdir', (req, res) => {
         res.json({ message: `Directory created: ${fullPath}` });
     } catch (err) {
         res.status(500).json({ error: err.stack });
-    }
+    };
 });
 
 // 複製遠端文件
@@ -120,7 +124,7 @@ app.post('/copy', (req, res) => {
         res.json({ message: `File copied from ${srcPath} to ${dstPath}` });
     } catch (err) {
         res.status(500).json({ error: err.stack });
-    }
+    };
 });
 
 // 伺服器 啟動！

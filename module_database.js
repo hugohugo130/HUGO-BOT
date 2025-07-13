@@ -11,7 +11,7 @@ const backupdb_queue_file = `${process.cwd()}/backup_database_send_queue.json`;
 // === 資料庫檔案清單 ===
 const databaseFiles = [
     'backup_database_send_queue.json',
-    'cooking_interactions.json',
+    'bake_db.json',
     'data_red_packet.json',
     'database.json',
     'db.json',
@@ -293,8 +293,8 @@ function save_shop_data(userid, userData) {
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
 };
 
-function load_cooking_interactions() {
-    const databasefilename = "./cooking_interactions.json";
+function load_bake_data() {
+    const databasefilename = "./bake_db.json";
     if (fs.existsSync(databasefilename)) {
         const rawData = fs.readFileSync(databasefilename);
         return JSON.parse(rawData);
@@ -303,8 +303,8 @@ function load_cooking_interactions() {
     };
 };
 
-function save_cooking_interactions(data) {
-    const databasefilename = "./cooking_interactions.json";
+function save_bake_data(data) {
+    const databasefilename = "./bake_db.json";
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
 };
 
@@ -336,9 +336,17 @@ function sethacoin_forsign(userId, amount, add = false) {
 };
 
 // =========================================================================================================
-const IP = '26.146.150.194';
-let SERVER_URL = `http://${IP}:3001`;
-if (!beta) SERVER_URL = `http://${IP}:3002`;
+let IP = '26.146.150.194';
+const PORT = beta ? "3001" : "3002";
+
+(async () => {
+    try {
+        await axios.get(`http://127.0.0.1:${PORT}/verify`);
+        IP = "127.0.0.1"
+    } catch (_) { }
+})();
+
+const SERVER_URL = `http://${IP}:${PORT}`;
 
 // 列出所有檔案
 async function onlineDB_listFiles() {
@@ -347,7 +355,7 @@ async function onlineDB_listFiles() {
         return res.data.files;
     } catch (err) {
         console.error(`列出檔案時遇到錯誤: ${err.stack}`);
-    }
+    };
 };
 
 // 下載檔案
@@ -399,7 +407,6 @@ async function onlineDB_uploadFile(filepath) {
                 throw err;
             };
         };
-
         // === 上傳新檔案 ===
         const form = new FormData();
         form.append('file', fs.createReadStream(filepath));
@@ -409,7 +416,8 @@ async function onlineDB_uploadFile(filepath) {
         const res = await axios.post(`${SERVER_URL}/files`, form, { headers: form.getHeaders() });
         return res.data;
     } catch (err) {
-        console.error(`上傳檔案時遇到錯誤: ${err.stack}`);
+        if (err)
+            console.error(`上傳檔案時遇到錯誤: ${err.stack}`);
     }
 };
 
@@ -446,11 +454,7 @@ async function onlineDB_FileEditDate(filename) {
 };
 
 function IsGotErr(response) {
-    if (response instanceof Array && response.length > 0 && response[0] instanceof axios.AxiosError) {
-        return true;
-    };
-
-    return false;
+    return response instanceof Array && response.length > 0 && response[0] instanceof axios.AxiosError;
 };
 
 function askUserWithTimeout(question, filename) {
@@ -463,16 +467,16 @@ function askUserWithTimeout(question, filename) {
         let timeout = setTimeout(() => {
             rl.close();
             // 備份檔案
-            const backupDir = path.join(__dirname, 'backup');
-            if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir);
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const backupFile = path.join(backupDir, `${filename}.${timestamp}.bak`);
-            try {
-                fs.copyFileSync(filename, backupFile);
-                console.log(` - - -\n10秒未回應，已自動備份目前檔案到 ${backupFile}，並自動選擇「是」`);
-            } catch (err) {
-                console.error(`\n備份檔案時遇到錯誤: ${err.stack}`);
-            }
+            // const backupDir = path.join(__dirname, 'backup');
+            // if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir);
+            // const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            // const backupFile = path.join(backupDir, `${filename}.${timestamp}.bak`);
+            // try {
+            // fs.copyFileSync(filename, backupFile);
+            console.log(` - - -\n10秒未回應，已自動選擇「否」`);
+            // } catch (err) {
+            //     console.error(`\n備份檔案時遇到錯誤: ${err.stack}`);
+            // }
             resolve('n');
         }, 10000);
 
@@ -562,6 +566,7 @@ async function downloadDatabaseFile(src, dst = null) {
 
 let { default_value } = require('./config.json');
 const { giveaway_eg } = require('./config.json');
+const { error } = require("console");
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
 // const database_files = Object.keys(default_value);
 const database_files = databaseFiles;
@@ -603,6 +608,27 @@ function update_database_files() {
     };
 };
 
+async function uploadChangedDatabaseFiles() {
+    for (const file of databaseFiles) {
+        if (fs.existsSync(file)) {
+            let lastModifiedDate_local = null;
+            try {
+                const stats = fs.statSync(file);
+                lastModifiedDate_local = stats.mtime.getTime();
+            } catch (err) {
+                console.error(`讀取本地檔案最後修改日期時遇到錯誤: ${err.stack}`);
+                continue;
+            };
+            let lastModifiedDate_remote = await onlineDB_FileEditDate(file);
+            if (!IsGotErr(lastModifiedDate_remote)) {
+                if (lastModifiedDate_local !== null && lastModifiedDate_local > lastModifiedDate_remote) {
+                    await onlineDB_uploadFile(file);
+                };
+            };
+        };
+    };
+};
+
 module.exports = {
     loadData,
     saveUserData,
@@ -616,8 +642,8 @@ module.exports = {
     save_rpg_data,
     load_shop_data,
     save_shop_data,
-    load_cooking_interactions,
-    save_cooking_interactions,
+    load_bake_data,
+    save_bake_data,
     sethacoin,
     sethacoin_forsign,
     onlineDB_FileEditDate,
@@ -632,4 +658,5 @@ module.exports = {
     downloadDatabaseFile,
     check_database_files,
     update_database_files,
+    uploadChangedDatabaseFiles,
 };

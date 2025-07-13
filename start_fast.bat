@@ -1,1 +1,1 @@
-start cmd /K "node --trace-deprecation --trace-warnings register_commands.js & node --trace-deprecation --trace-warnings index.js"
+start cmd /K "git pull & node --trace-deprecation --trace-warnings register_commands.js & node --trace-deprecation --trace-warnings index.js"

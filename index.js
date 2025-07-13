@@ -6,7 +6,7 @@ const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
 const { Events } = require("discord.js");
 const { updateDatabaseDefaults, checkAllDatabaseFilesLastModified, check_database_files, update_database_files } = require("./module_database.js");
-const { check_item_name } = require("./rpg.js");
+const { check_item_data } = require("./rpg.js");
 const fs = require("fs");
 require("dotenv").config();
 
@@ -32,14 +32,10 @@ client.on(Events.Error, (error) => {
 
     await checkAllDatabaseFilesLastModified();
 
-    check_item_name()
+    check_item_data();
 
     if (slashcmd) client.commands = loadslashcmd(true);
     if (botfunction) loadbotfunction(client);
-
-    getrl().on("line", async (input) => {
-        await rlcmd(client, input);
-    });
 
     const temp_folder = `${process.cwd()}/temp`;
     if (fs.existsSync(temp_folder)) {
@@ -51,7 +47,9 @@ client.on(Events.Error, (error) => {
         };
     };
 
-    // client.cooking_interactions = [];
+    getrl().on("line", async (input) => {
+        await rlcmd(client, input);
+    });
 
     client.login(process.env.TOKEN);
 })();

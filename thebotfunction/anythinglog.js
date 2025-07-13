@@ -16,11 +16,13 @@ module.exports = {
                 if (channel.id === spam_free_channel_ID) return;
                 let content = message.content || "無內容";
                 let referenceurl = "無";
-                if (message.reference) {
-                    let refrence_message_id = message.reference.messageId;
+
+                let refrence_message_id = message.reference?.messageId;
+                if (refrence_message_id) {
                     let reference_message = await message.channel.messages.fetch(refrence_message_id);
                     referenceurl = reference_message.url || "無";
                 };
+
                 let time = Math.floor(message.createdTimestamp / 1000);
 
                 const embed = new EmbedBuilder()

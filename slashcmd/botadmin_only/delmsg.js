@@ -76,7 +76,7 @@ module.exports = {
         let userid = interaction.user.id;
         let data = loadData(userid);
 
-        if (!data.admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
+        if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         const msgnum = interaction.options.getInteger('number');
         const channel = interaction.options.getChannel('channel') ?? interaction.channel;
         const contentincluded = interaction.options.getString('contentincluded');

@@ -350,8 +350,8 @@ function get_loophole_embed(client = cli, guild = Guild, text = null) {
     return setEmbedFooter(client, embed)
 };
 
-async function ls_function({ client, message, rpg_data, data, args, mode }) {
-    if (!rpg_data.privacy.includes(privacy_data["ls"])) {
+async function ls_function({ client, message, rpg_data, data, args, mode, PASS }) {
+    if (!rpg_data.privacy.includes(privacy_data["ls"]) && !PASS) {
         const bag_emoji = get_emoji(message.guild, "bag")
         let embed = new EmbedBuilder()
             .setTitle(`${bag_emoji} | 查看包包`)
@@ -361,7 +361,7 @@ async function ls_function({ client, message, rpg_data, data, args, mode }) {
         embed = setEmbedFooter(client, embed);
 
         const confirm_button = new ButtonBuilder()
-            .setCustomId(`ls|${userid}`)
+            .setCustomId(`ls|${message.author.id}`)
             .setEmoji(bag_emoji)
             .setLabel("查看包包")
             .setStyle(ButtonStyle.Success);
@@ -461,11 +461,16 @@ rpg_cooldown: {
 */
 const rpg_cooldown = {
     // 單位: 秒
-    mine: "150 + {c} * 30",
-    hew: "150 + {c} * 30",
-    herd: "150 + {c} * 30",
-    brew: "150 + {c} * 30",
-    fish: "150 + {c} * 30",
+    // mine: "150 + {c} * 30",
+    // hew: "150 + {c} * 30",
+    // herd: "150 + {c} * 30",
+    // brew: "150 + {c} * 30",
+    // fish: "150 + {c} * 30",
+    mine: "{c}",
+    hew: "{c}",
+    herd: "{c}",
+    brew: "{c}",
+    fish: "{c}",
 };
 
 const rpg_actions = {
@@ -655,12 +660,12 @@ const rpg_commands = {
             fish_text = "呼"
             description = `你等待了幾個小時，打撈到了 \`${show_amount}\` 條${fish_name}！`
         } else if (random_fish === "raw_shark") {
-            if (Math.round(Math.random()) == - 1) {
-                fish_text = "a"
-                description = "欸不是這鯊魚也太大了吧 快跑"
+            if (Math.round(Math.random()) === 0) {
+                fish_text = "a";
+                description = "欸不是這鯊魚也太大了吧 快跑";
             } else {
-                fish_text = "小鯊魚"
-                description = `這鯊魚好小owo 先帶 \`${show_amount}\` 條 ${fish_name} 回家`
+                fish_text = "小鯊魚";
+                description = `這鯊魚好小owo 先帶 \`${show_amount}\` 條 ${fish_name} 回家`;
             };
         } else {
             if (Math.round(Math.random()) === 0) {
@@ -877,7 +882,8 @@ const rpg_commands = {
                 if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
                 return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
             }
-            case "open" | "on": {
+            case "open":
+            case "on": {
                 const userid = message.author.id;
                 const emoji = get_emoji(message.guild, "store");
                 const shop_data = load_shop_data(userid);
@@ -886,10 +892,12 @@ const rpg_commands = {
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
                     .setTitle(`${emoji} | 你的商店開始營業啦！`);
+
                 if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
                 return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
             }
-            case "close" | "off": {
+            case "close":
+            case "off": {
                 const userid = message.author.id;
                 const emoji = get_emoji(message.guild, "store");
                 const shop_data = load_shop_data(userid);
@@ -898,6 +906,7 @@ const rpg_commands = {
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
                     .setTitle(`${emoji} | 你拉下了商店鐵捲門`);
+
                 if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
                 return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
             }
@@ -909,6 +918,7 @@ const rpg_commands = {
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
                     .setTitle(`${emoji} | 你的商店狀態為: ${status}`);
+
                 if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
                 return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
             }
@@ -932,13 +942,13 @@ const rpg_commands = {
 
     }],
     buy: ["購買", "購買其他人上架的物品", async function ({ client, message, rpg_data, data, args, mode }) {
-        const { load_shop_data, save_shop_data, load_rpg_data, save_rpg_data } = require("../../module_database.js");
+        const { load_shop_data, load_rpg_data } = require("../../module_database.js");
         const { name } = require("../../rpg.js");
+
         const userid = message.author.id;
-        let emoji_cross = message.guild.emojis.cache.find(emoji => emoji.name === "crosS");
-        let emoji_store = message.guild.emojis.cache.find(emoji => emoji.name === "store");
-        emoji_cross = `<${emoji_cross.animated ? 'a' : ''}:${emoji_cross.name}:${emoji_cross.id}>`;
-        emoji_store = `<${emoji_store.animated ? 'a' : ''}:${emoji_store.name}:${emoji_store.id}>`;
+        const emoji_cross = get_emoji(message.guild, "crosS");
+        const emoji_store = get_emoji(message.guild, "store");
+
         const target_user = message.mentions.users.first();
         if (!target_user) {
             const embed = new EmbedBuilder()
@@ -951,7 +961,6 @@ const rpg_commands = {
             if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
             return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
         };
-        const target_user_rpg_data = load_rpg_data(target_user.id);
 
         try {
             args = args.filter(arg => arg !== `<@${target_user.id}>` && arg !== `<@!${target_user.id}>`);
@@ -1061,7 +1070,7 @@ const rpg_commands = {
         let amount = args[1];
         if (amount === "all") {
             amount = item_exist.amount;
-        } else {
+        } else if (amount) {
             // 過濾amount中任何非數字的字元 e.g: $100 -> 100
             amount = amount.toString().replace(/\D/g, '');
 
@@ -1085,34 +1094,66 @@ const rpg_commands = {
             if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
             return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
         };
-        // rpg_data.money -= item_exist.price * amount;
-        rpg_data.money = remove_money({
-            rpg_data,
-            amount: item_exist.price * amount,
-            originalUser: `<@${userid}>`,
-            targetUser: `<@${target_user.id}>`,
-            type: `購買物品付款`,
-        });
-        rpg_data.inventory[item] += amount;
-        target_user_rpg_data.money = add_money({
-            rpg_data: target_user_rpg_data,
-            amount: item_exist.price * amount,
-            originalUser: `<@${userid}>`,
-            targetUser: `<@${target_user.id}>`,
-            type: `購買物品付款`,
-        });
-        shop_data.items[item].amount -= amount;
-        save_rpg_data(userid, rpg_data);
-        save_rpg_data(target_user.id, target_user_rpg_data);
-        save_shop_data(target_user.id, shop_data);
+
+        // 參數正確，處理購買
+
+        // rpg_data.money = remove_money({
+        //     rpg_data,
+        //     amount: item_exist.price * amount,
+        //     originalUser: `<@${userid}>`,
+        //     targetUser: `<@${target_user.id}>`,
+        //     type: `購買物品付款`,
+        // });
+        // rpg_data.inventory[item] += amount;
+        // target_user_rpg_data.money = add_money({
+        //     rpg_data: target_user_rpg_data,
+        //     amount: item_exist.price * amount,
+        //     originalUser: `<@${userid}>`,
+        //     targetUser: `<@${target_user.id}>`,
+        //     type: `購買物品付款`,
+        // });
+        // shop_data.items[item].amount -= amount;
+        // save_rpg_data(userid, rpg_data);
+        // save_rpg_data(target_user.id, target_user_rpg_data);
+        // save_shop_data(target_user.id, shop_data);
+
+        // const embed = new EmbedBuilder()
+        //     .setColor(0x00BBFF)
+        //     .setTitle(`${emoji_store} | 購買成功`)
+        //     .setDescription(`你購買了 ${item_name} \`x${amount.toLocaleString()}\`，花費 \`${(item_exist.price * amount).toLocaleString()}$\``);
+
+        // if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
+        // return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
+
+        const buyer_mention = message.author.toString();
+        const targetUserMention = target_user.toString();
+        const total_price = (item_exist.price * amount).toLocaleString();
+        const pricePerOne = item_exist.price.toLocaleString();
 
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
-            .setTitle(`${emoji_store} | 購買成功`)
-            .setDescription(`你購買了 ${item_name} \`x${amount.toLocaleString()}\`，花費 \`${(item_exist.price * amount).toLocaleString()}$\``);
+            .setTitle(`${emoji_store} | 購買確認`)
+            .setDescription(`
+${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買 ${targetUserMention} 的 ${item_name} \`x${amount.toLocaleString()}\`
 
-        if (mode === 1) return { embeds: [setEmbedFooter(client, embed)] };
-        return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
+請確認價格和商店正確，我們不處理購買糾紛，
+如果價格有誤請和賣家確認好。`);
+
+        const confirmButton = new ButtonBuilder()
+            .setCustomId(`buy|${message.author.id}|${target_user.id}|${amount}|${item_exist.price}|${item}`)
+            .setLabel('確認購買')
+            .setStyle(ButtonStyle.Success);
+
+        const cancelButton = new ButtonBuilder()
+            .setCustomId(`cancel|${message.author.id}`)
+            .setLabel('取消')
+            .setStyle(ButtonStyle.Danger);
+
+        const row = new ActionRowBuilder()
+            .addComponents(confirmButton, cancelButton);
+
+        if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: [row] };
+        return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
     }],
     m: ["查看餘額", "查看自己的餘額", async function ({ client, message, rpg_data, data, args, mode }) {
         const button = new ButtonBuilder()
@@ -1374,7 +1415,9 @@ const rpg_commands = {
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
     }],
     lazy: ["懶惰", "懶惰地遊玩這個遊戲", async function ({ client, message, rpg_data, data, args, mode }) {
-        if (new Date().getMinutes() % 2 === 0) {
+        if (message.channel.id !== "1391989655490265191") return await message.reply("只能在 <#1391989655490265191> 中使用，正式機器人不支援！");
+        // if (new Date().getMinutes() % 2 === 0) {
+        if (true) {
             const embeds = []
             const cmds = ["mine", "hew", "herd", "brew", "fish"];
             for (const cmd of cmds) {
@@ -1619,7 +1662,7 @@ const rpg_commands = {
             .setStyle(ButtonStyle.Success);
 
         const cancel_button = new ButtonBuilder()
-            .setCustomId("cancel")
+            .setCustomId(`cancel|${message.author.id}`)
             .setLabel("取消")
             .setStyle(ButtonStyle.Danger);
 
@@ -1631,39 +1674,39 @@ const rpg_commands = {
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
             .setTitle(`${emoji_trade} | 出售確認`)
-            .setDescription(`你將要出售 \`${amount.toLocaleString()}\` 個 \`${item_name}\`，共獲得 \`${(price*amount).toLocaleString()}$\``);
+            .setDescription(`你將要出售 \`${amount.toLocaleString()}\` 個 \`${item_name}\`，共獲得 \`${(price * amount).toLocaleString()}$\``);
 
         if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: [row] };
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
     }],
-    cmd: ["通過按下按鈕來選擇指令", "PS: 需要參數的指令不行哦！", async function ({ client, message, rpg_data, data, args, mode }) {
-        const commands = Object.keys(rpg_commands);;
+    // cmd: ["通過按下按鈕來選擇指令", "PS: 需要參數的指令不行哦！", async function ({ client, message, rpg_data, data, args, mode }) {
+    //     const commands = Object.keys(rpg_commands);;
 
-        const attachment = new AttachmentBuilder(`./f_images/cmdBlock.webp`, { name: "cmdBlock.webp" });
-        const embed = new EmbedBuilder()
-            .setColor(0x00BBFF)
-            .setTitle(`⚙️ | 選擇指令`)
-            .setDescription("PS: 需要參數的指令不行哦！")
-            .setThumbnail("attachment://cmdBlock.webp");
+    //     const attachment = new AttachmentBuilder(`./f_images/cmdBlock.webp`, { name: "cmdBlock.webp" });
+    //     const embed = new EmbedBuilder()
+    //         .setColor(0x00BBFF)
+    //         .setTitle(`⚙️ | 選擇指令`)
+    //         .setDescription("PS: 需要參數的指令不行哦！")
+    //         .setThumbnail("attachment://cmdBlock.webp");
 
-        const buttons = commands.map(cmd => {
-            return new ButtonBuilder()
-                .setCustomId(`choose_command|${message.author.id}|${cmd}`)
-                .setLabel(cmd)
-                .setStyle(ButtonStyle.Primary);
-        });
+    //     const buttons = commands.map(cmd => {
+    //         return new ButtonBuilder()
+    //             .setCustomId(`choose_command|${message.author.id}|${cmd}`)
+    //             .setLabel(cmd)
+    //             .setStyle(ButtonStyle.Primary);
+    //     });
 
-        // 將按鈕分成每組最多5個
-        const rows = [];
-        for (let i = 0; i < buttons.length; i += 5) {
-            const row = new ActionRowBuilder()
-                .addComponents(buttons.slice(i, i + 5));
-            rows.push(row);
-        };
+    //     // 將按鈕分成每組最多5個
+    //     const rows = [];
+    //     for (let i = 0; i < buttons.length; i += 5) {
+    //         const row = new ActionRowBuilder()
+    //             .addComponents(buttons.slice(i, i + 5));
+    //         rows.push(row);
+    //     };
 
-        if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] };
-        return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] });
-    }],
+    //     if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] };
+    //     return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: rows, files: [attachment] });
+    // }],
     top: ["金錢排行榜", "who!誰是世界首富!是不是你!", async function ({ client, message, rpg_data, data, args, mode }) {
         const { load_rpg_data } = require("../../module_database.js");
         const { GuildID } = require('../../config.json');
@@ -1753,9 +1796,9 @@ const rpg_commands = {
         return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
     }],
     limited: ["???", "???", async function ({ client, message, rpg_data, data, args, mode }) {
+        if (message.author.id !== "898836485397180426") return;
         const { load_rpg_data } = require("../../module_database.js");
-        const { foods_crops, foods_meat, fish } = require("../../rpg.js");
-
+        const { foods } = require("../../rpg.js");
         const amount = parseInt(args[0]) || 1;
         const msg = await message.reply("處理中...");
         const total = amount;
@@ -1763,9 +1806,8 @@ const rpg_commands = {
         let completed = 0;
         let last_msg = "";
 
-        // 合併所有食物數據
-        const food_data = { ...foods_crops, ...foods_meat, ...fish };
-        const food_items = Object.keys(food_data);
+        // 取得所有可吃的食物
+        const food_items = Object.keys(foods);
 
         const timer = setInterval(async () => {
             const percent = (completed / total).toFixed(4);
@@ -1801,13 +1843,13 @@ const rpg_commands = {
                         .replace('！', '')
                         .replace('個', '');
 
-                    const [amount, ...names] = new_description.split(" ")
+                    const [amount, ...names] = new_description.split(" ");
                     if (amount && names && names.length > 0) {
                         for (const name of names) {
                             if (name.includes("生")) {
                                 desc = name;
-                                desc += ` x${amount}`
-                                break
+                                desc += ` x${amount}`;
+                                break;
                             };
                         };
                     } else {
@@ -1817,12 +1859,13 @@ const rpg_commands = {
             };
             desc = desc.padEnd(13, '|');
 
+            // 重新載入玩家資料
             // if (completed % 1 === 0) {
             if (true) {
                 rpg_data = load_rpg_data(message.author.id);
             };
 
-            // 尋找玩家擁有的食物
+            // 尋找玩家擁有的可吃食物
             let current_food = null;
             for (const food of food_items) {
                 if (rpg_data.inventory[food] > 0) {
@@ -1833,7 +1876,7 @@ const rpg_commands = {
 
             let txt;
             if (current_food) {
-                txt = `${progressText} | 剩下 ${rpg_data.inventory[current_food].toLocaleString()} 個${food_data[current_food]} | ${desc}`;
+                txt = `${progressText} | 剩下 ${rpg_data.inventory[current_food].toLocaleString()} 個${current_food} | ${desc}`;
             } else {
                 txt = `${progressText} | 沒有食物了 | ${desc}`;
             };
@@ -1950,6 +1993,10 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         };
 
         embed.setDescription(`你是不是指：\n${similarCommands.map(cmd => `- ${prefix}${cmd}`).join('\n')}`);
+        if (rows.length > 5) {
+            rows.length = 0; // 清空rows，等同於 rows = []
+            embed.setDescription("太多指令了 owo 我真的不知道你要用什麼指令(||其實是顯示不出來這麼多按鈕||)")
+        };
 
         if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: rows };
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: rows });
@@ -1976,8 +2023,8 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         rpg_data.hungry -= 1;
     };
 
-    // if (rpg_cooldown[command] || command === "cd") {
-    if (false) {
+    if (rpg_cooldown[command] || command === "cd") {
+        // if (false) {
         // 檢查上次執行時間是否為今天
         if (rpg_data.lastRunTimestamp && rpg_data.lastRunTimestamp[command]) {
             const lastRunDate = new Date(rpg_data.lastRunTimestamp[command]);
@@ -2019,6 +2066,31 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         save_rpg_data(userid, rpg_data);
     };
 
+    if (rpg_work.includes(command) && rpg_data.hungry === 0) {
+        const { foods } = require("../../rpg.js");
+        const food_items = Object.keys(foods);
+        let found_food = null;
+        for (const food of food_items) {
+            if (rpg_data.inventory && rpg_data.inventory[food] > 0) {
+                found_food = food;
+                break;
+            };
+        };
+        if (found_food) {
+            // 嘗試自動吃掉一個食物
+            if (typeof rpg_commands.eat?.[2] === "function") {
+                await rpg_commands.eat[2]({ client, message, rpg_data, data, args: [found_food, "all"], mode });
+            }
+        } else {
+            const embed = new EmbedBuilder()
+                .setColor(0xF04A47)
+                .setTitle("你已經餓到沒有食物可以吃了！請先補充食物！");
+
+            if (mode === 1) return { embeds: [embed] };
+            return await message.reply({ embeds: [embed] });
+        };
+    };
+
     const result = await execute({ client, message, rpg_data, data, args, mode });
     if (mode === 1) return result;
 };
@@ -2050,6 +2122,7 @@ module.exports = {
     redirect,
     get_number_of_items,
     get_random_number,
+    get_loophole_embed,
     setEmbedFooter,
     unlock_waiting_handler,
     MockMessage,

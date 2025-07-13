@@ -3,12 +3,12 @@ const { recipes, name } = require("../../../rpg.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("craft")
-        .setDescription("合成物品")
+        .setName("make")
+        .setDescription("合成製作武器和物品")
         .setNameLocalizations({
-            "zh-TW": "合成",
-            "zh-CN": "合成",
-            "en-US": "craft",
+            "zh-TW": "製作",
+            "zh-CN": "製作",
+            "en-US": "make",
         })
         .setDescriptionLocalizations({
             "zh-TW": "合成物品",
@@ -58,20 +58,23 @@ module.exports = {
         for (const need of item[1].split(",")) {
             const need_item = need.split("*");
             const count = need_item[1] || 1;
-            let id = need_item[0]
+            let id = need_item[0];
+            let real_id = id;
             if (id.startsWith("#")) {
-                const tag = id.replace("#", "")
+                const tag = id.replace("#", "");
                 for (const item of tags[tag]) {
                     if (rpg_data.inventory[item]) {
-                        id = item
-                        break
+                        id = item;
+                        break;
                     };
                 };
-                if (id.startsWith("#")) { // 背包裡面沒有任何關於該tag的物品
-                    id = name[id];
-                };
-            };
-            item_need[need_item[0]] = count * amount;
+                if (!id.startsWith("#")) {
+                    real_id = id;
+                } else {
+                    real_id = need_item[0];
+                }
+            }
+            item_need[real_id] = (item_need[real_id] || 0) + count * amount;
         };
 
         for (const need_item in item_need) {
@@ -111,7 +114,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(0x0099ff)
             .setTitle(`${emoji} | 製作物品`)
-            .setDescription(`你製作了出了 \`${output_amount}\` 個 ${name[item_id]}`);
+            .setDescription(`你製作出了 \`${output_amount}\` 個 ${name[item_id]}`);
 
         await interaction.editReply({ embeds: [setEmbedFooter(interaction.client, embed)] });
     },

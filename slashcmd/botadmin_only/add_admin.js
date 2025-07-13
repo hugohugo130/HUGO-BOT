@@ -14,16 +14,10 @@ module.exports = {
 
     async execute(interaction) {
         const { loadData, saveUserData } = require("../../module_database.js");
-        const { sleep } = require("../../module_sleep.js");
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        const currentSeconds = new Date().getSeconds();
-        const targetSeconds = 4;
-        const diff = Math.abs(currentSeconds - targetSeconds);
-
-        if (diff <= 5) {
-            await interaction.editReply("正在處理...");
-            sleep(10000);
-        };
+        // await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
+        if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
+        await interaction.editReply("正在處理...");
 
         let config = JSON.parse(fs.readFileSync(path.join(__dirname, "../../config.json"), "utf8"));
         const member = interaction.options.getUser('member');

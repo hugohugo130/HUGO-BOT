@@ -135,6 +135,6 @@
     "database.json": {},
     "backup_database_send_queue.json": [],
     "rpg_database.json": {},
-    "cooking_interactions.json": []
+    "bake_db.json": {}
   }
 }
