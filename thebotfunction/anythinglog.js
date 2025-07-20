@@ -2,6 +2,7 @@ const { Events, EmbedBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     setup(client) {
+        // 訊息相關監聽器
         client.on(Events.MessageCreate, async (message) => {
             if (!message.guild) return;
             try {
@@ -139,6 +140,7 @@ module.exports = {
             };
         });
 
+        // 頻道相關監聽器
         client.on(Events.ChannelCreate, async (channel) => {
             try {
                 const { backend_channel_ID } = require("../config.json");
@@ -215,6 +217,7 @@ module.exports = {
             }
         });
 
+        // 成員相關監聽器
         client.on(Events.GuildMemberAdd, async (member) => {
             try {
                 const { backend_channel_ID } = require("../config.json");
@@ -286,48 +289,7 @@ module.exports = {
             };
         });
 
-        client.on(Events.GuildBanAdd, async (ban) => {
-            try {
-                const { backend_channel_ID } = require("../config.json");
-                const backendchannel = await client.channels.fetch(backend_channel_ID);
-                if (!backendchannel) return;
-                let time = Math.floor(Date.now() / 1000);
-                let embed = new EmbedBuilder()
-                    .setColor(0x00BBFF)
-                    .setTitle("成員被停權")
-                    .addFields(
-                        { name: "成員ID", value: ban.user.id, inline: true },
-                        { name: "成員名稱", value: ban.user.username, inline: true },
-                        { name: "停權時間", value: `<t:${time}:D><t:${time}:T> (<t:${time}:R>)`, inline: true },
-                    )
-                    .setTimestamp();
-                backendchannel.send({ embeds: [embed] });
-            } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送成員停權記錄時出錯：${error.stack}`, clientready: true });
-            };
-        });
-
-        client.on(Events.GuildBanRemove, async (ban) => {
-            try {
-                const { backend_channel_ID } = require("../config.json");
-                const backendchannel = await client.channels.fetch(backend_channel_ID);
-                if (!backendchannel) return;
-                let time = Math.floor(Date.now() / 1000);
-                let embed = new EmbedBuilder()
-                    .setColor(0x00BBFF)
-                    .setTitle("成員被解除停權")
-                    .addFields(
-                        { name: "成員ID", value: ban.user.id, inline: true },
-                        { name: "成員名稱", value: ban.user.username, inline: true },
-                        { name: "解除停權時間", value: `<t:${time}:f} (<t:${time}:R>)`, inline: true },
-                    )
-                    .setTimestamp();
-                backendchannel.send({ embeds: [embed] });
-            } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送成員解除停權記錄時出錯：${error.stack}`, clientready: true });
-            };
-        });
-
+        // 表情符號相關監聽器
         client.on(Events.GuildEmojiUpdate, async (oldEmoji, newEmoji) => {
             try {
                 const { backend_channel_ID } = require("../config.json");
@@ -377,6 +339,7 @@ module.exports = {
             };
         });
 
+        // 角色相關監聽器
         client.on(Events.GuildRoleCreate, async (role) => {
             try {
                 const { backend_channel_ID } = require("../config.json");
@@ -474,67 +437,6 @@ module.exports = {
                 backendchannel.send({ embeds: [embed] });
             } catch (error) {
                 require("../module_senderr").senderr({ client: client, msg: `發送伺服器更新記錄時出錯：${error.stack}`, clientready: true });
-            };
-        });
-
-        client.on(Events.GuildIntegrationsUpdate, async (guild) => {
-            try {
-                const { backend_channel_ID } = require("../config.json");
-                const backendchannel = await client.channels.fetch(backend_channel_ID);
-                if (!backendchannel) return;
-                let time = Math.floor(Date.now() / 1000);
-                let embed = new EmbedBuilder()
-                    .setColor(0x00BBFF)
-                    .setTitle("整合更新")
-                    .addFields(
-                        { name: "伺服器ID", value: guild.id, inline: true },
-                        { name: "整合更新時間", value: `<t:${time}:D><t:${time}:T> (<t:${time}:R>)`, inline: true },
-                    )
-                    .setTimestamp();
-                backendchannel.send({ embeds: [embed] });
-            } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送整合更新記錄時出錯：${error.stack}`, clientready: true });
-            };
-        });
-
-        client.on(Events.GuildMembersChunk, async (members, guild) => {
-            try {
-                const { backend_channel_ID } = require("../config.json");
-                const backendchannel = await client.channels.fetch(backend_channel_ID);
-                if (!backendchannel) return;
-                let time = Math.floor(Date.now() / 1000);
-                let embed = new EmbedBuilder()
-                    .setColor(0x00BBFF)
-                    .setTitle("成員分塊")
-                    .addFields(
-                        { name: "伺服器ID", value: guild.id, inline: true },
-                        { name: "成員分塊時間", value: `<t:${time}:D><t:${time}:T> (<t:${time}:R>)`, inline: true },
-                    )
-                    .setTimestamp();
-                backendchannel.send({ embeds: [embed] });
-            } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送成員分塊記錄時出錯：${error.stack}`, clientready: true });
-            };
-        });
-
-        client.on(Events.GuildAuditLogEntryCreate, async (entry) => {
-            try {
-                const { backend_channel_ID } = require("../config.json");
-                const backendchannel = await client.channels.fetch(backend_channel_ID);
-                if (!backendchannel) return;
-                let time = Math.floor(Date.now() / 1000);
-                let embed = new EmbedBuilder()
-                    .setColor(0x00BBFF)
-                    .setTitle("審查日誌新增")
-                    .addFields(
-                        { name: "審查日誌ID", value: entry.id, inline: true },
-                        { name: "審查日誌類型", value: entry.actionType, inline: true },
-                        { name: "審查日誌時間", value: `<t:${time}:D><t:${time}:T> (<t:${time}:R>)`, inline: true },
-                    )
-                    .setTimestamp();
-                backendchannel.send({ embeds: [embed] });
-            } catch (error) {
-                require("../module_senderr").senderr({ client: client, msg: `發送審查日誌新增記錄時出錯：${error.stack}`, clientready: true });
             };
         });
     },

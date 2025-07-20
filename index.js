@@ -1,4 +1,4 @@
-const { slashcmd, botfunction } = require('./config.json');
+const { slashcmd, botfunction, beta } = require('./config.json');
 const { loadbotfunction } = require("./module_loadbotfunction.js")
 const { rlcmd } = require("./module_readlinecmd.js")
 const { getclient } = require("./module_createclient.js");
@@ -23,6 +23,18 @@ client.on(Events.Error, (error) => {
         });
     };
 });
+
+if (beta) {
+    console.log(
+` ________  _______  _________  ________          ________  ________  _________   
+|\\   __  \\|\\  ___ \\|\\___   ___\\\\   __  \\        |\\   __  \\|\\   __  \\|\\___   ___\\ 
+\\ \\  \\|\\ /\\ \\   __/\\|___ \\  \\_\\ \\  \\|\\  \\       \\ \\  \\|\\ /\\ \\  \\|\\  \\|___ \\  \\_| 
+ \\ \\   __  \\ \\  \\_|/__  \\ \\  \\ \\ \\   __  \\       \\ \\   __  \\ \\  \\\\\\  \\   \\ \\  \\  
+  \\ \\  \\|\\  \\ \\  \\_|\\ \\  \\ \\  \\ \\ \\  \\ \\  \\       \\ \\  \\|\\  \\ \\  \\\\\\  \\   \\ \\  \\ 
+   \\ \\_______\\ \\_______\\  \\ \\__\\ \\ \\__\\ \\__\\       \\ \\_______\\ \\_______\\   \\ \\__\\
+    \\|_______|\\|_______|   \\|__|  \\|__|\\|__|        \\|_______|\\|_______|    \\|__|`
+    );
+};
 
 (async () => {
     await check_database_files();
