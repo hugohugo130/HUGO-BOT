@@ -1,5 +1,5 @@
 const fs = require("fs");
-const FormData = require('form-data');;
+const FormData = require('form-data');
 const readline = require('readline');
 const isEqual = require('lodash.isequal');
 const axios = require('axios');
@@ -18,6 +18,8 @@ const databaseFiles = [
     'giveaway.json',
     'rpg_database.json',
     'rpg_shop.json',
+    "smelt_db.json",
+    "serverIP.json",
 ];
 
 function loadData(userid = null, mode = 0) {
@@ -153,6 +155,7 @@ function get_boosters(client, mode = 0) {
 
 // 更新資料庫檔案的預設值
 function updateDatabaseDefaults() {
+    delete default_value
     let { default_value, giveaway_eg } = require('./config.json');
     default_value = { ...default_value, "giveaway.json": giveaway_eg };
     for (const file of ["db.json", "giveaway.json"]) {
@@ -308,6 +311,21 @@ function save_bake_data(data) {
     fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
 };
 
+function load_smelt_data() {
+    const databasefilename = "./smelt_db.json";
+    if (fs.existsSync(databasefilename)) {
+        const rawData = fs.readFileSync(databasefilename);
+        return JSON.parse(rawData);
+    } else {
+        return [];
+    };
+};
+
+function save_smelt_data(data) {
+    const databasefilename = "./smelt_db.json";
+    fs.writeFileSync(databasefilename, JSON.stringify(data, null, 4));
+};
+
 function sethacoin(userId, amount, add) {
     let userData = loadData(userId);
     if (add) {
@@ -336,16 +354,39 @@ function sethacoin_forsign(userId, amount, add = false) {
 };
 
 // =========================================================================================================
-let IP = '26.146.150.194';
-const PORT = beta ? "3001" : "3002";
+const serverIPFile = path.join(process.cwd(), 'serverIP.json');
 
-(async () => {
-    try {
-        await axios.get(`http://127.0.0.1:${PORT}/verify`);
-        IP = "127.0.0.1"
-    } catch (_) { }
-})();
+function getServerIPSync() {
+    let serverIP = null;
+    if (fs.existsSync(serverIPFile)) {
+        try {
+            serverIP = JSON.parse(fs.readFileSync(serverIPFile, 'utf8'));
+        } catch (e) {
+            serverIP = null;
+        };
+    }
+    if (!serverIP) {
+        try {
+            delete default_value
+        } catch (_) { };
+        let { default_value } = require("./config.json");
+        let IP = default_value["serverIP.json"]?.IP || "26.146.150.194";
+        let PORT = beta ? 3001 : 3002;
+        try {
+            // 用 powershell 偵測本地伺服器
+            const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
+            if (res === "200") {
+                IP = "127.0.0.1";
+                console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
+            }
+        } catch (_) { }
+        serverIP = { IP, PORT };
+        fs.writeFileSync(serverIPFile, JSON.stringify(serverIP, null, 4));
+    };
+    return serverIP;
+}
 
+const { IP, PORT } = getServerIPSync();
 const SERVER_URL = `http://${IP}:${PORT}`;
 
 // 列出所有檔案
@@ -453,88 +494,72 @@ async function onlineDB_FileEditDate(filename) {
     }
 };
 
-function IsGotErr(response) {
-    return response instanceof Array && response.length > 0 && response[0] instanceof axios.AxiosError;
-};
-
-function askUserWithTimeout(question, filename) {
-    return new Promise((resolve) => {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-
-        let timeout = setTimeout(() => {
-            rl.close();
-            // 備份檔案
-            // const backupDir = path.join(__dirname, 'backup');
-            // if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir);
-            // const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            // const backupFile = path.join(backupDir, `${filename}.${timestamp}.bak`);
-            // try {
-            // fs.copyFileSync(filename, backupFile);
-            console.log(` - - -\n10秒未回應，已自動選擇「否」`);
-            // } catch (err) {
-            //     console.error(`\n備份檔案時遇到錯誤: ${err.stack}`);
-            // }
-            resolve('n');
-        }, 10000);
-
-        rl.question(question, (answer) => {
-            clearTimeout(timeout);
-            rl.close();
-            resolve(answer.trim().toLowerCase());
-        });
-    });
-};
-
-async function onlineDB_checkFileLastModifiedDate(filename) {
-    let lastModifiedDate_local;
+async function onlineDB_checkFileContent(filename) {
+    // 讀取本地檔案內容
+    let localContent;
     try {
-        const stats = fs.statSync(filename);
-        lastModifiedDate_local = stats.mtime.getTime();
+        localContent = fs.readFileSync(filename, 'utf8');
     } catch (err) {
-        console.error(`讀取本地檔案最後修改日期時遇到錯誤: ${err.stack}`);
-        lastModifiedDate_local = null;
-    };
+        console.error(`讀取本地檔案內容時遇到錯誤: ${err.stack}`);
+        localContent = null;
+    }
 
-    const lastModifiedDate_remote = await onlineDB_FileEditDate(filename);
-    if (!IsGotErr(lastModifiedDate_remote)) {
-        if (lastModifiedDate_local !== null && lastModifiedDate_local < lastModifiedDate_remote) {
-            let res = await onlineDB_uploadFile(filename);
-        } else if (lastModifiedDate_local !== null && lastModifiedDate_local > lastModifiedDate_remote) {
-            const answer = await askUserWithTimeout(`[${filename}]遠端檔案較新，是否要下載遠端檔案覆蓋本地？(Y/N) `, filename);
-            if (answer === 'y') {
-                let res = await onlineDB_downloadFile(filename);
-            };
+    // 從遠端獲取檔案內容
+    let remoteContent;
+    try {
+        const response = await axios.get(`${SERVER_URL}/files/${filename}`);
+        remoteContent = JSON.stringify(response.data);
+        localContent = JSON.stringify(JSON.parse(localContent)); // 格式化本地內容以進行比較
+    } catch (err) {
+        if (err.response?.status === 404) {
+            console.error(`遠端檔案不存在: ${filename}`);
+        } else {
+            console.error(`獲取遠端檔案內容時遇到錯誤: ${err.stack}`);
+        }
+        remoteContent = null;
+    }
+
+    if (localContent && remoteContent) {
+        if (localContent !== remoteContent) {
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+
+            console.log("=".repeat(30));
+            console.log(`檔案 ${filename} 內容不同:`);
+            console.log('1. 上傳本地檔案到遠端');
+            console.log('2. 下載遠端檔案到本地');
+            console.log('3. 不做任何事');
+
+            rl.question('請選擇操作 (1/2/3): ', async (answer) => {
+                rl.close();
+                switch (answer.trim()) {
+                    case '1':
+                        await onlineDB_uploadFile(filename);
+                        break;
+                    case '2':
+                        await onlineDB_downloadFile(filename);
+                        break;
+                    default:
+                        console.log('未進行任何操作');
+                };
+                console.log("=".repeat(30));
+            });
         };
+    } else if (localContent && !remoteContent) {
+        console.log(`遠端無 ${filename} 檔案，準備上傳本地檔案`);
+        await onlineDB_uploadFile(filename);
+    } else if (!localContent && remoteContent) {
+        console.log(`本地無 ${filename} 檔案，準備下載遠端檔案`);
+        await onlineDB_downloadFile(filename);
     };
 };
-
-// async function test() {
-//     const filelist = await onlineDB_listFiles();
-//     if (!IsGotErr(filelist))
-//         console.log(`檔案列表: ${filelist}`);
-
-//     let res = await onlineDB_downloadFile("example.txt");
-//     if (!IsGotErr(res))
-//         console.log(`下載完成: ${res}`);
-
-//     res = await onlineDB_uploadFile('example2.txt');
-//     if (!IsGotErr(res))
-//         console.log(`上載完成: ${res}`);
-
-//     res = await onlineDB_deleteFile('abc.txt');
-//     if (!IsGotErr(res))
-//         console.log(`已刪除檔案: ${res}`);
-
-//     await onlineDB_checkFileLastModifiedDate("example.txt");
-// };
 
 // === 批量檢查所有資料庫檔案 ===
-async function checkAllDatabaseFilesLastModified() {
+async function checkAllDatabaseFilesContent() {
     for (const file of databaseFiles) {
-        await onlineDB_checkFileLastModifiedDate(file);
+        await onlineDB_checkFileContent(file);
     }
 }
 
@@ -563,10 +588,9 @@ async function downloadDatabaseFile(src, dst = null) {
 }
 
 // =========================================================================================================
-
+delete default_value
 let { default_value } = require('./config.json');
 const { giveaway_eg } = require('./config.json');
-const { error } = require("console");
 default_value = { ...default_value, "giveaway.json": giveaway_eg };
 // const database_files = Object.keys(default_value);
 const database_files = databaseFiles;
@@ -611,22 +635,36 @@ function update_database_files() {
 async function uploadChangedDatabaseFiles() {
     for (const file of databaseFiles) {
         if (fs.existsSync(file)) {
-            let lastModifiedDate_local = null;
+            let localContent;
             try {
-                const stats = fs.statSync(file);
-                lastModifiedDate_local = stats.mtime.getTime();
+                localContent = fs.readFileSync(file, 'utf8');
+                localContent = JSON.stringify(JSON.parse(localContent)); // 格式化本地內容
             } catch (err) {
-                console.error(`讀取本地檔案最後修改日期時遇到錯誤: ${err.stack}`);
+                console.error(`讀取本地檔案內容時遇到錯誤: ${err.stack}`);
                 continue;
-            };
-            let lastModifiedDate_remote = await onlineDB_FileEditDate(file);
-            if (!IsGotErr(lastModifiedDate_remote)) {
-                if (lastModifiedDate_local !== null && lastModifiedDate_local > lastModifiedDate_remote) {
+            }
+
+            let remoteContent;
+            try {
+                const response = await axios.get(`${SERVER_URL}/files/${file}`);
+                remoteContent = JSON.stringify(response.data);
+            } catch (err) {
+                if (err.response?.status === 404) {
+                    console.log(`遠端無 ${file} 檔案，準備上傳本地檔案`);
                     await onlineDB_uploadFile(file);
-                };
+                } else {
+                    console.error(`獲取遠端檔案內容時遇到錯誤: ${err.stack}`);
+                }
+                continue;
+            }
+
+            if (localContent !== remoteContent) {
+                const { time } = require("./module_time.js");
+                console.log(`[${time()}] 檔案 ${file} 內容不同，上傳本地版本`);
+                await onlineDB_uploadFile(file);
             };
-        };
-    };
+        }
+    }
 };
 
 module.exports = {
@@ -644,16 +682,18 @@ module.exports = {
     save_shop_data,
     load_bake_data,
     save_bake_data,
+    load_smelt_data,
+    save_smelt_data,
     sethacoin,
     sethacoin_forsign,
     onlineDB_FileEditDate,
-    onlineDB_checkFileLastModifiedDate,
+    onlineDB_checkFileContent,
     onlineDB_deleteFile,
     onlineDB_downloadFile,
     onlineDB_listFiles,
     onlineDB_uploadFile,
     databaseFiles,
-    checkAllDatabaseFilesLastModified,
+    checkAllDatabaseFilesContent,
     uploadAllDatabaseFiles,
     downloadDatabaseFile,
     check_database_files,

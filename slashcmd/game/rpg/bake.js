@@ -111,8 +111,8 @@ module.exports = {
             const { setEmbedFooter, get_emoji } = require("../../../thebotfunction/rpg/msg_handler.js");
             await interaction.deferReply();
 
-            const emoji_cross = get_emoji(interaction.guild, "crosS");
-            const emoji_drumstick = get_emoji(interaction.guild, "drumstick");
+            const emoji_cross = await get_emoji(interaction.client, "crosS");
+            const emoji_drumstick = await get_emoji(interaction.client, "drumstick");
 
             let rpg_data = load_rpg_data(userId);
             const bake_data = load_bake_data()[userId];
@@ -127,12 +127,12 @@ module.exports = {
             let item_id = interaction.options.getString("食材");
             let amount = interaction.options.getInteger("數量") ?? 1;
             const allFoods = interaction.options.getBoolean("全部") ?? false;
-
-            const duration = 60 * amount;
-
+            
             if (allFoods) {
                 amount = rpg_data.inventory[item_id] || amount;
             };
+            const duration = 60 * amount;
+
             const coal_amount = Math.ceil(amount / 2);
 
             let item_need = [
@@ -213,7 +213,7 @@ module.exports = {
             await interaction.deferReply();
 
             const bake_data = load_bake_data()[userId];
-            const emoji_drumstick = get_emoji(interaction.guild, "drumstick");
+            const emoji_drumstick = await get_emoji(interaction.client, "drumstick");
 
             const used_slots = bake_data ? bake_data.length : 0;
             const current_time = Math.floor(Date.now() / 1000);
@@ -240,7 +240,7 @@ module.exports = {
 
                     embed.addFields({
                         name: `${i + 1}. ${input_name} x${item.amount}`,
-                        value: `=> ${output_name} (完成度：${Math.round(progress)}% ${time_ago})`,
+                        value: `=> ${output_name}x${item.amount} (完成度：${Math.round(progress)}% ${time_ago})`,
                         inline: false
                     });
                 };
@@ -257,8 +257,8 @@ module.exports = {
             const bake_data = bake_data_all[userId];
             const rpg_data = load_rpg_data(userId);
 
-            const emoji_cross = get_emoji(interaction.guild, "crosS");
-            const emoji_drumstick = get_emoji(interaction.guild, "drumstick");
+            const emoji_cross = await get_emoji(interaction.client, "crosS");
+            const emoji_drumstick = await get_emoji(interaction.client, "drumstick");
 
             if (!bake_data || bake_data.length === 0) {
                 const embed = new EmbedBuilder()

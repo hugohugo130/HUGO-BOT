@@ -17,7 +17,7 @@ module.exports = {
     async execute(interaction) {
         // const { get_emoji, setEmbedFooter } = require("../../../thebotfunction/rpg/msg_handler.js");
 
-        // const emoji = get_emoji(interaction.guild, "top");
+        // const emoji = await get_emoji(interaction.client, "top");
         // let embed = new EmbedBuilder()
         //     .setColor(0x00BBFF)
         //     .setTitle(`${emoji} | 設定語言`)

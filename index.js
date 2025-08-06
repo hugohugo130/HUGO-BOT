@@ -5,7 +5,7 @@ const { getclient } = require("./module_createclient.js");
 const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
 const { Events } = require("discord.js");
-const { updateDatabaseDefaults, checkAllDatabaseFilesLastModified, check_database_files, update_database_files } = require("./module_database.js");
+const { updateDatabaseDefaults, checkAllDatabaseFilesContent, check_database_files, update_database_files } = require("./module_database.js");
 const { check_item_data } = require("./rpg.js");
 const fs = require("fs");
 require("dotenv").config();
@@ -24,17 +24,21 @@ client.on(Events.Error, (error) => {
     };
 });
 
-if (beta) {
-    console.log(
-` ________  _______  _________  ________          ________  ________  _________   
-|\\   __  \\|\\  ___ \\|\\___   ___\\\\   __  \\        |\\   __  \\|\\   __  \\|\\___   ___\\ 
-\\ \\  \\|\\ /\\ \\   __/\\|___ \\  \\_\\ \\  \\|\\  \\       \\ \\  \\|\\ /\\ \\  \\|\\  \\|___ \\  \\_| 
- \\ \\   __  \\ \\  \\_|/__  \\ \\  \\ \\ \\   __  \\       \\ \\   __  \\ \\  \\\\\\  \\   \\ \\  \\  
-  \\ \\  \\|\\  \\ \\  \\_|\\ \\  \\ \\  \\ \\ \\  \\ \\  \\       \\ \\  \\|\\  \\ \\  \\\\\\  \\   \\ \\  \\ 
-   \\ \\_______\\ \\_______\\  \\ \\__\\ \\ \\__\\ \\__\\       \\ \\_______\\ \\_______\\   \\ \\__\\
-    \\|_______|\\|_______|   \\|__|  \\|__|\\|__|        \\|_______|\\|_______|    \\|__|`
-    );
-};
+console.log(beta ? `
+██████╗ ███████╗████████╗ █████╗     ██████╗  ██████╗ ████████╗
+██╔══██╗██╔════╝╚══██╔══╝██╔══██╗    ██╔══██╗██╔═══██╗╚══██╔══╝
+██████╔╝█████╗     ██║   ███████║    ██████╔╝██║   ██║   ██║   
+██╔══██╗██╔══╝     ██║   ██╔══██║    ██╔══██╗██║   ██║   ██║   
+██████╔╝███████╗   ██║   ██║  ██║    ██████╔╝╚██████╔╝   ██║   
+╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝    ╚═════╝  ╚═════╝    ╚═╝   
+` : `
+██████╗ ███████╗██╗     ███████╗ █████╗ ███████╗███████╗    ██████╗  ██████╗ ████████╗
+██╔══██╗██╔════╝██║     ██╔════╝██╔══██╗██╔════╝██╔════╝    ██╔══██╗██╔═══██╗╚══██╔══╝
+██████╔╝█████╗  ██║     █████╗  ███████║███████╗█████╗      ██████╔╝██║   ██║   ██║   
+██╔══██╗██╔══╝  ██║     ██╔══╝  ██╔══██║╚════██║██╔══╝      ██╔══██╗██║   ██║   ██║   
+██║  ██║███████╗███████╗███████╗██║  ██║███████║███████╗    ██████╔╝╚██████╔╝   ██║   
+╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝    ╚═╝   
+`);
 
 (async () => {
     await check_database_files();
@@ -42,14 +46,14 @@ if (beta) {
     update_database_files();
     updateDatabaseDefaults();
 
-    await checkAllDatabaseFilesLastModified();
+    await checkAllDatabaseFilesContent();
 
     check_item_data();
 
     if (slashcmd) client.commands = loadslashcmd(true);
     if (botfunction) loadbotfunction(client);
 
-    const temp_folder = `${process.cwd()}/temp`;
+    const temp_folder = `./temp`;
     if (fs.existsSync(temp_folder)) {
         const files = fs.readdirSync(temp_folder);
         for (const file of files) {

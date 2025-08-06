@@ -15,7 +15,8 @@ const ingots = {
     diamond: "diamond",
     emerald: "emerald",
     ruby: "ruby",
-    sapphire: "sapphire"
+    sapphire: "sapphire",
+    steel: "steel",
 };
 
 const logs = {
@@ -146,6 +147,30 @@ Object.entries(logs).forEach(([logKey, logValue]) => {
     };
 });
 
+const smeltable_items = [
+    {
+        input: [
+            { item: "iron_ore", amount: 2 }
+        ],
+        output: "iron",
+        amount: 1
+    },
+    {
+        input: [
+            { item: "iron", amount: 3 }
+        ],
+        output: "steel",
+        amount: 1
+    },
+    {
+        input: [
+            { item: "diamond_ore", amount: 1 }
+        ],
+        output: "diamond",
+        amount: 1
+    },
+];
+
 const tags = {
     "planks": Object.keys(planks),
 };
@@ -271,6 +296,7 @@ const shop_lowest_price = {
     raw_chicken: 50,
     raw_duck: 50,
     wheat: 65,
+    steel: 650,
 };
 
 const food_data = {
@@ -514,6 +540,7 @@ const sell_data = {
     revive_potion: 50,
     gold_potion: 50,
     cough_potion: 50,
+    steel: 585,
 };
 
 const name = {
@@ -532,6 +559,7 @@ const name = {
     emerald: "綠寶石",
     ruby: "紅寶石",
     sapphire: "藍寶石",
+    steel: "鋼鐵",
     // ==============木材==============
     oak_wood: "橡木",
     spruce_wood: "雲杉木",
@@ -690,7 +718,12 @@ function check_item_data() {
     };
 };
 
+function get_name_of(id) {
+    return name[id] || id
+};
+
 const oven_slots = 3;
+const smelter_slots = 3;
 
 module.exports = {
     mine_gets,
@@ -704,6 +737,7 @@ module.exports = {
     name,
     name_reverse,
     recipes,
+    smeltable_items,
     animals,
     animal_products,
     shop_lowest_price,
@@ -715,5 +749,7 @@ module.exports = {
     bake,
     sell_data,
     check_item_data,
+    get_name_of,
     oven_slots,
+    smelter_slots,
 };

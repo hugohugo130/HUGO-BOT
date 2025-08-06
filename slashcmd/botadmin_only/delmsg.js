@@ -1,37 +1,72 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, TextChannel, Message } = require('discord.js');
 
-async function getMessages(channel, limit) {
+/**
+ * 
+ * @param {TextChannel} channel 
+ * @param {number} limit 
+ * @param {Message} until 
+ * @returns <Promise<Message[]>}
+ * @description 獲取指定頻道的訊息，直到指定訊息為止。
+ * 如果沒有指定until，則獲取最新limit條訊息。
+ */
+async function getMessages(channel, limit, until = null) {
     let out = [];
-    if (limit > 500) {
-        return null;
-    };
 
-    limit = parseInt(limit);
-
-    if (limit <= 100) {
-        let messages = await channel.messages.fetch({ limit: limit });
-        out.push(...messages.map(m => m));
-    } else {
-        let rounds = Math.ceil(limit / 100);
+    if (until) {
+        let found = false;
         let last_id = "";
-        for (let x = 0; x < rounds; x++) {
+        
+        while (!found) {
             const options = {
-                limit: 100,
+                limit: 100
             };
             if (last_id.length > 0) {
                 options.before = last_id;
-            };
+            }
+            
             const messages = await channel.messages.fetch(options);
             const messageArray = Array.from(messages.values());
-            out.push(...messageArray);
+            
+            if (messageArray.length === 0) break;
+            
+            for (const msg of messageArray) {
+                out.push(msg);
+                if (msg.id === until.id) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            last_id = messageArray[messageArray.length - 1].id;
+            
+            if (found || messageArray.length < 100) break;
+        }
+    } else {
+        if (limit <= 100) {
+            let messages = await channel.messages.fetch({ limit: limit });
+            out.push(...messages.map(m => m));
+        } else {
+            let rounds = Math.ceil(limit / 100);
+            let last_id = "";
+            for (let x = 0; x < rounds; x++) {
+                const options = {
+                    limit: 100,
+                };
+                if (last_id.length > 0) {
+                    options.before = last_id;
+                };
+                const messages = await channel.messages.fetch(options);
+                const messageArray = Array.from(messages.values());
+                out.push(...messageArray);
 
-            if (messageArray.length > 0) {
-                last_id = messageArray[messageArray.length - 1].id;
-            };
+                if (messageArray.length > 0) {
+                    last_id = messageArray[messageArray.length - 1].id;
+                };
 
-            if (out.length >= limit) {
-                out = out.slice(0, limit);
-                break;
+                if (out.length >= limit) {
+                    out = out.slice(0, limit);
+                    break;
+                };
             };
         };
     };
@@ -46,7 +81,7 @@ module.exports = {
         .addIntegerOption(option =>
             option.setName('number')
                 .setDescription('要刪除的訊息數量 (最多500)')
-                .setRequired(true)
+                .setRequired(false)
                 .setMinValue(1)
                 .setMaxValue(500),
         )
@@ -73,8 +108,6 @@ module.exports = {
     async execute(interaction) {
         const { loadData } = require("../../module_database.js");
         await interaction.deferReply();
-        let userid = interaction.user.id;
-        let data = loadData(userid);
 
         if (!loadData(interaction.user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         const msgnum = interaction.options.getInteger('number');
@@ -82,7 +115,11 @@ module.exports = {
         const contentincluded = interaction.options.getString('contentincluded');
         const until = interaction.options.getString('until');
         const user = interaction.options.getUser('user');
-        
+
+        if (!msgnum && !contentincluded && !user && !until) {
+            return await interaction.editReply({ content: '請至少提供一個參數來刪除訊息', ephemeral: true });
+        };
+
         let untilmsg;
         if (until) {
             try {
@@ -92,9 +129,9 @@ module.exports = {
                 return await interaction.editReply({ content: '指定的訊息ID無效，請重新輸入' });
             };
         };
-        
+
         await interaction.editReply('[LOADING] 正在獲取訊息...');
-        const messages = await getMessages(channel, msgnum + 1);
+        const messages = await getMessages(channel, msgnum + 1, untilmsg);
 
         let progressMessage = null; // 追蹤進度訊息
         const reply = await interaction.editReply('開始刪除訊息! ');

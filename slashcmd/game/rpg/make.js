@@ -110,7 +110,7 @@ module.exports = {
         rpg_data.inventory[item_id] += output_amount;
         save_rpg_data(userid, rpg_data);
 
-        const emoji = get_emoji(interaction.guild, "toolbox")
+        const emoji = await get_emoji(interaction.client, "toolbox")
         const embed = new EmbedBuilder()
             .setColor(0x0099ff)
             .setTitle(`${emoji} | 製作物品`)

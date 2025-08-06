@@ -34,90 +34,13 @@ function get_transaction_embed(interaction) {
 
 let cli = null;
 
-function get_failed_embed(interaction, guild, client = cli) {
+async function get_failed_embed(client = cli) {
     const { setEmbedFooter, get_emoji } = require("./msg_handler.js");
-    const emoji = get_emoji(guild, "crosS");
+    const emoji = await get_emoji(client, "crosS");
     const embed = new EmbedBuilder()
         .setColor(0x00BBFF)
         .setTitle(`${emoji} | 沒事戳這顆按鈕幹嘛?`);
     return setEmbedFooter(client, embed, null, client);
-};
-
-function get_help_embed(category, client) {
-    const { rpg_commands, setEmbedFooter } = require("./msg_handler.js");
-
-    // 分類指令
-    const commandCategories = {
-        gathering: ['mine', 'hew', 'fell', 'herd', 'lazy'],
-        shop: ['shop', 'buy'],
-        inventory: ['ls', 'bag', 'item'],
-        others: ['m', 'mo', 'money', 'cd', 'pay', 'help', 'privacy']
-    };
-
-    let description = '';
-    let title = '';
-
-    // 合併相同指令
-    const mergedCommands = {};
-    commandCategories[category].forEach(cmd => {
-        if (rpg_commands[cmd]) {
-            const [name, desc] = rpg_commands[cmd];
-            if (!mergedCommands[name]) {
-                mergedCommands[name] = {
-                    desc,
-                    cmds: [cmd]
-                };
-            } else {
-                mergedCommands[name].cmds.push(cmd);
-            };
-        };
-    });
-
-    switch (category) {
-        case 'gathering':
-            title = '資源收集指令';
-            description = Object.entries(mergedCommands)
-                .map(([name, data]) => {
-                    const cmdList = data.cmds.join('/');
-                    return `- **${cmdList}** - ${name} (${data.desc})`;
-                })
-                .join('\n');
-            break;
-        case 'shop':
-            title = '商店系統指令';
-            description = Object.entries(mergedCommands)
-                .map(([name, data]) => {
-                    const cmdList = data.cmds.join('/');
-                    return `- **${cmdList}** - ${name} (${data.desc})`;
-                })
-                .join('\n');
-            break;
-        case 'inventory':
-            title = '背包系統指令';
-            description = Object.entries(mergedCommands)
-                .map(([name, data]) => {
-                    const cmdList = data.cmds.join('/');
-                    return `- **${cmdList}** - ${name} (${data.desc})`;
-                })
-                .join('\n');
-            break;
-        case 'others':
-            title = '其他指令';
-            description = Object.entries(mergedCommands)
-                .map(([name, data]) => {
-                    const cmdList = data.cmds.join('/');
-                    return `- **${cmdList}** - ${name} (${data.desc})`;
-                })
-                .join('\n');
-            break;
-    };
-
-    const embed = new EmbedBuilder()
-        .setColor(0x00BBFF)
-        .setTitle(title)
-        .setDescription(description || '沒有找到相關指令');
-
-    return setEmbedFooter(client, embed);
 };
 
 module.exports = {
@@ -126,7 +49,6 @@ module.exports = {
             if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
             if (interaction.customId.startsWith("vote_")) return;
             const { time } = require("../../module_time.js");
-            const { get_loophole_embed } = require("./msg_handler.js");
 
             const message = interaction.message;
             const user = interaction.user;
@@ -137,17 +59,13 @@ module.exports = {
             const customIdParts = interaction.customId.split('|');
             const originalUserId = customIdParts[1];
 
-            // console.debug(`customId: ${interaction.customId}`);
-            // console.debug(`customIdParts: ${customIdParts}`);
-            // console.debug(`originalUserId: ${originalUserId}`);
-
             // 驗證使用者身份
             if (user.id !== originalUserId) {
                 try {
-                    await interaction.followUp({ embeds: [get_failed_embed(interaction, interaction.guild, client)], flags: MessageFlags.Ephemeral });
+                    await interaction.followUp({ embeds: [await get_failed_embed(client)], flags: MessageFlags.Ephemeral });
                 } catch (error) {
                     await interaction.deferUpdate();
-                    await interaction.followUp({ embeds: [get_failed_embed(interaction, interaction.guild, client)], flags: MessageFlags.Ephemeral });
+                    await interaction.followUp({ embeds: [await get_failed_embed(client)], flags: MessageFlags.Ephemeral });
                 };
                 return;
             };
@@ -160,10 +78,11 @@ module.exports = {
                 const embed = get_transaction_embed(interaction);
                 await interaction.followUp({ embeds: [embed], flags: MessageFlags.Ephemeral });
             } else if (interaction.customId.startsWith('rpg_help_menu')) {
+                const { get_help_embed } = require("./msg_handler.js");
                 await interaction.deferUpdate();
 
                 const category = interaction.values[0];
-                const newEmbed = get_help_embed(category, client);
+                const newEmbed = await get_help_embed(category, client);
 
                 await interaction.followUp({
                     embeds: [newEmbed],
@@ -174,9 +93,9 @@ module.exports = {
                 const { load_rpg_data, save_rpg_data } = require("../../module_database.js");
                 const { get_emoji, setEmbedFooter, add_money, remove_money } = require("./msg_handler.js");
 
-                const emoji_cross = get_emoji(interaction.guild, "crosS");
+                const emoji_cross = await get_emoji(interaction.client, "crosS");
                 if (interaction.customId.startsWith('pay_confirm')) {
-                    const emoji_top = get_emoji(interaction.guild, "top");
+                    const emoji_top = await get_emoji(interaction.client, "top");
                     const [_, userId, targetUserId, amount, timestamp] = interaction.customId.split('|');
                     const rpg_data = load_rpg_data(userId);
                     const target_user_rpg_data = load_rpg_data(targetUserId);
@@ -226,8 +145,8 @@ module.exports = {
                 // const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
 
                 // await interaction.deferUpdate();
-                // const emoji_tick = get_emoji(interaction.guild, "Tick");
-                // const emoji_cross = get_emoji(interaction.guild, "crosS");
+                // const emoji_tick = get_emoji(interaction.client, "Tick");
+                // const emoji_cross = get_emoji(interaction.client, "crosS");
                 // const embed = new EmbedBuilder()
                 //     .setColor(0x00BBFF)
                 //     .setTitle(`${emoji_tick} | 語言設定成功`)
@@ -267,9 +186,9 @@ module.exports = {
 
                 const rpg_data = load_rpg_data(userId);
 
-                const emoji_shield = get_emoji(message.guild, "shield");
-                const emoji_backpack = get_emoji(message.guild, "bag");
-                const emoji_partner = get_emoji(message.guild, "partner");
+                const emoji_shield = await get_emoji(interaction.client, "shield");
+                const emoji_backpack = await get_emoji(interaction.client, "bag");
+                const emoji_partner = await get_emoji(interaction.client, "partner");
 
                 // if (mode === undefined) { // 不是第一次執行
                 //     const privacy = interaction.values;
@@ -378,7 +297,7 @@ module.exports = {
 
                 save_rpg_data(userId, rpg_data);
 
-                const emoji_trade = get_emoji(interaction.guild, "trade");
+                const emoji_trade = await get_emoji(interaction.client, "trade");
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
                     .setTitle(`${emoji_trade} | 成功售出了 ${amount} 個 ${name[item_id]}`);
@@ -388,7 +307,7 @@ module.exports = {
                 const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
                 await interaction.deferUpdate();
 
-                const emoji_cross = get_emoji(interaction.guild, "crosS");
+                const emoji_cross = await get_emoji(interaction.client, "crosS");
 
                 const embed = new EmbedBuilder()
                     .setColor(0xF04A47)
@@ -402,8 +321,8 @@ module.exports = {
 
                 await interaction.deferUpdate();
 
-                const emoji_cross = get_emoji(interaction.guild, "crosS");
-                const emoji_store = get_emoji(interaction.guild, "store");
+                const emoji_cross = await get_emoji(interaction.client, "crosS");
+                const emoji_store = await get_emoji(interaction.client, "store");
 
                 const buyerRPGData = load_rpg_data(buyerUserId);
                 const targetUserRPGData = load_rpg_data(targetUserId);
@@ -465,7 +384,7 @@ module.exports = {
                 const item_need = global.oven_sessions?.[session_id];
                 if (!item_need) {
                     const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
-                    const emoji_cross = get_emoji(interaction.guild, "crosS");
+                    const emoji_cross = await get_emoji(interaction.client, "crosS");
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji_cross} | 烘烤會話已過期`)
@@ -498,7 +417,7 @@ module.exports = {
                         items.push(`${missing.name} \`x${missing.amount}\`個`);
                     };
 
-                    const emoji_cross = get_emoji(interaction.guild, "crosS");
+                    const emoji_cross = await get_emoji(interaction.client, "crosS");
                     const embed = new EmbedBuilder()
                         .setTitle(`${emoji_cross} | 你沒有那麼多的物品`)
                         .setColor(0xF04A47)
@@ -528,7 +447,7 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji_cross} | 你的烤箱已經滿了`);
-    
+
                     return await interaction.followUp({ embeds: [setEmbedFooter(interaction.client, embed)] });
                 };
 
@@ -547,12 +466,124 @@ module.exports = {
                 delete global.oven_sessions[session_id];
 
                 const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
-                const emoji_drumstick = get_emoji(interaction.guild, "drumstick");
+                const emoji_drumstick = await get_emoji(interaction.client, "drumstick");
                 const embed = new EmbedBuilder()
                     .setColor(0x00BBFF)
                     // .setTitle(`${emoji_drumstick} | 烘烤開始`)
                     // .setDescription(`已開始烘烤 \`${parsedAmount}\` 個 \`${name[item_id]}\`，預計 \`${parsedDuration / 60}\` 分鐘後完成`);
                     .setTitle(`${emoji_drumstick} | 成功放進烤箱烘烤 ${parsedAmount} 個 ${name[item_id]}`)
+                    .setDescription(`等待至 <t:${end_time}:R>`);
+
+                await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
+            } else if (interaction.customId.startsWith("smelter_smelt")) {
+                const {
+                    load_smelt_data,
+                    save_smelt_data,
+                    load_rpg_data,
+                    save_rpg_data
+                } = require("../../module_database.js");
+                const { smeltable_items, name, smelter_slots } = require("../../rpg.js");
+
+                await interaction.deferUpdate();
+
+                const [_, userId, item_id, amount, coal_amount, duration, output_amount, session_id] = interaction.customId.split("|");
+
+                // 確保所有數值都被正確解析為整數
+                const parsedAmount = parseInt(amount);
+                const parsedCoalAmount = parseInt(coal_amount);
+                const parsedDuration = parseInt(duration);
+
+                // 從全域變數中取得 item_need 資料
+                const item_need = global.smelter_sessions?.[session_id];
+                if (!item_need) {
+                    const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
+                    const emoji_cross = await get_emoji(interaction.client, "crosS");
+                    const embed = new EmbedBuilder()
+                        .setColor(0xF04A47)
+                        .setTitle(`${emoji_cross} | 熔鍊會話已過期`)
+                        .setDescription(`請重新執行熔鍊指令`);
+
+                    return await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });
+                };
+
+                let rpg_data = load_rpg_data(userId)
+
+                // ==================檢查物品==================
+                let item_missing = [];
+
+                for (const need_item of item_need) {
+                    const current_item_id = need_item.item;
+                    const need_amount = need_item.amount;
+                    const have_amount = (rpg_data.inventory[current_item_id] || 0);
+
+                    if (have_amount < need_amount) {
+                        item_missing.push({
+                            name: name[current_item_id] || need_item,
+                            amount: need_amount - have_amount,
+                        });
+                    };
+                };
+
+                if (item_missing.length > 0) {
+                    const items = [];
+                    for (const missing of item_missing) {
+                        items.push(`${missing.name} \`x${missing.amount}\`個`);
+                    };
+
+                    const emoji_cross = await get_emoji(interaction.client, "crosS");
+                    const embed = new EmbedBuilder()
+                        .setTitle(`${emoji_cross} | 你沒有那麼多的物品`)
+                        .setColor(0xF04A47)
+                        .setDescription(`你缺少了 ${items.join("、")}`);
+
+                    return await interaction.editReply({ embeds: [setEmbedFooter(interaction.client, embed)], ephemeral: true });
+                };
+                // ==================檢查物品==================
+
+
+                for (const need_item of item_need) {
+                    rpg_data.inventory[need_item.item] -= need_item.amount;
+                };
+
+                save_rpg_data(userId, rpg_data)
+
+                const output_item_id = smeltable_items.find(a => a.input[0].item === item_id).output;
+                const end_time = Math.floor(Date.now() / 1000) + parsedDuration;
+
+                let smelt_data = load_smelt_data();
+
+                if (!smelt_data[userId]) {
+                    smelt_data[userId] = [];
+                };
+
+                if (smelt_data[userId].length >= smelter_slots) {
+                    const embed = new EmbedBuilder()
+                        .setColor(0xF04A47)
+                        .setTitle(`${emoji_cross} | 你的煉金爐已經滿了`);
+
+                    return await interaction.followUp({ embeds: [setEmbedFooter(interaction.client, embed)] });
+                };
+
+                smelt_data[userId].push({
+                    userId,
+                    item_id,
+                    amount: parsedAmount,
+                    coal_amount: parsedCoalAmount,
+                    end_time,
+                    output_item_id,
+                    output_amount: parseInt(output_amount),
+                });
+
+                save_smelt_data(smelt_data);
+
+                // 清理 session 資料
+                delete global.smelter_sessions[session_id];
+
+                const { get_emoji, setEmbedFooter } = require("./msg_handler.js");
+                const emoji_furnace = await get_emoji(interaction.client, "furnace");
+                const embed = new EmbedBuilder()
+                    .setColor(0x00BBFF)
+                    .setTitle(`${emoji_furnace} | 成功放進煉金爐內`)
                     .setDescription(`等待至 <t:${end_time}:R>`);
 
                 await interaction.editReply({ embeds: [setEmbedFooter(client, embed)], components: [] });

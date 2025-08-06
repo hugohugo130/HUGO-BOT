@@ -1,4 +1,4 @@
-const { Client, Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, BaseInteraction, ChatInputCommandInteraction, Message, Guild: djsGuild, AttachmentBuilder } = require("discord.js");
+const { Client, Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, BaseInteraction, ChatInputCommandInteraction, Message, Client: djsClient } = require("discord.js");
 
 const prefix = "!";
 const max_hungry = 20;
@@ -214,26 +214,14 @@ const rpg_help = {
 // Object.assign(rpg_help.fell, rpg_help.hew);
 // Object.assign(rpg_help.wood, rpg_help.hew);
 
-function get_help_embed(category, client, message) {
-    const { rpg_commands } = require("./msg_handler.js");
-
-    if (!rpg_commands) {
-        const embed = new EmbedBuilder()
-            .setColor(0x00BBFF)
-            .setTitle('錯誤')
-            .setDescription('無法載入指令列表');
-        return setEmbedFooter(client, embed);
-    };
-
+async function get_help_embed(category, client) {
     if (!rpg_help[category]) return null;
 
     const embedData = rpg_help[category];
     const emojiName = rpg_emojis[category] || "question";
 
     let emojiStr = "❓"; // 預設表情符號
-    if (message && message.guild) {
-        emojiStr = get_emoji(message.guild, emojiName);
-    };
+    emojiStr = await get_emoji(client, emojiName);
 
     const embed = new EmbedBuilder()
         .setColor(embedData.color)
@@ -243,19 +231,26 @@ function get_help_embed(category, client, message) {
     return setEmbedFooter(client, embed);
 };
 
-function get_emoji(guild = Guild, name) {
-    if (guild instanceof djsGuild && (guild != Guild || !Guild)) {
-        Guild = guild;
+async function get_emoji(client = cli, name) {
+    if (client instanceof djsClient && (client != cli || !cli)) {
+        cli = client;
     };
 
-    let emoji = guild.emojis.cache.find(emoji => emoji.name === name);
+    await client.application.fetch();
+    let emojis = client.application.emojis.cache;
+    let emoji = emojis.find(e => e.name === name);
+    if (!emoji) {
+        emojis = await client.application.emojis.fetch();
+        emoji = emojis.find(e => e.name === name);
+    };
     if (!emoji) throw new Error(`找不到名為${name}的emoji`);
     emoji = `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
     return emoji;
 };
 
-function get_cooldown_embed(remaining_time, guild = Guild, client = cli, action, count, message) {
-    const emoji = get_emoji(guild, "crosS");
+async function get_cooldown_embed(remaining_time, guild = Guild, client = cli, action, count) {
+    const emoji = await get_emoji(client, "crosS");
+
     const timestamp = Math.floor(Date.now() / 1000) + Math.floor(remaining_time / 1000);
     const time = `<t:${timestamp}:T> (<t:${timestamp}:R>)`;
 
@@ -335,8 +330,8 @@ function remove_money({ rpg_data, amount, originalUser, targetUser, type }) {
     return rpg_data.money;
 };
 
-function get_loophole_embed(client = cli, guild = Guild, text = null) {
-    const emoji_cross = get_emoji(guild, "crosS");
+async function get_loophole_embed(client = cli, text = null) {
+    const emoji_cross = await get_emoji(client, "crosS");
 
     if (text && !text.includes("```")) {
         text = `\`\`\`${text}\`\`\``;
@@ -352,7 +347,8 @@ function get_loophole_embed(client = cli, guild = Guild, text = null) {
 
 async function ls_function({ client, message, rpg_data, data, args, mode, PASS }) {
     if (!rpg_data.privacy.includes(privacy_data["ls"]) && !PASS) {
-        const bag_emoji = get_emoji(message.guild, "bag")
+        const bag_emoji = await get_emoji(client, "bag");
+
         let embed = new EmbedBuilder()
             .setTitle(`${bag_emoji} | 查看包包`)
             .setColor(0x00BBFF)
@@ -375,8 +371,8 @@ async function ls_function({ client, message, rpg_data, data, args, mode, PASS }
 
     const { name, mine_gets, ingots, logs, foods_crops, foods_meat, fish, weapons_armor, wood_productions, brew, planks } = require("../../rpg.js");
     const emojiNames = ["bag", "ore", "farmer", "cow", "swords", "potion"];
-    const [bag_emoji, ore_emoji, farmer_emoji, cow_emoji, swords_emoji, potion_emoji] = emojiNames.map(name => {
-        return get_emoji(message.guild, name);
+    const [bag_emoji, ore_emoji, farmer_emoji, cow_emoji, swords_emoji, potion_emoji] = emojiNames.map(async (name) => {
+        return await get_emoji(client, name);
     });
 
     // 分類物品
@@ -516,7 +512,7 @@ const rpg_commands = {
         rpg_data.inventory[random_ore] += real_amount;
         save_rpg_data(userid, rpg_data);
         const ore_name = name[random_ore];
-        const emoji = get_emoji(message.guild, "ore")
+        const emoji = await get_emoji(client, "ore");
 
         let description;
         if (random_ore === "stone") {
@@ -559,7 +555,7 @@ const rpg_commands = {
         rpg_data.inventory[random_log] += real_amount;
         save_rpg_data(userid, rpg_data);
 
-        const emoji = get_emoji(message.guild, "wood");
+        const emoji = await get_emoji(client, "wood");
 
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
@@ -592,7 +588,7 @@ const rpg_commands = {
 
         const product_name = name[product];
         const animal_name = product_name.replace("生", "").replace("肉", "");
-        const emoji = get_emoji(message.guild, rpg_emojis["herd"]);
+        const emoji = await get_emoji(client, rpg_emojis["herd"]);
 
         const description = `你宰了一隻${animal_name}，獲得了 \`${show_amount}\` 個${product_name}！`;
 
@@ -617,7 +613,7 @@ const rpg_commands = {
         rpg_data.inventory[random_potion] += real_amount;
         save_rpg_data(userid, rpg_data);
 
-        const emoji_potion = get_emoji(message.guild, "potion");
+        const emoji_potion = await get_emoji(client, "potion");
         let embed = new EmbedBuilder()
             .setColor(0x00BBFF)
             .setTitle(`${emoji_potion} | 釀造`)
@@ -677,7 +673,7 @@ const rpg_commands = {
             };
         };
 
-        const emoji = get_emoji(message.guild, "fisher")
+        const emoji = await get_emoji(client, "fisher");
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
             .setTitle(`${emoji} | ${fish_text}`)
@@ -693,8 +689,8 @@ const rpg_commands = {
         switch (subcommand) {
             case "add": {
                 const userid = message.author.id;
-                const emoji = get_emoji(message.guild, "store");
-                const emoji_cross = get_emoji(message.guild, "crosS");
+                const emoji = await get_emoji(client, "store");
+                const emoji_cross = await get_emoji(client, "crosS");
                 const shop_data = load_shop_data(userid);
                 const status = shop_data.status ? "營業中" : "打烊";
                 /*
@@ -718,7 +714,7 @@ const rpg_commands = {
                 amount = parseInt(amount);
                 if (isNaN(amount)) amount = 1;
                 if (amount < 1) {
-                    const emoji = get_emoji(message.guild, "crosS");
+                    const emoji = await get_emoji(client, "crosS");
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji} | 錯誤的數量`);
@@ -729,7 +725,7 @@ const rpg_commands = {
                 // let price = parseInt(args[3]) || item_exist?.price || shop_lowest_price[item];
                 let price = parseInt(args[3]) || item_exist?.price;
                 if (!price || price < 1 || price >= 1000000000) {
-                    const emoji = get_emoji(message.guild, "crosS");
+                    const emoji = await get_emoji(client, "crosS");
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji} | 錯誤的價格`);
@@ -738,7 +734,7 @@ const rpg_commands = {
                     return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
                 };
                 if (price < shop_lowest_price[item]) {
-                    const emoji = get_emoji(message.guild, "crosS");
+                    const emoji = await get_emoji(client, "crosS");
                     const embed = new EmbedBuilder()
                         .setColor(0xF04A47)
                         .setTitle(`${emoji} | 價格低於最低價格`)
@@ -790,8 +786,8 @@ const rpg_commands = {
             }
             case "remove": {
                 const userid = message.author.id;
-                const emoji = get_emoji(message.guild, "store");
-                const emoji_cross = get_emoji(message.guild, "crosS");
+                const emoji = await get_emoji(client, "store");
+                const emoji_cross = await get_emoji(client, "crosS");
                 const shop_data = load_shop_data(userid);
                 const item = args[1];
                 if (!item) {
@@ -839,9 +835,9 @@ const rpg_commands = {
                 const user = message.mentions.users.first() || message.author;
                 const userid = user.id;
 
-                const emoji_cross = get_emoji(message.guild, "crosS");
-                const ore_emoji = get_emoji(message.guild, "ore");
-                const food_emoji = get_emoji(message.guild, "bread");
+                const emoji_cross = await get_emoji(client, "crosS");
+                const ore_emoji = await get_emoji(client, "ore");
+                const food_emoji = await get_emoji(client, "bread");
                 const shop_data = load_shop_data(userid);
 
                 const embed = new EmbedBuilder()
@@ -885,7 +881,7 @@ const rpg_commands = {
             case "open":
             case "on": {
                 const userid = message.author.id;
-                const emoji = get_emoji(message.guild, "store");
+                const emoji = await get_emoji(client, "store");
                 const shop_data = load_shop_data(userid);
                 shop_data.status = true;
                 save_shop_data(userid, shop_data);
@@ -899,7 +895,7 @@ const rpg_commands = {
             case "close":
             case "off": {
                 const userid = message.author.id;
-                const emoji = get_emoji(message.guild, "store");
+                const emoji = await get_emoji(client, "store");
                 const shop_data = load_shop_data(userid);
                 shop_data.status = false;
                 save_shop_data(userid, shop_data);
@@ -912,7 +908,7 @@ const rpg_commands = {
             }
             case "status": {
                 const userid = message.author.id;
-                const emoji = get_emoji(message.guild, "store");
+                const emoji = await get_emoji(client, "store");
                 const shop_data = load_shop_data(userid);
                 const status = shop_data.status ? "營業中" : "打烊";
                 const embed = new EmbedBuilder()
@@ -946,8 +942,8 @@ const rpg_commands = {
         const { name } = require("../../rpg.js");
 
         const userid = message.author.id;
-        const emoji_cross = get_emoji(message.guild, "crosS");
-        const emoji_store = get_emoji(message.guild, "store");
+        const emoji_cross = await get_emoji(client, "crosS");
+        const emoji_store = await get_emoji(client, "store");
 
         const target_user = message.mentions.users.first();
         if (!target_user) {
@@ -1234,8 +1230,8 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
     }],
     pay: ["付款", "付款給其他用戶", async function ({ client, message, rpg_data, data, args, mode }) {
         const target_user = message.mentions.users.first();
-        const emoji_cross = get_emoji(message.guild, "crosS");
-        const emoji_top = get_emoji(message.guild, "top");
+        const emoji_cross = await get_emoji(client, "crosS");
+        const emoji_top = await get_emoji(client, "top");
         if (!target_user) {
             return await redirect({ client, message, command: `help`, mode });
         };
@@ -1334,7 +1330,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
     }],
     privacy: ["隱私權", "修改隱私權", async function ({ client, message, rpg_data, data, args, mode }) {
-        // const emoji_shield = get_emoji(message.guild, "shield");
+        // const emoji_shield = await get_emoji(client, "shield");
 
         // const embed = new EmbedBuilder()
         //     .setColor(0x00BBFF)
@@ -1356,7 +1352,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         // return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
         const emojiNames = ["bag", "partner", "shield"];
         const [emoji_backpack, emoji_partner, emoji_shield] = emojiNames.map(name => {
-            return get_emoji(message.guild, name);
+            return get_emoji(client, name);
         });
 
         rpg_data.privacy.sort((a, b) => {
@@ -1430,7 +1426,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
             if (mode === 1) return { embeds };
             return await message.reply({ embeds });
         } else {
-            const emoji_cross = get_emoji(message.guild, "crosS");
+            const emoji_cross = await get_emoji(client, "crosS");
 
             const embed = new EmbedBuilder()
                 .setTitle(`${emoji_cross} | 太懶了辣！`)
@@ -1449,8 +1445,8 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         const user = message.author;
         const userid = user.id;
 
-        const emoji_cross = get_emoji(message.guild, "crosS");
-        const drumstick_emoji = get_emoji(message.guild, "drumstick");
+        const emoji_cross = await get_emoji(client, "crosS");
+        const drumstick_emoji = await get_emoji(client, "drumstick");
 
         if (args.length > 0) {
             const extra_embeds = [];
@@ -1483,7 +1479,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
 
             const add = food_data[food_id]
             if (!add) {
-                const embed = get_loophole_embed(client, message.guild, `快點找哈狗說你要吃的食物，我不知道要加多少飽食度吧！\n詳細資訊: food_data[${food_id}]為${add}`)
+                const embed = await get_loophole_embed(client, `food_data[${food_id}] is ${add}`)
 
                 console.warn(`食物${food_name} (${food_id})在food_data中沒有這個食物的數據`);
                 try {
@@ -1580,8 +1576,8 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
                 return await message.reply({ embeds: [setEmbedFooter(client, embed)] });
             };
 
-            const farmer_emoji = get_emoji(message.guild, "farmer");
-            const cow_emoji = get_emoji(message.guild, "cow");
+            const farmer_emoji = await get_emoji(client, "farmer");
+            const cow_emoji = await get_emoji(client, "cow");
 
             const categories = [
                 { items: food_crops_items, name: `${farmer_emoji} 農作物` },
@@ -1609,7 +1605,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         const item_id = Object.keys(name).find(key => name[key] === item_name);
 
         if (!name[item_id]) {
-            const emoji_cross = get_emoji(message.guild, "crosS");
+            const emoji_cross = await get_emoji(client, "crosS");
 
             let embed = new EmbedBuilder()
                 .setColor(0xF04A47)
@@ -1622,7 +1618,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         };
 
         if (!rpg_data.inventory[item_id]) {
-            const emoji_cross = get_emoji(message.guild, "crosS");
+            const emoji_cross = await get_emoji(client, "crosS");
 
             let embed = new EmbedBuilder()
                 .setColor(0xF04A47)
@@ -1636,7 +1632,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
 
         const amount = get_amount(item_id || item_name, message.author, args[1]) || 1;
         if (rpg_data.inventory[item_id] < amount) {
-            const emoji_cross = get_emoji(message.guild, "crosS");
+            const emoji_cross = await get_emoji(client, "crosS");
 
             let embed = new EmbedBuilder()
                 .setColor(0xF04A47)
@@ -1650,7 +1646,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
 
         const price = sell_data[item_id];
         if (!price) {
-            const embed = get_loophole_embed(client, message.guild, `詳細資訊: sell_data[${item_id}]為${price}`);
+            const embed = await get_loophole_embed(client, `詳細資訊: sell_data[${item_id}]為${price}`);
 
             if (mode === 1) return { embeds: [embed] };
             return await message.reply({ embeds: [embed] });
@@ -1669,7 +1665,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         const row = new ActionRowBuilder()
             .addComponents(cancel_button, confirm_button);
 
-        const emoji_trade = get_emoji(message.guild, "trade");
+        const emoji_trade = await get_emoji(client, "trade");
 
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
@@ -1725,7 +1721,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
 
         userDataList.sort((a, b) => b.money - a.money);
 
-        const emoji_top = get_emoji(message.guild, "top");
+        const emoji_top = await get_emoji(client, "top");
 
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
@@ -1769,7 +1765,7 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         // 按金錢排序（從高到低）
         userDataList.sort((a, b) => b.money - a.money);
 
-        const emoji_decrease = get_emoji(message.guild, "decrease");
+        const emoji_decrease = await get_emoji(client, "decrease");
 
         const embed = new EmbedBuilder()
             .setColor(0x00BBFF)
@@ -1936,7 +1932,7 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         /*
         // 舊版代碼
         const commands = Object.keys(rpg_commands);
-        const cross_emoji = get_emoji(message.guild, "crosS");
+        const cross_emoji = get_emoji(client, "crosS");
 
         const firstChar = command.charAt(0);
         const similarCommands = commands.filter(cmd => cmd.startsWith(firstChar));
@@ -1960,7 +1956,7 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
         */
 
         const commands = Object.keys(rpg_commands);
-        const cross_emoji = get_emoji(message.guild, "crosS");
+        const cross_emoji = await get_emoji(client, "crosS");
 
         command = command.replace(/[^a-zA-Z0-9]/g, '');
 
@@ -2011,7 +2007,7 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
 
     if (rpg_work.includes(command)) {
         if (rpg_data.hungry <= 0) {
-            const emoji_cross = get_emoji(message.guild, "crosS");
+            const emoji_cross = await get_emoji(client, "crosS");
 
             const embed = setEmbedFooter(client, new EmbedBuilder()
                 .setTitle(`${emoji_cross} | 你的體力不足了！`)
@@ -2055,8 +2051,8 @@ async function rpg_handler({ client, message, d, mode = 0 }) {
 
         // 冷卻
         if (!is_finished) {
-            if (mode === 1) return { embeds: [get_cooldown_embed(remaining_time, message.guild, client, action, rpg_data.count[command], message)] };
-            return await message.reply({ embeds: [get_cooldown_embed(remaining_time, message.guild, client, action, rpg_data.count[command], message)] });
+            if (mode === 1) return { embeds: [await get_cooldown_embed(remaining_time, message.guild, client, action, rpg_data.count[command])] };
+            return await message.reply({ embeds: [await get_cooldown_embed(remaining_time, message.guild, client, action, rpg_data.count[command])] });
         };
 
         // 增加計數
