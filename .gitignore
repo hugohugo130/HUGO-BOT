@@ -2,6 +2,7 @@ ffmpeg/
 node_modules/
 **/package-lock.json
 package-lock.json
+package.json
 temp/
 backup/
 .env
