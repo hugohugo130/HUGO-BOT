@@ -1,7 +1,7 @@
 const fs = require("fs");
 const FormData = require('form-data');
 const readline = require('readline');
-const {isDeepStrictEqual} = require("node:util")
+const { isDeepStrictEqual } = require("node:util")
 const axios = require('axios');
 const path = require('path');
 const { beta } = require("./config.json")
@@ -155,38 +155,42 @@ function get_boosters(client, mode = 0) {
 
 // 更新資料庫檔案的預設值
 function updateDatabaseDefaults() {
-    let { default_value, giveaway_eg } = require('./config.json');
-    default_value = { ...default_value, "giveaway.json": giveaway_eg };
-    for (const file of ["db.json", "giveaway.json"]) {
-        try {
-            let data = JSON.parse(fs.readFileSync(file));
-            let defaultData = default_value[file];
-            let changed = false;
+    try {
+        let { default_value, giveaway_eg } = require('./config.json');
+        default_value = { ...default_value, "giveaway.json": giveaway_eg };
+        for (const file of ["db.json", "giveaway.json"]) {
+            try {
+                let data = JSON.parse(fs.readFileSync(file));
+                let defaultData = default_value[file];
+                let changed = false;
 
-            // 遞迴檢查和更新物件的所有層級
-            function updateObject(current, defaults) {
-                for (const [key, value] of Object.entries(defaults)) {
-                    if (!(key in current)) {
-                        current[key] = value;
-                        changed = true;
-                    } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                        if (typeof current[key] !== 'object') {
-                            current[key] = {};
+                // 遞迴檢查和更新物件的所有層級
+                function updateObject(current, defaults) {
+                    for (const [key, value] of Object.entries(defaults)) {
+                        if (!(key in current)) {
+                            current[key] = value;
                             changed = true;
-                        }
-                        updateObject(current[key], value);
+                        } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                            if (typeof current[key] !== 'object') {
+                                current[key] = {};
+                                changed = true;
+                            }
+                            updateObject(current[key], value);
+                        };
                     };
                 };
-            };
 
-            updateObject(data, defaultData);
+                updateObject(data, defaultData);
 
-            if (changed) {
-                fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                if (changed) {
+                    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                };
+            } catch (error) {
+                console.error(`更新${file}時出錯：${error.stack}`);
             };
-        } catch (error) {
-            console.error(`更新${file}時出錯：${error.stack}`);
         };
+    } finally {
+        delete default_value;
     };
 };
 
@@ -366,22 +370,26 @@ function getServerIPSync() {
         };
     }
     if (!serverIP) {
-        let { default_value } = require("./config.json");
-        let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
-        let PORT = beta ? 3001 : 3002;
         try {
-            // 用 powershell 偵測本地伺服器
-            const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
-            if (res === "200") {
-                IP = "127.0.0.1";
-                console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
-            }
-        } catch (_) { }
-        serverIP = { IP, PORT };
-        fs.writeFileSync(serverIPFile, JSON.stringify(serverIP, null, 4));
+            let { default_value } = require("./config.json");
+            let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
+            let PORT = beta ? 3001 : 3002;
+            try {
+                // 用 powershell 偵測本地伺服器
+                const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
+                if (res === "200") {
+                    IP = "127.0.0.1";
+                    console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
+                }
+            } catch (_) { }
+            serverIP = { IP, PORT };
+            fs.writeFileSync(serverIPFile, JSON.stringify(serverIP, null, 4));
+        } finally {
+            delete default_value;
+        };
     };
     return serverIP;
-}
+};
 
 const { IP, PORT } = getServerIPSync();
 const SERVER_URL = `http://${IP}:${PORT}`;
@@ -628,13 +636,16 @@ function check_db_files_exists() {
     //         fs.writeFileSync(file, JSON.stringify(fileData, null, 4));
     //     };
     // };
-    for (const file of database_files) {
-        if (!fs.existsSync(file)) {
-            if (default_value) delete default_value;
-            let { default_value } = require("./config.json");
-            let defaultData = default_value[file];
-            fs.writeFileSync(file, JSON.stringify(defaultData, null, 4));
+    try {
+        for (const file of database_files) {
+            if (!fs.existsSync(file)) {
+                let { default_value } = require("./config.json");
+                let defaultData = default_value[file];
+                fs.writeFileSync(file, JSON.stringify(defaultData, null, 4));
+            };
         };
+    } finally {
+        delete default_value;
     };
 };
 
