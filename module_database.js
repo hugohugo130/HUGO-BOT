@@ -1,7 +1,7 @@
 const fs = require("fs");
 const FormData = require('form-data');
 const readline = require('readline');
-const isEqual = require('lodash.isequal');
+const {isDeepStrictEqual} = require("node:util")
 const axios = require('axios');
 const path = require('path');
 const { beta } = require("./config.json")
@@ -88,7 +88,7 @@ function saveUserData(userid, userData, backup = true) {
         throw lastError;
     };
 
-    if (!backup || isEqual(old_data, data)) return;
+    if (!backup || isDeepStrictEqual(old_data, data)) return;
 
     let backupdb_queue = [];
     if (fs.existsSync(backupdb_queue_file)) {
@@ -630,6 +630,8 @@ function check_db_files_exists() {
     // };
     for (const file of database_files) {
         if (!fs.existsSync(file)) {
+            if (default_value) delete default_value;
+            let { default_value } = require("./config.json");
             let defaultData = default_value[file];
             fs.writeFileSync(file, JSON.stringify(defaultData, null, 4));
         };
