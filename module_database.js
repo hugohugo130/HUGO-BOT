@@ -155,7 +155,6 @@ function get_boosters(client, mode = 0) {
 
 // 更新資料庫檔案的預設值
 function updateDatabaseDefaults() {
-    delete default_value
     let { default_value, giveaway_eg } = require('./config.json');
     default_value = { ...default_value, "giveaway.json": giveaway_eg };
     for (const file of ["db.json", "giveaway.json"]) {
@@ -355,6 +354,7 @@ function sethacoin_forsign(userId, amount, add = false) {
 
 // =========================================================================================================
 const serverIPFile = path.join(process.cwd(), 'serverIP.json');
+const DEFAULT_IP = "26.146.150.194";
 
 function getServerIPSync() {
     let serverIP = null;
@@ -366,11 +366,8 @@ function getServerIPSync() {
         };
     }
     if (!serverIP) {
-        try {
-            delete default_value
-        } catch (_) { };
         let { default_value } = require("./config.json");
-        let IP = default_value["serverIP.json"]?.IP || "26.146.150.194";
+        let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
         let PORT = beta ? 3001 : 3002;
         try {
             // 用 powershell 偵測本地伺服器
@@ -521,6 +518,7 @@ async function onlineDB_checkFileContent(filename) {
 
     if (localContent && remoteContent) {
         if (localContent !== remoteContent) {
+            const { asleep } = require("./module_sleep.js");
             const rl = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
@@ -532,8 +530,11 @@ async function onlineDB_checkFileContent(filename) {
             console.log('2. 下載遠端檔案到本地');
             console.log('3. 不做任何事');
 
+            let result = false;
+
             rl.question('請選擇操作 (1/2/3): ', async (answer) => {
                 rl.close();
+                result = true;
                 switch (answer.trim()) {
                     case '1':
                         await onlineDB_uploadFile(filename);
@@ -546,6 +547,8 @@ async function onlineDB_checkFileContent(filename) {
                 };
                 console.log("=".repeat(30));
             });
+
+            while (!result) asleep(100);
         };
     } else if (localContent && !remoteContent) {
         console.log(`遠端無 ${filename} 檔案，準備上傳本地檔案`);
@@ -588,11 +591,6 @@ async function downloadDatabaseFile(src, dst = null) {
 }
 
 // =========================================================================================================
-delete default_value
-let { default_value } = require('./config.json');
-const { giveaway_eg } = require('./config.json');
-default_value = { ...default_value, "giveaway.json": giveaway_eg };
-// const database_files = Object.keys(default_value);
 const database_files = databaseFiles;
 
 async function check_database_files() {
@@ -612,22 +610,28 @@ async function check_database_files() {
     };
 };
 
-function update_database_files() {
+function check_db_files_exists() {
+    // for (const file of database_files) {
+    //     if (fs.existsSync(file)) {
+    //         let fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
+    //         let defaultData = default_value[file];
+    //         let modified = false;
+
+    //         for (const key in defaultData) {
+    //             if (!(key in fileData)) {
+    //                 fileData[key] = defaultData[key];
+    //                 modified = true;
+    //             };
+    //         };
+
+    //         if (!modified) continue;
+    //         fs.writeFileSync(file, JSON.stringify(fileData, null, 4));
+    //     };
+    // };
     for (const file of database_files) {
-        if (fs.existsSync(file)) {
-            let fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
+        if (!fs.existsSync(file)) {
             let defaultData = default_value[file];
-            let modified = false;
-
-            for (const key in defaultData) {
-                if (!(key in fileData)) {
-                    fileData[key] = defaultData[key];
-                    modified = true;
-                };
-            };
-
-            if (!modified) continue;
-            fs.writeFileSync(file, JSON.stringify(fileData, null, 4));
+            fs.writeFileSync(file, JSON.stringify(defaultData, null, 4));
         };
     };
 };
@@ -697,6 +701,6 @@ module.exports = {
     uploadAllDatabaseFiles,
     downloadDatabaseFile,
     check_database_files,
-    update_database_files,
+    check_db_files_exists,
     uploadChangedDatabaseFiles,
 };

@@ -1,4 +1,4 @@
-# 哈狗機器人更新 HUGO BOT Update - 7 August 2025 (Release Update 9)
+# 哈狗機器人更新 HUGO BOT Update - 25 August 2025 (Release Update 10)
 
 > [!CAUTION]
 > 哈狗機器人的RPG遊戲仍在開發，可能會有很多bug，並且這機器人只是為了哈狗伺服器而做的
@@ -10,10 +10,10 @@
   - 什麼都沒有 Nothing
 
 - 修復 | What bugs fixed?
-  - 什麼都沒有 Nothing
+  - some bugs
 
 - 更新 | What things edited?
-  - 什麼都沒有 Nothing
+  - async sleep
 
 - 移除 | What things removed?
   - 什麼都沒有 Nothing

@@ -5,7 +5,7 @@ const { getclient } = require("./module_createclient.js");
 const { getrl } = require("./module_createrl.js");
 const { loadslashcmd } = require("./module_regcmd.js");
 const { Events } = require("discord.js");
-const { updateDatabaseDefaults, checkAllDatabaseFilesContent, check_database_files, update_database_files } = require("./module_database.js");
+const { updateDatabaseDefaults, checkAllDatabaseFilesContent, check_database_files, check_db_files_exists } = require("./module_database.js");
 const { check_item_data } = require("./rpg.js");
 const fs = require("fs");
 require("dotenv").config();
@@ -43,7 +43,7 @@ console.log(beta ? `
 (async () => {
     await check_database_files();
 
-    update_database_files();
+    check_db_files_exists();
     updateDatabaseDefaults();
 
     await checkAllDatabaseFilesContent();
