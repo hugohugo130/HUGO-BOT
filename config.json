@@ -131,10 +131,13 @@
         "participants": {}
       }
     },
-    "data_red_packet.json": {},
+    "data_red_packet.json": [],
     "database.json": {},
     "backup_database_send_queue.json": [],
     "rpg_database.json": {},
-    "bake_db.json": {}
+    "rpg_shop.json": {},
+    "bake_db.json": {},
+    "smelt_db.json": {},
+    "serverIP.json": { "IP": "26.146.150.194", "PORT": 3001 }
   }
 }
