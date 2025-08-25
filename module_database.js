@@ -526,7 +526,7 @@ async function onlineDB_checkFileContent(filename) {
 
     if (localContent && remoteContent) {
         if (localContent !== remoteContent) {
-            const { asleep } = require("./module_sleep.js");
+            const { sleep } = require("./module_sleep.js");
             const rl = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
@@ -556,7 +556,7 @@ async function onlineDB_checkFileContent(filename) {
                 console.log("=".repeat(30));
             });
 
-            while (!result) asleep(100);
+            while (!result) sleep(100);
         };
     } else if (localContent && !remoteContent) {
         console.log(`遠端無 ${filename} 檔案，準備上傳本地檔案`);
