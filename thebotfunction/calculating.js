@@ -31,15 +31,15 @@ module.exports = {
 
             try {
                 result = eval(expression);
+                result = `${expression} = ${result}`;
             } catch (error) {
                 result = ":x: 計算失敗。";
             };
 
-            if (!result) {
+            if (!result && result != 0) {
                 result = ":x: 計算失敗。";
             };
             
-            result = `${expression} = ${result}`;
 
             const embed = new EmbedBuilder()
                 // .setColor(0x00BBFF)
