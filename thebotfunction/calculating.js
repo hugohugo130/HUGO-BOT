@@ -10,6 +10,7 @@ let mathConstants = {
     log10e: Math.LOG10E
 };
 
+const prefix = "C "
 
 module.exports = {
     setup(client) {
@@ -19,9 +20,10 @@ module.exports = {
             const channel = message.channel;
             if (channel.id !== "1402811558299570277") return;
 
-            const msgcon = message.content.trim()
+            const msgcon = message.content.trim();
+            if (!msgcon.startsWith(prefix)) return;
 
-            let expression = msgcon.slice(5).trim(); // 移除 "calc "
+            let expression = msgcon.slice(prefix.length).trim();
             let result;
             for (const [constant, value] of Object.entries(mathConstants)) {
                 expression = expression.replace(new RegExp(`\\b${constant}\\b`, 'g'), value);
@@ -36,7 +38,7 @@ module.exports = {
             if (!result) {
                 result = ":x: 計算失敗。";
             };
-
+            
             result = `${expression} = ${result}`;
 
             const embed = new EmbedBuilder()
