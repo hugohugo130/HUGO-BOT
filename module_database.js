@@ -1,6 +1,5 @@
 const fs = require("fs");
 const FormData = require('form-data');
-const readline = require('readline');
 const { isDeepStrictEqual } = require("node:util")
 const axios = require('axios');
 const path = require('path');
@@ -526,8 +525,7 @@ async function onlineDB_checkFileContent(filename) {
 
     if (localContent && remoteContent) {
         if (localContent !== remoteContent) {
-            const { sleep } = require("./module_sleep.js");
-            const rl = readline.createInterface({
+            const rl = require("readline/promises").createInterface({
                 input: process.stdin,
                 output: process.stdout
             });
@@ -540,23 +538,22 @@ async function onlineDB_checkFileContent(filename) {
 
             let result = false;
 
-            rl.question('請選擇操作 (1/2/3): ', async (answer) => {
-                rl.close();
-                result = true;
-                switch (answer.trim()) {
-                    case '1':
-                        await onlineDB_uploadFile(filename);
-                        break;
-                    case '2':
-                        await onlineDB_downloadFile(filename);
-                        break;
-                    default:
-                        console.log('未進行任何操作');
-                };
-                console.log("=".repeat(30));
-            });
+            const answer = await rl.question('請選擇操作 (1/2/3): ');
+            rl.close();
+            result = true;
+            switch (answer.trim()) {
+                case '1':
+                    await onlineDB_uploadFile(filename);
+                    break;
+                case '2':
+                    await onlineDB_downloadFile(filename);
+                    break;
+                default:
+                    console.log('未進行任何操作');
+            };
 
-            while (!result) sleep(100);
+            console.log("=".repeat(30));
+            delete rl;
         };
     } else if (localContent && !remoteContent) {
         console.log(`遠端無 ${filename} 檔案，準備上傳本地檔案`);
