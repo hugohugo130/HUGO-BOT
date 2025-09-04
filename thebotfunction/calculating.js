@@ -1,4 +1,15 @@
-const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { Events, EmbedBuilder } = require("discord.js");
+
+let mathConstants = {
+    e: Math.E,
+    pi: Math.PI,
+    sqrt2: Math.SQRT2,
+    ln2: Math.LN2,
+    ln10: Math.LN10,
+    log2e: Math.LOG2E,
+    log10e: Math.LOG10E
+};
+
 
 module.exports = {
     setup(client) {
