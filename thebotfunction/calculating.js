@@ -12,6 +12,10 @@ let mathConstants = {
 
 const prefix = "C "
 
+function BetterEval(obj) {
+    return Function(`"use strict";return ${obj}`)();
+};
+
 module.exports = {
     setup(client) {
         // 訊息回應
@@ -30,7 +34,7 @@ module.exports = {
             };
 
             try {
-                result = eval(expression);
+                result = BetterEval(expression);
                 result = `${expression} = ${result}`;
             } catch (error) {
                 result = ":x: 計算失敗。";
@@ -39,7 +43,7 @@ module.exports = {
             if (!result && result != 0) {
                 result = ":x: 計算失敗。";
             };
-            
+
 
             const embed = new EmbedBuilder()
                 // .setColor(0x00BBFF)
