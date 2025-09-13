@@ -185,6 +185,7 @@ const foods_crops = {
     pumpkin_pie: "pumpkin_pie",
     melon_slice: "melon_slice",
     raw_potato: "raw_potato",
+    apple: "apple",
 };
 
 const foods_meat = {
@@ -223,7 +224,6 @@ const foods_meat = {
     raw_duck: "raw_duck",
 };
 
-const foods = { ...foods_crops, ...foods_meat };
 
 const animals = {
     cow: "cow",
@@ -238,6 +238,8 @@ const animal_products = {
     a_chicken: "raw_chicken",
     a_duck: "raw_duck",
 };
+
+const foods = { ...foods_crops, ...foods_meat };
 
 const shop_lowest_price = {
     coal: 50,
@@ -254,15 +256,16 @@ const shop_lowest_price = {
     emerald: 50,
     ruby: 50,
     sapphire: 50,
-    oak_wood: 50,
-    spruce_wood: 50,
-    birch_wood: 50,
-    jungle_wood: 50,
-    acacia_wood: 50,
-    dark_oak_wood: 50,
-    crimson_wood: 50,
-    warped_wood: 50,
-    god_wood: 50,
+    ha_wood: 45,
+    oak_wood: 55,
+    spruce_wood: 55,
+    birch_wood: 55,
+    jungle_wood: 55,
+    acacia_wood: 55,
+    dark_oak_wood: 55,
+    crimson_wood: 55,
+    warped_wood: 55,
+    god_wood: 250,
     oak_planks: 50,
     spruce_planks: 50,
     birch_planks: 50,
@@ -278,12 +281,14 @@ const shop_lowest_price = {
     duck: 50,
     bread: 130,
     potato: 50,
+    tomato: 50,
     cookie: 50,
     cake: 50,
     candy: 50,
     chocolate: 50,
     pumpkin_pie: 50,
     melon_slice: 50,
+    apple: 85,
     golden_apple: 50,
     enchanted_golden_apple: 50,
     golden_carrot: 50,
@@ -299,18 +304,159 @@ const shop_lowest_price = {
     steel: 650,
 };
 
+const sell_data = {
+    // ==============礦物==============
+    coal: 45,
+    iron_ore: 45,
+    gold_ore: 50,
+    diamond_ore: 50,
+    emerald_ore: 50,
+    ruby_ore: 50,
+    sapphire_ore: 50,
+    stone: 45,
+    iron: 50,
+    gold: 50,
+    diamond: 675,
+    emerald: 50,
+    ruby: 50,
+    sapphire: 50,
+    // ==============木材==============
+    oak_wood: 45,
+    spruce_wood: 45,
+    birch_wood: 45,
+    jungle_wood: 45,
+    acacia_wood: 45,
+    dark_oak_wood: 45,
+    crimson_wood: 45,
+    warped_wood: 45,
+    god_wood: 225,
+    ha_wood: 45,
+    oak_planks: 50,
+    spruce_planks: 50,
+    birch_planks: 50,
+    jungle_planks: 50,
+    acacia_planks: 50,
+    dark_oak_planks: 50,
+    crimson_planks: 50,
+    warped_planks: 50,
+    god_planks: 50,
+    ha_planks: 50,
+    stick: 50,
+    // ==============食物(烤魚類也是食物)==============
+    shrimp: 50,
+    pork: 50,
+    beef: 50,
+    chicken: 50,
+    duck: 50,
+    raw_shrimp: 50,
+    raw_pork: 50,
+    raw_beef: 50,
+    raw_chicken: 50,
+    raw_duck: 50,
+    raw_cod: 50,
+    raw_salmon: 50,
+    raw_tropical_fish: 50,
+    raw_pufferfish: 50,
+    raw_clownfish: 50,
+    raw_tuna: 50,
+    raw_swordfish: 50,
+    raw_anglerfish: 50,
+    raw_jellyfish: 50,
+    raw_octopus: 50,
+    raw_squid: 50,
+    raw_crab: 50,
+    raw_lobster: 50,
+    raw_eel: 50,
+    raw_catfish: 50,
+    raw_goldfish: 50,
+    raw_koi: 50,
+    raw_shark: 50,
+    raw_whale: 50,
+    cod: 50,
+    salmon: 50,
+    tropical_fish: 50,
+    pufferfish: 50,
+    clownfish: 50,
+    tuna: 50,
+    swordfish: 50,
+    anglerfish: 50,
+    jellyfish: 50,
+    octopus: 50,
+    squid: 50,
+    crab: 50,
+    lobster: 50,
+    eel: 50,
+    catfish: 50,
+    goldfish: 50,
+    koi: 50,
+    shark: 50,
+    whale: 50,
+    bread: 50,
+    raw_potato: 76,
+    potato: 117,
+    apple: 85,
+    cookie: 50,
+    cake: 50,
+    candy: 50,
+    chocolate: 50,
+    pumpkin_pie: 50,
+    melon_slice: 50,
+    // ==============特殊食物==============
+    golden_apple: 50,
+    enchanted_golden_apple: 50,
+    golden_carrot: 50,
+    golden_beef: 50,
+    wheat: 58,
+    // ==============武器裝備==============
+    wooden_hoe: 50,
+    iron_hoe: 50,
+    stone_short_knife: 50,
+    iron_short_knife: 50,
+    stone_sword: 50,
+    iron_sword: 50,
+    stone_axe: 50,
+    iron_axe: 50,
+    iron_armor: 1080,
+    // ==============藥水==============
+    regen_potion: 50,
+    poison_potion: 50,
+    floating_potion: 50,
+    invisibility_potion: 50,
+    mystery_potion: 50,
+    eye_potion: 50,
+    ha_potion: 50,
+    jump_potion: 50,
+    lucky_potion: 50,
+    dizzy_potion: 50,
+    unlucky_potion: 50,
+    nausea_potion: 50,
+    hair_growth_potion: 50,
+    revive_potion: 50,
+    gold_potion: 50,
+    cough_potion: 50,
+    steel: 585,
+};
+
 const food_data = {
-    crab: 2,
-    lobster: 2,
-    eel: 4,
-    catfish: 3,
+    apple: 1,
     goldfish: 1,
     koi: 1,
-    shark: 4,
-    whale: 4,
     clownfish: 1,
     jellyfish: 1,
     candy: 1,
+    raw_potato: 1,
+    raw_shrimp: 1,
+    raw_pork: 1,
+    raw_beef: 1,
+    raw_chicken: 1,
+    raw_duck: 1,
+    raw_tuna: 1,
+    crab: 2,
+    lobster: 2,
+    catfish: 3,
+    eel: 4,
+    shark: 4,
+    whale: 4,
     cod: 2,
     tropical_fish: 2,
     pufferfish: 2,
@@ -336,13 +482,6 @@ const food_data = {
     pork: 4,
     beef: 4,
     enchanted_golden_apple: 4,
-    raw_potato: 1,
-    raw_shrimp: 1,
-    raw_pork: 1,
-    raw_beef: 1,
-    raw_chicken: 1,
-    raw_duck: 1,
-    raw_tuna: 1,
 };
 
 const brew = {
@@ -409,138 +548,6 @@ const bake = {
     raw_shrimp: "shrimp",
     raw_tuna: "tuna",
     wheat: "bread",
-};
-
-const sell_data = {
-    // ==============礦物==============
-    coal: 45,
-    iron_ore: 45,
-    gold_ore: 50,
-    diamond_ore: 50,
-    emerald_ore: 50,
-    ruby_ore: 50,
-    sapphire_ore: 50,
-    stone: 45,
-    iron: 50,
-    gold: 50,
-    diamond: 675,
-    emerald: 50,
-    ruby: 50,
-    sapphire: 50,
-    // ==============木材==============
-    oak_wood: 50,
-    spruce_wood: 50,
-    birch_wood: 50,
-    jungle_wood: 50,
-    acacia_wood: 50,
-    dark_oak_wood: 50,
-    crimson_wood: 50,
-    warped_wood: 50,
-    god_wood: 50,
-    ha_wood: 50,
-    oak_planks: 50,
-    spruce_planks: 50,
-    birch_planks: 50,
-    jungle_planks: 50,
-    acacia_planks: 50,
-    dark_oak_planks: 50,
-    crimson_planks: 50,
-    warped_planks: 50,
-    god_planks: 50,
-    ha_planks: 50,
-    stick: 50,
-    // ==============食物(烤魚類也是食物)==============
-    shrimp: 50,
-    pork: 50,
-    beef: 50,
-    chicken: 50,
-    duck: 50,
-    raw_shrimp: 50,
-    raw_pork: 50,
-    raw_beef: 50,
-    raw_chicken: 50,
-    raw_duck: 50,
-    raw_cod: 50,
-    raw_salmon: 50,
-    raw_tropical_fish: 50,
-    raw_pufferfish: 50,
-    raw_clownfish: 50,
-    raw_tuna: 50,
-    raw_swordfish: 50,
-    raw_anglerfish: 50,
-    raw_jellyfish: 50,
-    raw_octopus: 50,
-    raw_squid: 50,
-    raw_crab: 50,
-    raw_lobster: 50,
-    raw_eel: 50,
-    raw_catfish: 50,
-    raw_goldfish: 50,
-    raw_koi: 50,
-    raw_shark: 50,
-    raw_whale: 50,
-    cod: 50,
-    salmon: 50,
-    tropical_fish: 50,
-    pufferfish: 50,
-    clownfish: 50,
-    tuna: 50,
-    swordfish: 50,
-    anglerfish: 50,
-    jellyfish: 50,
-    octopus: 50,
-    squid: 50,
-    crab: 50,
-    lobster: 50,
-    eel: 50,
-    catfish: 50,
-    goldfish: 50,
-    koi: 50,
-    shark: 50,
-    whale: 50,
-    bread: 50,
-    raw_potato: 76,
-    potato: 117,
-    cookie: 50,
-    cake: 50,
-    candy: 50,
-    chocolate: 50,
-    pumpkin_pie: 50,
-    melon_slice: 50,
-    // ==============特殊食物==============
-    golden_apple: 50,
-    enchanted_golden_apple: 50,
-    golden_carrot: 50,
-    golden_beef: 50,
-    wheat: 58,
-    // ==============武器裝備==============
-    wooden_hoe: 50,
-    iron_hoe: 50,
-    stone_short_knife: 50,
-    iron_short_knife: 50,
-    stone_sword: 50,
-    iron_sword: 50,
-    stone_axe: 50,
-    iron_axe: 50,
-    iron_armor: 1080,
-    // ==============藥水==============
-    regen_potion: 50,
-    poison_potion: 50,
-    floating_potion: 50,
-    invisibility_potion: 50,
-    mystery_potion: 50,
-    eye_potion: 50,
-    ha_potion: 50,
-    jump_potion: 50,
-    lucky_potion: 50,
-    dizzy_potion: 50,
-    unlucky_potion: 50,
-    nausea_potion: 50,
-    hair_growth_potion: 50,
-    revive_potion: 50,
-    gold_potion: 50,
-    cough_potion: 50,
-    steel: 585,
 };
 
 const name = {
@@ -702,16 +709,18 @@ function check_item_data() {
         ...Object.keys(recipes),
         ...Object.values(wood_productions),
         ...Object.keys(name).filter(item => !item.startsWith("#")),
-    ].flat().filter(item => !["cow", "pig", "a_chicken", "a_duck"].includes(item));
+    ].flat().filter(item => !animals.includes(item));
 
 
     for (const item_id of all_items) {
         if (!name[item_id]) {
             console.warn(`[警告] 物品ID "${item_id}" 沒有對應的名稱`);
         };
-    };
 
-    for (const item_id of all_items) {
+        if (!shop_lowest_price[item_id]) {
+            console.warn(`[警告] 物品ID "${item_id}" 沒有對應的最低上架價格`);
+        };
+
         if (!sell_data[item_id]) {
             console.warn(`[警告] 物品ID "${item_id}" 沒有對應的出售價格`);
         };
@@ -720,6 +729,22 @@ function check_item_data() {
 
 function get_name_of(id) {
     return name[id] || id
+};
+
+function get_number_of_items(name, userid) {
+    const { load_rpg_data } = require("../module_database.js");
+    const { name: name_list } = require("../rpg.js");
+    const rpg_data = load_rpg_data(userid);
+    const items = rpg_data.inventory;
+
+    // 如果輸入的是中文名稱，找到對應的英文key
+    let item_key = name;
+    if (Object.values(name_list).includes(name)) {
+        item_key = Object.keys(name_list).find(key => name_list[key] === name);
+    };
+
+    if (!items[item_key]) return 0;
+    return items[item_key];
 };
 
 const oven_slots = 3;
@@ -750,6 +775,7 @@ module.exports = {
     sell_data,
     check_item_data,
     get_name_of,
+    get_number_of_items,
     oven_slots,
     smelter_slots,
 };
