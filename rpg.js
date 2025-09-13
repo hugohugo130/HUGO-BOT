@@ -709,7 +709,7 @@ function check_item_data() {
         ...Object.keys(recipes),
         ...Object.values(wood_productions),
         ...Object.keys(name).filter(item => !item.startsWith("#")),
-    ].flat().filter(item => !animals.includes(item));
+    ].flat().filter(item => !Object.values(animals).includes(item));
 
 
     for (const item_id of all_items) {
