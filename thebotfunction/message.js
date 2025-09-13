@@ -66,13 +66,17 @@ async function level_exp_handler({ client, message, user }) {
             data.exp -= exp_need;
             data.level++;
             if (channel) {
-                await channel.send({ content: `${user} 已達到 ${data.level} 級!`, allowedMentions: { repliedUser: false } });
+                await channel.send({ content: `${user} 已達到 ${data.level} 級!`});
             };
         };
         saveUserData(userid, data);
     } catch (error) {
         require("../module_senderr").senderr({ client: client, msg: `處理等級經驗值時出錯：${error.stack}`, clientready: true });
     };
+};
+
+function BetterEval(obj) {
+    return Function(`"use strict";return ${obj}`)();
 };
 
 async function message_command_handler({ client, message }) {
@@ -129,7 +133,7 @@ async function message_command_handler({ client, message }) {
                 .setColor(0x00BBFF)
                 .setDescription(showhelp);
 
-            return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+            return message.reply({ embeds: [embed]});
         };
 
         if (cmd === "calc") {
@@ -140,23 +144,23 @@ async function message_command_handler({ client, message }) {
             };
 
             try {
-                result = eval(expression);
+                result = BetterEval(expression);
+                result = `${expression} = ${result}`;
             } catch (error) {
                 result = ":x: 計算失敗。";
             };
 
-            if (!result) {
+            if (!result && result != 0) {
                 result = ":x: 計算失敗。";
             };
 
-            result = `${expression} = ${result}`;
 
             const embed = new EmbedBuilder()
                 // .setColor(0x00BBFF)
                 .setColor(0x8965D6)
                 .setDescription(`\`\`\`${result}\`\`\``);
 
-            return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+            return message.reply({ embeds: [embed]});
         };
 
         if (cmd === "ping") {
@@ -170,7 +174,7 @@ async function message_command_handler({ client, message }) {
                     { name: '🔗 API延遲', value: `${client.ws.ping}ms` },
                     { name: '🌐 Global 全域延遲', value: `${ping}ms` }
                 );
-            return msg.edit({ content: "Pong!", embeds: [embed], allowedMentions: { repliedUser: false } });
+            return msg.edit({ content: "Pong!", embeds: [embed]});
         };
 
         if (cmd === "c") {
@@ -183,13 +187,13 @@ async function message_command_handler({ client, message }) {
 目前數字： **${num}**
 最高數字： **${highest}**
 `);
-                return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                return message.reply({ embeds: [embed]});
             } else if (msgcon.split(" ")[1] == "set") {
                 const { loadData } = require("../module_database.js");
                 if (!loadData(message.author.id).admin) return message.reply("您不是機器人管理員。無法使用此指令。");
 
                 const num = parseInt(msgcon.split(" ")[2]);
-                if (!num) return message.reply({ content: `請輸入數字`, allowedMentions: { repliedUser: false } });
+                if (!num) return message.reply({ content: `請輸入數字`});
                 let db = JSON.parse(require('fs').readFileSync('./db.json', 'utf8'));
                 const oldnum = db.counting_num;
                 let highest = db.counting_highest;
@@ -209,13 +213,13 @@ async function message_command_handler({ client, message }) {
 目前數字： **${oldnum}** -> **${num}**
 最高數字： **${highest}**
 `);
-                return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                return message.reply({ embeds: [embed]});
             } else if (msgcon.split(" ")[1] == "set2") {
                 const { loadData } = require("../module_database.js");
                 if (!loadData(message.author.id).admin) return message.reply("您不是機器人管理員。無法使用此指令。");
 
                 const num = parseInt(msgcon.split(" ")[2]);
-                if (!num) return message.reply({ content: `請輸入數字`, allowedMentions: { repliedUser: false } });
+                if (!num) return message.reply({ content: `請輸入數字`});
                 let db = JSON.parse(require('fs').readFileSync('./db.json', 'utf8'));
                 const oldnum = db.counting_highest;
                 db.counting_highest = num;
@@ -228,7 +232,7 @@ async function message_command_handler({ client, message }) {
 目前數字： **${db.counting_num}**
 最高數字： **${oldnum}** -> **${num}**
 `);
-                return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                return message.reply({ embeds: [embed]});
             };
         };
 
@@ -243,9 +247,9 @@ async function message_command_handler({ client, message }) {
             const msg = await channel.messages.fetch(messageID);
             if (msg) {
                 await msg.pin();
-                return message.reply({ content: `已釘選訊息: ${msg.url}`, allowedMentions: { repliedUser: false } });
+                return message.reply({ content: `已釘選訊息: ${msg.url}`});
             };
-            return message.reply({ content: `找不到訊息，你是不是跨頻道了？: ${messageID}`, allowedMentions: { repliedUser: false } });
+            return message.reply({ content: `找不到訊息，你是不是跨頻道了？: ${messageID}`});
         };
 
         if (cmd === "unpin") {
@@ -259,14 +263,14 @@ async function message_command_handler({ client, message }) {
             const msg = await channel.messages.fetch(messageID);
             if (msg) {
                 await msg.unpin();
-                return message.reply({ content: `已釘選訊息: ${msg.url}`, allowedMentions: { repliedUser: false } });
+                return message.reply({ content: `已取消釘選訊息: ${msg.url}`});
             };
-            return message.reply({ content: `找不到訊息，你是不是跨頻道了？: ${messageID}`, allowedMentions: { repliedUser: false } });
+            return message.reply({ content: `找不到訊息，你是不是跨頻道了？: ${messageID}`});
         };
 
         if (cmd === "vping") {
             const connection = getVoiceConnection(message.guild.id);
-            if (!connection) return message.reply({ content: `機器人不在語音頻道`, allowedMentions: { repliedUser: false } });
+            if (!connection) return message.reply({ content: `機器人不在語音頻道`});
 
             const embed = new EmbedBuilder()
                 .setColor(0x00BBFF)
@@ -274,31 +278,15 @@ async function message_command_handler({ client, message }) {
                     { name: 'WebSocket 語音延遲', value: `${connection.ping.ws || "無"}ms` },
                     { name: 'UDP 語音延遲', value: `${connection.ping.udp || "無"}ms` }
                 );
-            return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+            return message.reply({ embeds: [embed]});
         };
 
         if (cmd === "ip") {
-            return message.reply({ content: `\`mc.yanpl.com:25105\``, allowedMentions: { repliedUser: false } });
+            return message.reply({ content: `\`mc.yanpl.com:25105\``});
         };
     } catch (error) {
         require("../module_senderr").senderr({ client: client, msg: `處理訊息指令時出錯：${error.stack}`, clientready: true });
     };
-};
-
-function get_number_of_items(name, userid) {
-    const { load_rpg_data } = require("../module_database.js");
-    const { name: name_list } = require("../rpg.js");
-    const rpg_data = load_rpg_data(userid);
-    const items = rpg_data.inventory;
-
-    // 如果輸入的是中文名稱，找到對應的英文key
-    let item_key = name;
-    if (Object.values(name_list).includes(name)) {
-        item_key = Object.keys(name_list).find(key => name_list[key] === name);
-    };
-
-    if (!items[item_key]) return 0;
-    return items[item_key];
 };
 
 let lock = {
@@ -355,7 +343,7 @@ module.exports = {
         client.on(Events.MessageCreate, async (message) => {
             if (message.author.bot) return;
             const channel = message.channel;
-            const content = message.content;
+            const content = message.content.toLowerCase().trim();
 
             // if (content === "." && message.author.id === "1197913368519004191") {
             //     const randomEmoji = generateRandomEmoji(Math.floor(Math.random() * 3) + 2); // 2~4個
@@ -367,9 +355,9 @@ module.exports = {
                 content === "風暴" ||
                 content === "風暴." ||
                 content === "袋子" ||
-                content.toLowerCase() === "darknight" ||
-                content.toLowerCase() === "daiz" ||
-                content.toLowerCase() === "daiz01"
+                content === "darknight" ||
+                content === "daiz" ||
+                content === "daiz01"
             ) {
                 return channel.send("大佬!!我非常肯定!他是!大佬!!!");
             };
