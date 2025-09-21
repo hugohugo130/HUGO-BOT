@@ -7,8 +7,10 @@ module.exports = {
             try {
                 const { load_skiplist, thebotfunctionFolderPath } = require("../config.json");
                 const { start_send_msg } = require("../module_bot_start_stop.js");
+
                 const Folder = `${process.cwd()}/${thebotfunctionFolderPath}`;
                 let FolderFiles = fs.readdirSync(Folder).filter(file => file.endsWith('.js')).filter(file => !load_skiplist.includes(file));
+
                 start_send_msg({ client: client, amount: FolderFiles.length, reload: false });
                 client.user.setActivity({ name: `啟動時間: ${new Date(client.readyTimestamp).toLocaleString('zh-TW', { hour12: false })}`, type: ActivityType.Custom });
             } catch (error) {
