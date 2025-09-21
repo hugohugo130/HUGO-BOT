@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,14 +9,14 @@ module.exports = {
         const { loadData } = require("../../module_database.js");
         const { time } = require("../../module_time.js");
 
-        await interaction.deferReply();
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         let user = interaction.user;
         if (!loadData(user.id).admin) return await interaction.editReply("您不是機器人管理員。無法使用此指令。");
         await interaction.editReply("機器人正在關機!");
         console.log(`[${time()}] 正在關機... (${user.globalName || user.username} 要求關機)`);
         let channel = interaction.guild.channels.cache.get(BotAnnouncementChannelID);
         if (channel) {
-            await channel.send({ content: `哈狗機器人已關機! (${user.toString()} 要求我關機)`, allowedMentions: { repliedUser: false } });
+            await channel.send(`哈狗機器人已關機! (${user.toString()} 要求我關機)`);
         };
         await interaction.client.destroy();
         process.exit();
