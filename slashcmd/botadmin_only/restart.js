@@ -6,7 +6,12 @@ const fs = require('fs');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('重啟機器人')
-        .setDescription('使用斜線指令來重啟機器人 restart'),
+        .setDescription('使用斜線指令來重啟機器人 restart')
+        .addBooleanOption(option =>
+            option.setName("fast")
+            .setDescription("快速重啟")
+            .setRequired(false),
+        ),
     async execute(interaction) {
         const { loadData } = require("../../module_database.js");
         const { BotAnnouncementChannelID } = require("../../config.json");
@@ -19,10 +24,10 @@ module.exports = {
         const isWindows = process.platform === "win32";
         const rootDir = path.join(__dirname, '../..');
 
-        const scriptFile = 'start.bat';
+        const scriptFile = (interaction.options.getBoolean("fast") ?? false) ? 'start_fast.bat' : "start.bat";
 
         const scriptPath = path.join(rootDir, scriptFile);
-        if (!fs.existsSync(scriptPath)) return await interaction.editReply("Error 0x0001: 機器人啟動腳本不存在。"); 
+        if (!fs.existsSync(scriptPath)) return await interaction.editReply(`重啟失敗！機器人啟動腳本不存在。\n${scriptFile}`); 
 
         if (isWindows) {
             const channel = interaction.guild.channels.cache.get(BotAnnouncementChannelID);
