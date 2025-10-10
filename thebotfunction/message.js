@@ -18,18 +18,18 @@ async function unlock_waiting_handler(lock_name) {
     });
 };
 
-function generateRandomEmoji(amount) {
-    const emojis = [
-        ':eyes:', // 內建表情符號
-        '<:angry:1279090863879884901>', // 自訂表情符號
-        '<:bruh:1261592422094475284>' // 自訂表情符號
-    ];
-    const result = [];
-    for (let i = 0; i < amount; i++) {
-        result.push(emojis[Math.floor(Math.random() * emojis.length)]);
-    };
-    return result;
-};
+// function generateRandomEmoji(amount) {
+//     const emojis = [
+//         ':eyes:', // 內建表情符號
+//         '<:angry:1279090863879884901>', // 自訂表情符號
+//         '<:bruh:1261592422094475284>' // 自訂表情符號
+//     ];
+//     const result = [];
+//     for (let i = 0; i < amount; i++) {
+//         result.push(emojis[Math.floor(Math.random() * emojis.length)]);
+//     };
+//     return result;
+// };
 
 function message_count_handler({ client, message, user }) {
     try {
@@ -147,11 +147,11 @@ async function message_command_handler({ client, message }) {
                 result = BetterEval(expression);
                 result = `${expression} = ${result}`;
             } catch (error) {
-                result = ":x: 計算失敗。";
+                result = "❌ 計算失敗。";
             };
 
             if (!result && result != 0) {
-                result = ":x: 計算失敗。";
+                result = "❌ 計算失敗。";
             };
 
 
