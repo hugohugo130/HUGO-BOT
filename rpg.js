@@ -193,6 +193,7 @@ const foods_meat = {
     pork: "pork",
     beef: "beef",
     chicken: "chicken",
+    mutton: "mutton",
     duck: "duck",
     cod: "cod",
     salmon: "salmon",
@@ -222,14 +223,15 @@ const foods_meat = {
     raw_beef: "raw_beef",
     raw_chicken: "raw_chicken",
     raw_duck: "raw_duck",
+    raw_mutton: "raw_mutton",
 };
-
 
 const animals = {
     cow: "cow",
     pig: "pig",
     a_chicken: "a_chicken",
     a_duck: "a_duck",
+    a_sheep: "a_sheep",
 };
 
 const animal_products = {
@@ -237,6 +239,7 @@ const animal_products = {
     pig: "raw_pork",
     a_chicken: "raw_chicken",
     a_duck: "raw_duck",
+    a_sheep: "raw_mutton",
 };
 
 const foods = { ...foods_crops, ...foods_meat };
@@ -302,6 +305,8 @@ const shop_lowest_price = {
     raw_duck: 50,
     wheat: 65,
     steel: 650,
+    raw_mutton: 50,
+    mutton: 125,
 };
 
 const sell_data = {
@@ -401,6 +406,8 @@ const sell_data = {
     chocolate: 50,
     pumpkin_pie: 50,
     melon_slice: 50,
+    raw_mutton: 45,
+    mutton: 112,
     // ==============特殊食物==============
     golden_apple: 50,
     enchanted_golden_apple: 50,
@@ -451,13 +458,7 @@ const food_data = {
     raw_chicken: 1,
     raw_duck: 1,
     raw_tuna: 1,
-    crab: 2,
-    lobster: 2,
-    catfish: 3,
-    eel: 4,
-    shark: 4,
-    whale: 4,
-    cod: 2,
+    raw_mutton: 1,
     tropical_fish: 2,
     pufferfish: 2,
     bread: 2,
@@ -466,16 +467,24 @@ const food_data = {
     cake: 2,
     chocolate: 2,
     melon_slice: 2,
+    crab: 2,
+    lobster: 2,
+    cod: 2,
+    catfish: 3,
     swordfish: 3,
     shrimp: 3,
     chicken: 3,
     duck: 3,
+    mutton: 3,
     pumpkin_pie: 3,
     golden_apple: 3,
     golden_carrot: 3,
     golden_beef: 3,
     salmon: 3,
     tuna: 3,
+    eel: 4,
+    shark: 4,
+    whale: 4,
     anglerfish: 4,
     octopus: 4,
     squid: 4,
@@ -613,12 +622,15 @@ const name = {
     raw_chicken: "生雞肉",
     raw_duck: "生鴨肉",
     raw_potato: "馬鈴薯",
+    raw_mutton: "生羊肉",
     wheat: "小麥",
+    mutton: "烤羊肉",
     // ==============動物==============
     cow: "牛",
     pig: "豬",
     a_chicken: "雞",
     a_duck: "鴨",
+    a_sheep: "羊",
     // ==============藥水==============
     regen_potion: "回復藥水",
     poison_potion: "中毒藥水",
