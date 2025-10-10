@@ -357,7 +357,7 @@ function sethacoin_forsign(userId, amount, add = false) {
 
 // =========================================================================================================
 const serverIPFile = path.join(process.cwd(), 'serverIP.json');
-const DEFAULT_IP = "26.146.150.194";
+const DEFAULT_IP = "hugo.904037.xyz";
 
 function getServerIPSync() {
     let serverIP = null;
@@ -367,7 +367,12 @@ function getServerIPSync() {
         } catch (e) {
             serverIP = null;
         };
-    }
+    };
+
+    if (serverIP === "26.146.150.194") { // 舊檔案相容
+        serverIP = "hugo.904037.xyz";
+    };
+
     if (!serverIP) {
         try {
             let { default_value } = require("./config.json");
@@ -379,14 +384,19 @@ function getServerIPSync() {
                 if (res === "200") {
                     IP = "127.0.0.1";
                     console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
-                }
+                };
             } catch (_) { }
+            if (IP === "26.146.150.194") { // 舊檔案相容
+                IP = "hugo.904037.xyz";
+            };
+
             serverIP = { IP, PORT };
             fs.writeFileSync(serverIPFile, JSON.stringify(serverIP, null, 4));
         } finally {
             delete default_value;
         };
     };
+
     return serverIP;
 };
 
