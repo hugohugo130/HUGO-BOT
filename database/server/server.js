@@ -5,13 +5,11 @@ const multer = require('multer');
 const app = express();
 
 // const BETA = true;
-const BETA = __dirname.split("\\").at(-1) === "DB Server2"
+const BETA = __dirname.split("/").at(-1) === "DB Server2"
 let PORT = 3001;
 if (!BETA) PORT = 3002;
 
-let FILES_DIR = "C:\\hugodatabase\\beta-dc-bot";
-if (!BETA) FILES_DIR = "C:\\hugodatabase\\rel-dc-bot";
-if (!fs.existsSync(FILES_DIR)) fs.mkdirSync(FILES_DIR);
+let FILES_DIR = "/db";
 
 app.use(express.json());
 
@@ -75,7 +73,7 @@ app.post('/files', upload.single('file'), (req, res) => {
     if (req.body.mtime) {
         const mtime = new Date(Number(req.body.mtime));
         fs.utimesSync(req.file.path, mtime, mtime);
-    };
+    }
     res.json({ message: 'File uploaded', filename: req.file.filename });
 });
 
@@ -105,7 +103,7 @@ app.post('/mkdir', (req, res) => {
         res.json({ message: `Directory created: ${fullPath}` });
     } catch (err) {
         res.status(500).json({ error: err.stack });
-    };
+    }
 });
 
 // 複製遠端文件
@@ -124,7 +122,7 @@ app.post('/copy', (req, res) => {
         res.json({ message: `File copied from ${srcPath} to ${dstPath}` });
     } catch (err) {
         res.status(500).json({ error: err.stack });
-    };
+    }
 });
 
 // 伺服器 啟動！
