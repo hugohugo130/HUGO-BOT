@@ -3,8 +3,8 @@ FROM node:22.14.0-alpine
 WORKDIR /app
 
 # 安裝編譯依賴 (某些套件會需要)
-# 和安裝curl
-RUN apk add --no-cache python3 make g++ git curl
+# 和安裝 curl, git
+RUN apk add --no-cache python3 make g++ git curl git
 
 # 複製 package.json / package-lock.json
 COPY package*.json ./
