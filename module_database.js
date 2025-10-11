@@ -359,8 +359,17 @@ const serverIPFile = path.join(process.cwd(), 'serverIP.json');
 const DEFAULT_IP = "hugo.904037.xyz";
 
 function check_IP_valid(IP, PORT) {
-    const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://${IP}:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
-    return res === "200";
+    const platform = process.platform;
+    if (platform === "win32") { // windows NT
+        // 用 powershell 偵測本地伺服器
+        res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://${IP}:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
+        passed = true;
+    } else if (platform === "linux") { // linux / ubuntu
+        res = require('child_process').execSync(`curl -s -o /dev/null -w "%{http_code}" http://${IP}:${PORT}/verify --connect-timeout 1 || echo ""`).toString().trim();
+        passed = true;
+    } else { // other unsupport system D:
+        serverIP = DEFAULT_IP;
+    };
 };
 
 function getServerIPSync() {
@@ -385,12 +394,28 @@ function getServerIPSync() {
             // let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
             let IP = DEFAULT_IP;
             PORT = beta ? 3001 : 3002;
+
             try {
-                // 用 powershell 偵測本地伺服器
-                const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
-                if (res === "200") {
-                    IP = "127.0.0.1";
-                    console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
+                const platform = process.platform;
+                let res;
+                let passed = false;
+
+                if (platform === "win32") { // windows NT
+                    // 用 powershell 偵測本地伺服器
+                    res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
+                    passed = true;
+                } else if (platform === "linux") { // linux / ubuntu
+                    res = require('child_process').execSync(`curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${PORT}/verify --connect-timeout 1 || echo ""`).toString().trim();
+                    passed = true;
+                } else { // other unsupport system D:
+                    serverIP = DEFAULT_IP;
+                };
+
+                if (passed) {
+                    if (res === "200") {
+                        IP = "127.0.0.1";
+                        console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
+                    };
                 };
             } catch (_) { }
 
