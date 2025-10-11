@@ -740,8 +740,8 @@ function check_item_data() {
     };
 };
 
-function get_name_of(id) {
-    return name[id] || id
+function get_name_of(id, default_value = id) {
+    return name[id] || default_value;
 };
 
 function get_number_of_items(name, userid) {
