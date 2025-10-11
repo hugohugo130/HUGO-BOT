@@ -6,13 +6,14 @@ WORKDIR /app
 # 和安裝 curl, git
 RUN apk add --no-cache python3 make g++ git curl
 
-
 # 複製 package.json / package-lock.json
 COPY package*.json ./
 
 # npm 安裝
-RUN npm install && \
-apk del python3 make g++
+RUN npm install
+
+# 刪除編譯依賴 (某些套件會需要)
+RUN apk del python3 make g++
 
 # 複製剩下的程式碼
 COPY . .
