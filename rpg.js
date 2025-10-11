@@ -556,6 +556,7 @@ const bake = {
     raw_salmon: "salmon",
     raw_shrimp: "shrimp",
     raw_tuna: "tuna",
+    raw_mutton: "mutton",
     wheat: "bread",
 };
 
