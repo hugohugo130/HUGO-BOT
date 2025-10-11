@@ -19,9 +19,11 @@ COPY . .
 # 註冊指令
 RUN node register_commands.js
 
-# 自動更新並修復依賴
-RUN git pull && \
-    npm update --save && \
+# pull
+RUN git pull
+
+# 自動更新
+RUN npm update --save && \
     npm audit fix
 
 # 註冊斜線指令
