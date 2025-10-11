@@ -12,6 +12,9 @@ COPY package*.json ./
 RUN npm install && \
     apk del python3 make g++ git
 
+# 安裝curl
+RUN apk add curl
+
 # 複製剩下的程式碼
 COPY . .
 
