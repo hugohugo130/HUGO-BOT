@@ -46,6 +46,7 @@ async function get_failed_embed(client = cli) {
 module.exports = {
     setup(client) {
         client.on(Events.InteractionCreate, async (interaction) => {
+            const { get_emoji } = require("./msg_handler.js");
             if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
             if (interaction.customId.startsWith("vote_")) return;
             const { time } = require("../../module_time.js");

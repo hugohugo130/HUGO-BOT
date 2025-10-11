@@ -371,9 +371,9 @@ async function ls_function({ client, message, rpg_data, data, args, mode, PASS }
 
     const { name, mine_gets, ingots, logs, foods_crops, foods_meat, fish, weapons_armor, wood_productions, brew, planks } = require("../../rpg.js");
     const emojiNames = ["bag", "ore", "farmer", "cow", "swords", "potion"];
-    const [bag_emoji, ore_emoji, farmer_emoji, cow_emoji, swords_emoji, potion_emoji] = emojiNames.map(async (name) => {
-        return await get_emoji(client, name);
-    });
+    const [bag_emoji, ore_emoji, farmer_emoji, cow_emoji, swords_emoji, potion_emoji] = await Promise.all(
+        emojiNames.map(name => get_emoji(client, name))
+    );
 
     // 分類物品
     const ores = {};
@@ -462,11 +462,11 @@ const rpg_cooldown = {
     // herd: "150 + {c} * 30",
     // brew: "150 + {c} * 30",
     // fish: "150 + {c} * 30",
-    mine: "{c}",
-    hew: "{c}",
-    herd: "{c}",
-    brew: "{c}",
-    fish: "{c}",
+    mine: "0",
+    hew: "0",
+    herd: "0",
+    brew: "0",
+    fish: "0",
 };
 
 const rpg_actions = {
@@ -1351,9 +1351,9 @@ ${buyer_mention} 將要花費 \`${total_price}$ (${pricePerOne}$ / 個)\` 購買
         // if (mode === 1) return { embeds: [setEmbedFooter(client, embed)], components: [row] };
         // return await message.reply({ embeds: [setEmbedFooter(client, embed)], components: [row] });
         const emojiNames = ["bag", "partner", "shield"];
-        const [emoji_backpack, emoji_partner, emoji_shield] = emojiNames.map(name => {
-            return get_emoji(client, name);
-        });
+        const [emoji_backpack, emoji_partner, emoji_shield] = await Promise.all(
+            emojiNames.map(name => get_emoji(client, name))
+        );
 
         rpg_data.privacy.sort((a, b) => {
             const order = { "money": 0, "backpack": 1, "partner": 2 };
