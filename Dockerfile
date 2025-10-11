@@ -13,7 +13,7 @@ RUN npm install && \
     apk del python3 make g++ git
 
 # 安裝curl
-RUN apk add curl
+RUN apt-get -qq -y install curl
 
 # 複製剩下的程式碼
 COPY . .
