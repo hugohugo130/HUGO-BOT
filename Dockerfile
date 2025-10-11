@@ -6,21 +6,21 @@ WORKDIR /app
 # 和安裝 curl, git
 RUN apk add --no-cache python3 make g++ git curl
 
+# pull
+RUN git pull
+
 # 複製 package.json / package-lock.json
 COPY package*.json ./
 
 # npm 安裝
 RUN npm install && \
-    apk del python3 make g++
+    apk del python3 make g++ git
 
 # 複製剩下的程式碼
 COPY . .
 
 # 註冊指令
 RUN node register_commands.js
-
-# pull
-RUN git pull
 
 # 自動更新
 RUN npm update --save && \
