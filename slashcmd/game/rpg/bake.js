@@ -1,18 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder, SlashCommandSubcommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const { name } = require("../../../rpg.js");
+const { name, bake } = require("../../../rpg.js");
 
 // 定義可烘烤的食材列表
-const bakeable_items = [
-    "馬鈴薯",
-    "生豬肉",
-    "生鴨肉",
-    "生牛肉",
-    "生雞肉",
-    "生鮭魚",
-    "生蝦",
-    "生鮪魚",
-    "小麥",
-];
+const bakeable_items = Object.fromEntries(
+    Object.entries(bake).map(([key, value]) => [
+        name[key],
+        key,
+    ])
+);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -46,14 +41,10 @@ module.exports = {
                     .setDescription("需要烘烤的食材")
                     .setRequired(true)
                     .addChoices(
-                        ...bakeable_items.map(item_name => {
-                            // 根據中文名稱尋找對應的 item_id
-                            const item_id = Object.keys(name).find(key => name[key] === item_name);
-                            return {
-                                name: item_name,
-                                value: item_id
-                            };
-                        }).filter(choice => choice.value !== undefined)
+                        ...Object.entries(bakeable_items).map(([key, value]) => ({
+                            name: value,
+                            value: key,
+                        })),
                     ),
             )
             .addIntegerOption(option =>
@@ -127,7 +118,7 @@ module.exports = {
             let item_id = interaction.options.getString("食材");
             let amount = interaction.options.getInteger("數量") ?? 1;
             const allFoods = interaction.options.getBoolean("全部") ?? false;
-            
+
             if (allFoods) {
                 amount = rpg_data.inventory[item_id] || amount;
             };
