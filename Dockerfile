@@ -19,7 +19,7 @@ RUN apk del python3 make g++
 COPY . .
 
 # pull
-RUN git pull
+# RUN git pull
 
 RUN apk del git
 
