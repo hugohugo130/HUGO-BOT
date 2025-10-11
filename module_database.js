@@ -18,7 +18,6 @@ const databaseFiles = [
     'rpg_database.json',
     'rpg_shop.json',
     "smelt_db.json",
-    "serverIP.json",
 ];
 
 function loadData(userid = null, mode = 0) {
@@ -359,6 +358,11 @@ function sethacoin_forsign(userId, amount, add = false) {
 const serverIPFile = path.join(process.cwd(), 'serverIP.json');
 const DEFAULT_IP = "hugo.904037.xyz";
 
+function check_IP_valid(IP, PORT) {
+    const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://${IP}:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
+    return res === "200";
+};
+
 function getServerIPSync() {
     let serverIP = null;
     if (fs.existsSync(serverIPFile)) {
@@ -373,11 +377,14 @@ function getServerIPSync() {
         serverIP = "hugo.904037.xyz";
     };
 
-    if (!serverIP) {
+    let PORT = beta ? 3001 : 3002;
+
+    if (!serverIP || !check_IP_valid(serverIP, PORT)) {
         try {
-            let { default_value } = require("./config.json");
-            let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
-            let PORT = beta ? 3001 : 3002;
+            // let { default_value } = require("./config.json");
+            // let IP = default_value["serverIP.json"]?.IP || DEFAULT_IP;
+            let IP = DEFAULT_IP;
+            PORT = beta ? 3001 : 3002;
             try {
                 // 用 powershell 偵測本地伺服器
                 const res = require('child_process').execSync(`powershell -Command \"try { (Invoke-WebRequest -Uri 'http://127.0.0.1:${PORT}/verify' -UseBasicParsing -TimeoutSec 1).StatusCode } catch { '' }\"`).toString().trim();
@@ -386,6 +393,7 @@ function getServerIPSync() {
                     console.log("偵測到本地伺服器，已切換 IP 為 127.0.0.1");
                 };
             } catch (_) { }
+
             if (IP === "26.146.150.194") { // 舊檔案相容
                 IP = "hugo.904037.xyz";
             };
