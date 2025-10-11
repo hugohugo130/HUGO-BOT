@@ -4,8 +4,8 @@ const { name, bake } = require("../../../rpg.js");
 // 定義可烘烤的食材列表
 const bakeable_items = Object.fromEntries(
     Object.entries(bake).map(([key, value]) => [
-        name[key],
         key,
+        name[key],
     ])
 );
 
