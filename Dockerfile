@@ -30,6 +30,8 @@ RUN node register_commands.js
 RUN npm update --save && \
     npm audit fix
 
+RUN npm cache clean --force
+
 # 註冊斜線指令
 RUN ["node", "--trace-deprecation", "--trace-warnings", "register_commands.js"]
 
