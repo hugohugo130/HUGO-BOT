@@ -4,8 +4,7 @@ const path = require('path');
 const multer = require('multer');
 const app = express();
 
-// const BETA = true;
-const BETA = __dirname.split("/").at(-1) === "DB Server2"
+const BETA = false;
 let PORT = 3001;
 if (!BETA) PORT = 3002;
 
