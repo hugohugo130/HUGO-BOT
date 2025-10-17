@@ -370,6 +370,8 @@ function check_IP_valid(IP, PORT) {
     } else { // other unsupport system D:
         serverIP = DEFAULT_IP;
     };
+
+    return passed;
 };
 
 function getServerIPSync() {
