@@ -27,8 +27,8 @@ RUN apk del git
 RUN node register_commands.js
 
 # 自動更新
-RUN npm update --save && \
-    npm audit fix
+# RUN npm update --save && \
+#     npm audit fix
 
 RUN npm cache clean --force
 
