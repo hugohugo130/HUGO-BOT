@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, docker]
 
     steps:
       - name: Checkout code
