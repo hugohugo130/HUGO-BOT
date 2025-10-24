@@ -23,9 +23,6 @@ COPY . .
 
 RUN apk del git
 
-# 註冊指令
-RUN node register_commands.js
-
 # 自動更新
 # RUN npm update --save && \
 #     npm audit fix
